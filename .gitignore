@@ -1,3 +1,7 @@
 project.ini
 *.swp
 *.pyc
+*.smc
+*.sfc
+*.srm
+*.ips
