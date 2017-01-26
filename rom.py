@@ -31,6 +31,19 @@ class ROM:
             loc = struct.unpack_from('3B', patch_data, offset=offset)
             offset += 3
             if loc == self.IPS_EOF_BYTES:
+                if len(patch_data) - offset == 3:
+                    truncate = struct.unpack_from(
+                        '3B',
+                        patch_data,
+                        offset=offset
+                    )
+                    offset += 3
+                    truncate = (
+                        (truncate[0] << 16) +
+                        (truncate[1] << 8) +
+                        (truncate)
+                    )
+                    self.rom_data = self.rom_data[:truncate]
                 break
             loc = ((loc[0] << 16) + (loc[1] << 8)  + (loc[2]))
             patch_size = struct.unpack_from('!H', patch_data, offset=offset)
@@ -40,10 +53,10 @@ class ROM:
                 run_size = struct.unpack_from('!H', patch_data, offset=offset)
                 offset += 2
                 run_size = run_size[0]
-                fill_char = struct.unpack_from('c', patch_data, offset=offset)
+                fill_byte = struct.unpack_from('c', patch_data, offset=offset)
                 offset += 1
-                fill_char = fill_char[0]
-                self.rom_data[loc:loc+run_size] = fill_char * run_size
+                fill_byte = fill_byte[0]
+                self.rom_data[loc:loc+run_size] = fill_byte * run_size
             else:
                 replacement_data = struct.unpack_from(
                     '!{}s'.format(patch_size),
@@ -66,7 +79,7 @@ class ROM:
 
     def ensure_has_header(self):
         if not self.has_header:
-            self.rom_data.insert(0, 0x00 * 512)
+            self.rom_data = bytearray((0,) * 512) + self.rom_data
             self.header_size = 512
             self.has_header = True
 
