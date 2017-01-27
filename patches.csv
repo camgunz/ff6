@@ -1,5 +1,21 @@
 file_name,header,apply
 Overkill - 32000 max (v1.0).ips,n,y
+basic nATB patch (no header).ips,n,y
+AlwaysSprint10.ips,y,y
+FF3-SoulSavedA-N.ips,n,y
+GRAPHICS.IPS,y,y
+psycho.ips,y,y
+rippler.ips,y,y
+VANISH.IPS,y,y
+EVADE.IPS,y,y
+StickyShadow.IPS,y,y
+Randomosity-U.ips,y,y
+GmbNamA.ips,y,y
+Lowercase.ips,y,y
+SuplDmg.ips,y,y
+extra_mimic_slot_10.ips,y,y
+learnable_rage_10.ips,y,y
+resilient_morph_22.ips,y,y
 Multi-Steal-Fix-for-FF3-US-10-NH.ips,n,y
 FF3-G&S.ips,y,y
 Jump-Megafix-A-10.IPS,y,y
@@ -13,21 +29,8 @@ StopEx.ips,y,y
 Gogo+Sketch v0.6 (FFIIIus).ips,y,y
 RUNIC-E1.IPS,y,y
 FF3-1WAY.IPS,y,y
-AlwaysSprint10.ips,y,y
-FF3-SoulSavedA-N.ips,n,y
-GRAPHICS.IPS,y,y
-psycho.ips,y,y
-rippler.ips,y,y
-VANISH.IPS,y,y
-EVADE.IPS,y,y
-StickyShadow.IPS,y,y
-Randomosity-U.ips,y,y
 PINROW-E.IPS,y,y
-GmbNamA.ips,y,y
-Lowercase.ips,y,y
-SuplDmg.ips,y,y
 RefBeam.ips,y,y
-basic nATB patch (no header).ips,n,y
 BeheRow0.ips,y,y
 CarveStone.ips,y,y
 CONT-MP.IPS,y,y
@@ -67,6 +70,9 @@ auction_chocobo_fix_snes_nh.ips,n,y
 Border Crossing US - no header.ips,n,y
 Bridge Correction (no header).ips,n,y
 Can't lose for winning - no header.ips,n,y
+Tweak - Elemental - no header.ips,n,y
+I condemn thee to hell! - no header.ips,n,y
+Offering US - no header.ips,n,y
 FF3-AnonymousAttack-N0.ips,n,y
 FF3-Backstabu-N.ips,n,y
 FF3-BackwardsJump-N0.ips,n,y
@@ -118,17 +124,19 @@ FF3-ZombieRipC-N.ips,n,y
 FF3-ZombieTapirB-N.ips,n,y
 FF3FC05.IPS,y,y
 FF3IK.IPS,n,y
-Fix Crusader - no header.ips,n,y
+Fix Crusader - no header.ips,n,n
 FIX4.IPS,n,y
 For What Ails Ya - multi-steal - no header.ips,n,y
 frozen_terra_fix_us_nh.ips,n,y
-Tweak - Elemental - no header.ips,n,y
-I condemn thee to hell! - no header.ips,n,y
 Ignore defense - v1.0 v1.1 - no header.ips,n,y
 MP - no header.ips,n,y
-Offering US - no header.ips,n,y
 opened_eyes_terra_fix_ALT_nh.ips,n,y
 tritoch_anim_fix_us_nh.ips,n,y
 US Air Anchor - no header.ips,n,y
-"Wrong Way, Idiot!.IPS",n,y
+Wrong Way, Idiot!.IPS,n,y
 zozo_sign_petty_fix_nh.ips,n,y
+d4s_ff3_palfix_noheader.ips,n,n
+FairHit11.ips,y,n
+rage_and_sketch_expansion_10.ips,y,n
+Tweak - Holy Randomness Batman! - no header.ips,n,n
+FF3-TurnAround-N.ips,n,n
