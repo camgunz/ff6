@@ -133,10 +133,12 @@ MP - no header.ips,n,y,
 opened_eyes_terra_fix_ALT_nh.ips,n,y,
 tritoch_anim_fix_us_nh.ips,n,y,
 US Air Anchor - no header.ips,n,y,
-Wrong Way, Idiot!.IPS,n,y,
+"Wrong Way, Idiot!.IPS",n,y,
 zozo_sign_petty_fix_nh.ips,n,y,
 d4s_ff3_palfix_noheader.ips,n,n,graphical corruption on intro credits screen
 FairHit11.ips,y,n,misses move characters forward
 rage_and_sketch_expansion_10.ips,y,n,forces all party damage to 0
 Tweak - Holy Randomness Batman! - no header.ips,n,n,freezes battle
 FF3-TurnAround-N.ips,n,n,freezes battle
+rename-fenix-down.ips,n,y,rename fenix down to phoenix down
+fix-mag-roader-battle-script.ips,n,y,"mag roader's battle script doesn't have an ""end script"" byte; this patch adds it"

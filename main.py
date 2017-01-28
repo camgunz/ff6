@@ -1,13 +1,12 @@
+import subprocess
+
 from tkinter import *
 from tkinter.ttk import *
 
 import lib
 
-###
-# Text field for patch file name
-# Text field for patch description
-# Button to build, apply, and launch emulator
-###
+from rom import ROM
+from patch import Patch
 
 class Application(Frame):
 
@@ -31,42 +30,79 @@ class Application(Frame):
         self.patch_description_label = Label(self, text='Description:')
         self.separator = Separator(self)
         self.save_patch_button = Button(self)
-        self.save_patch_button['text'] = 'Save patch'
+        self.save_patch_button['text'] = 'Save Patch'
         self.save_patch_button['command'] = self.save_patch
         self.launch_button = Button(self)
-        self.launch_button['text'] = 'Save patch'
+        self.launch_button['text'] = 'Launch Game'
         self.launch_button['command'] = self.launch_emulator
-        self.patch_file_name_label.grid(row=0, column=0, padx=2, pady=5)
-        self.patch_file_name_entry.grid(row=0, column=1)
-        self.patch_description_label.grid(row=1, column=0, padx=2, pady=5)
-        self.patch_description_entry.grid(row=1, column=1)
-        self.separator.grid(row=2, column=0, columnspan=2, ipady=5)
+        self.rebuild_button = Button(self)
+        self.rebuild_button['text'] = 'Rebuild From Patch List'
+        self.rebuild_button['command'] = self.rebuild_rom
+        self.patch_file_name_label.grid(
+            row=0,
+            column=0,
+            padx=2,
+            pady=5
+        )
+        self.patch_file_name_entry.grid(
+            row=0,
+            column=1,
+            columnspan=2,
+        )
+        self.patch_description_label.grid(
+            row=1,
+            column=0,
+            padx=2,
+            pady=5
+        )
+        self.patch_description_entry.grid(
+            row=1,
+            column=1,
+            columnspan=2,
+        )
+        self.separator.grid(row=2, column=0, ipady=5)
         self.save_patch_button.grid(
             row=3,
             column=0,
-            columnspan=2,
             pady=5,
             ipady=5
         )
         self.launch_button.grid(
-            row=4,
-            column=0,
-            columnspan=2,
+            row=3,
+            column=1,
+            pady=5,
+            ipady=5
+        )
+        self.rebuild_button.grid(
+            row=3,
+            column=2,
             pady=5,
             ipady=5
         )
 
+    def rebuild_rom(self):
+        config = lib.get_config()
+        rom = lib.build_rom()
+        rom.save_to_file(config['project_rom'])
+
     def launch_emulator(self):
+        config = lib.get_config()
         subprocess.run([config['emulator'], config['project_rom']])
 
     def save_patch(self):
         config = lib.get_config()
-        lib.build_rom()
-        lib.build_rom('temp.smc')
-        project_rom = rom.Rom.from_file(config['project_rom'])
-        temp_rom = rom.Rom.from_file('temp.smc')
-        patch = patch.from_roms(project_rom, temp_rom)
+        base_rom = lib.build_rom()
+        project_rom = ROM.from_file(config['project_rom'])
+        patch = Patch.from_roms(
+            self.patch_file_name.get(),
+            False,
+            True,
+            self.patch_description.get(),
+            base_rom,
+            project_rom
+        )
         patch.save()
+        lib.build_rom()
 
 def main():
     root = Tk()

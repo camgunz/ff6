@@ -1,4 +1,7 @@
+import os
 import struct
+
+import lib
 
 class Patch:
 
@@ -6,42 +9,46 @@ class Patch:
     EOF_BYTES = tuple([ord(c) for c in 'EOF'])
 
     def __init__(self, file_name, header, apply, notes, data):
-        if struct.unpack('5B', data) != self.HEADER_BYTES:
+        if struct.unpack_from('5B', data) != self.HEADER_BYTES:
             raise Exception('Invalid IPS patch data')
         self.file_name = file_name
         self.header = header
         self.apply = apply
         self.notes = notes
-        self.data = data
+        self.data = bytearray(data)
 
     @staticmethod
-    def from_file(file_name, header, apply, notes):
-        with open(file_name, 'rb') as fobj:
-            data = bytearray(fobj.read())
-            return Patch(file_name, header, apply, notes, data)
+    def from_file(file_path, header, apply, notes):
+        file_name = os.path.basename(file_path)
+        with open(file_path, 'rb') as fobj:
+            return Patch(file_name, header, apply, notes, fobj.read())
 
     @staticmethod
-    def from_roms(base_rom, modded_rom):
+    def from_roms(file_name, header, apply, notes, base_rom, modded_rom):
         ###
         # For simplicity, don't make any RLEs.
         ###
         diffs = []
+        in_diff = False
+        location = None
+        size = None
         current_diff = None # will be 2-Tuple (location, size)
         for n in range(len(base_rom.data)):
             base_rom_byte = base_rom.data[n]
             modded_rom_byte = modded_rom.data[n]
             if current_diff:
                 if base_rom_byte != modded_rom_byte:
-                    current_diff[1] += 1
+                    size += 1
                 else:
-                    diffs.append(current_diff)
-                    current_diff = None
+                    diffs.append((location, size))
+                    in_diff = False
+                    location = None
+                    size = None
             elif base_rom_byte != modded_rom_byte:
-                current_diff = (n, 1)
+                location = n
+                size = 1
         data = bytearray()
-        offset = 0
-        struct.pack_into('5B', data, offset, *self.HEADER_BYTES)
-        offset += 5
+        data.extend(struct.pack('5B', *[int(b) for b in Patch.HEADER_BYTES]))
         for location, size in diffs:
             location_bytes = (
                 (location & 0x00FF0000),
@@ -52,33 +59,31 @@ class Patch:
                 (size & 0x0000FF00),
                 (size & 0x000000FF)
             )
-            data = modded_rom.data[location:location+size]
-            struct.pack_into('3B', data, offset, *location_bytes)
-            offset += 3
-            struct.pack_into('2B', data, offset, *size_bytes)
-            offset += 2
-            struct.pack_into('{}s'.format(size), data, offset, *data_bytes)
-            offset += size
-        struct.pack_into('3B', data, offset, *self.EOF_BYTES)
+            data_bytes = modded_rom.data[location:location+size]
+            data.extend(struct.pack('3B', *location_bytes))
+            data.extend(struct.pack('2B', *size_bytes))
+            data.extend(struct.pack('{}s'.format(size), *data_bytes))
+        data.extend(struct.pack('3B', *[int(b) for b in Patch.EOF_BYTES]))
+        return Patch(file_name, header, apply, notes, data)
 
     def __eq__(self, other):
         return self.file_name == other.file_name
 
     def __iter__(self):
         offset = 0
-        header = struct.unpack_from('5B', patch_data)
+        header = struct.unpack_from('5B', self.data)
         offset += 5
         if header != Patch.HEADER_BYTES:
             raise Exception('Invalid IPS patch data')
-        while offset < len(patch_data):
+        while offset < len(self.data):
             start_offset = offset
-            loc = struct.unpack_from('3B', patch_data, offset=offset)
+            loc = struct.unpack_from('3B', self.data, offset=offset)
             offset += 3
             if loc == Patch.EOF_BYTES:
-                if len(patch_data) - offset == 3:
+                if len(self.data) - offset == 3:
                     truncate = struct.unpack_from(
                         '3B',
-                        patch_data,
+                        self.data,
                         offset=offset
                     )
                     offset += 3
@@ -91,21 +96,21 @@ class Patch:
                     self.data = self.data[:truncate]
                 break
             loc = ((loc[0] << 16) + (loc[1] << 8)  + (loc[2]))
-            patch_size = struct.unpack_from('!H', patch_data, offset=offset)
+            patch_size = struct.unpack_from('!H', self.data, offset=offset)
             offset += 2
             patch_size = patch_size[0]
             if patch_size == 0:
-                run_size = struct.unpack_from('!H', patch_data, offset=offset)
+                run_size = struct.unpack_from('!H', self.data, offset=offset)
                 offset += 2
                 run_size = run_size[0]
-                fill_byte = struct.unpack_from('c', patch_data, offset=offset)
+                fill_byte = struct.unpack_from('c', self.data, offset=offset)
                 offset += 1
                 fill_byte = fill_byte[0]
                 yield ('rle', (loc, run_size, fill_byte))
             else:
                 replacement_data = struct.unpack_from(
                     '{}s'.format(patch_size),
-                    patch_data,
+                    self.data,
                     offset
                 )
                 offset += patch_size
@@ -113,8 +118,9 @@ class Patch:
                 yield ('patch', (loc, patch_size, replacement_data))
 
     def save(self):
+        config = lib.get_config()
         patch_file_path = os.path.join(config['patch_dir'], self.file_name)
-        with open(patch_file_path, 'w') as patch_fobj:
+        with open(patch_file_path, 'wb') as patch_fobj:
             patch_fobj.write(self.data)
         patch_list = lib.get_patch_list()
         if self not in patch_list:
