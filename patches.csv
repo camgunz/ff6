@@ -1,142 +1,142 @@
-file_name,header,apply
-Overkill - 32000 max (v1.0).ips,n,y
-basic nATB patch (no header).ips,n,y
-AlwaysSprint10.ips,y,y
-FF3-SoulSavedA-N.ips,n,y
-GRAPHICS.IPS,y,y
-psycho.ips,y,y
-rippler.ips,y,y
-VANISH.IPS,y,y
-EVADE.IPS,y,y
-StickyShadow.IPS,y,y
-Randomosity-U.ips,y,y
-GmbNamA.ips,y,y
-Lowercase.ips,y,y
-SuplDmg.ips,y,y
-extra_mimic_slot_10.ips,y,y
-learnable_rage_10.ips,y,y
-resilient_morph_22.ips,y,y
-Multi-Steal-Fix-for-FF3-US-10-NH.ips,n,y
-FF3-G&S.ips,y,y
-Jump-Megafix-A-10.IPS,y,y
-CAPTWPN.ips,y,y
-Command-List-G.ips,y,y
-FF3-DeadHare-N.ips,n,y
-FF3-SavePoint-N.ips,n,y
-BRUSH-E.ips,y,y
-MPCanNotPlusMinus.ips,y,y
-StopEx.ips,y,y
-Gogo+Sketch v0.6 (FFIIIus).ips,y,y
-RUNIC-E1.IPS,y,y
-FF3-1WAY.IPS,y,y
-PINROW-E.IPS,y,y
-RefBeam.ips,y,y
-BeheRow0.ips,y,y
-CarveStone.ips,y,y
-CONT-MP.IPS,y,y
-CONTUPD.IPS,y,y
-CyanMTek.ips,y,y
-Equ-Any.ips,y,y
-EquSlot.ips,y,y
-FF3BIRD.IPS,y,y
-FF3DIGIT.IPS,y,y
-FF3JEWEL.IPS,y,y
-FF3LAU20.IPS,y,y
-ff3SepPwr.ips,y,y
-FF3STACK.IPS,y,y
-FF3TAPIR.IPS,y,y
-FF3ZOMB.IPS,y,y
-FF6ALLO.IPS,y,y
-funk2C30.ips,y,y
-GrdBar.ips,y,y
-Gungho.ips,y,y
-InvDrn.ips,y,y
-MineCart.ips,y,y
-MithSet.ips,y,y
-MPFlag.ips,y,y
-MUDMANT.IPS,y,y
-PinkGogo.ips,y,y
-RAGSTAT.IPS,y,y
-RunPop0.ips,y,y
-SCAVE3.IPS,y,y
-SLOMP.ips,y,y
-StepMP.ips,y,y
-STIMER.IPS,y,y
-SwordTech11B.ips,y,y
-TimeDsp.ips,y,y
-TKSide.ips,y,y
-YSTREAK.IPS,y,y
-auction_chocobo_fix_snes_nh.ips,n,y
-Border Crossing US - no header.ips,n,y
-Bridge Correction (no header).ips,n,y
-Can't lose for winning - no header.ips,n,y
-Tweak - Elemental - no header.ips,n,y
-I condemn thee to hell! - no header.ips,n,y
-Offering US - no header.ips,n,y
-FF3-AnonymousAttack-N0.ips,n,y
-FF3-Backstabu-N.ips,n,y
-FF3-BackwardsJump-N0.ips,n,y
-FF3-BanonRiding-N.ips,n,y
-FF3-BetterDice-NC.ips,n,y
-FF3-BlandEntrance-N.ips,n,y
-FF3-CastleParty-N.ips,n,y
-FF3-ChainOfCommand-NG.ips,n,y
-FF3-DeadInAir-NS.ips,n,y
-FF3-DoubleBlock-N.ips,n,y
-FF3-FalseKnight-N0.ips,n,y
-FF3-GameOver-N.ips,n,y
-FF3-GeradSabin-N.ips,n,y
-FF3-HalfKnife-N.ips,n,y
-FF3-HastyT-Rex-N.ips,n,y
-FF3-ImpCall-N.ips,n,y
-FF3-ImpRage-N.ips,n,y
-FF3-ImpRetort-NA.ips,n,y
-FF3-ImpSkimp-N0.ips,n,y
-FF3-ItemMagicCounter-ND.ips,n,y
-FF3-KillerLife3-N.ips,n,y
-FF3-KingsRobes-N0.ips,n,y
-FF3-LoudMusic-N.ips,n,y
-FF3-MagitekMadness-N0.ips,n,y
-FF3-MenuMalarky-N.ips,n,y
-FF3-MorphMayhem-N.ips,n,y
-FF3-MultipleEvents-N.ips,n,y
-FF3-NarsheDoor-N.ips,n,y
-FF3-NoXInFight-NB0.ips,n,y
-FF3-OffDeathRow-N.ips,n,y
-FF3-OffTheHook-N.ips,n,y
-FF3-Overhead-N.ips,n,y
-FF3-PhoenixChest-N.ips,n,y
-FF3-PreciousJewels-N.ips,n,y
-FF3-Reflections-N0.ips,n,y
-FF3-ReturnersDayOff-NV.ips,n,y
-FF3-RockBottom-NP.ips,n,y
-FF3-SelfSneeze-N.ips,n,y
-FF3-ShadowCopy-N.ips,n,y
-FF3-ShadowStatus-N.ips,n,y
-FF3-StatusUnknown-N0.ips,n,y
-FF3-StoneFaced-N1.ips,n,y
-FF3-StoneZombie-N.ips,n,y
-FF3-Throwback-NJ0.ips,n,y
-FF3-Unequipium-N.ips,n,y
-FF3-UpsideDown-N0.ips,n,y
-FF3-VanishRunic-N0.ips,n,y
-FF3-ZombieRipC-N.ips,n,y
-FF3-ZombieTapirB-N.ips,n,y
-FF3FC05.IPS,y,y
-FF3IK.IPS,n,y
-Fix Crusader - no header.ips,n,n
-FIX4.IPS,n,y
-For What Ails Ya - multi-steal - no header.ips,n,y
-frozen_terra_fix_us_nh.ips,n,y
-Ignore defense - v1.0 v1.1 - no header.ips,n,y
-MP - no header.ips,n,y
-opened_eyes_terra_fix_ALT_nh.ips,n,y
-tritoch_anim_fix_us_nh.ips,n,y
-US Air Anchor - no header.ips,n,y
-Wrong Way, Idiot!.IPS,n,y
-zozo_sign_petty_fix_nh.ips,n,y
-d4s_ff3_palfix_noheader.ips,n,n
-FairHit11.ips,y,n
-rage_and_sketch_expansion_10.ips,y,n
-Tweak - Holy Randomness Batman! - no header.ips,n,n
-FF3-TurnAround-N.ips,n,n
+file_name,header,apply,notes
+Overkill - 32000 max (v1.0).ips,n,y,
+basic nATB patch (no header).ips,n,y,
+AlwaysSprint10.ips,y,y,
+FF3-SoulSavedA-N.ips,n,y,
+GRAPHICS.IPS,y,y,
+psycho.ips,y,y,
+rippler.ips,y,y,
+VANISH.IPS,y,y,
+EVADE.IPS,y,y,
+StickyShadow.IPS,y,y,
+Randomosity-U.ips,y,y,
+GmbNamA.ips,y,y,
+Lowercase.ips,y,y,
+SuplDmg.ips,y,y,
+extra_mimic_slot_10.ips,y,y,
+learnable_rage_10.ips,y,y,
+resilient_morph_22.ips,y,y,
+Multi-Steal-Fix-for-FF3-US-10-NH.ips,n,y,
+FF3-G&S.ips,y,y,
+Jump-Megafix-A-10.IPS,y,y,
+CAPTWPN.ips,y,y,
+Command-List-G.ips,y,y,
+FF3-DeadHare-N.ips,n,y,
+FF3-SavePoint-N.ips,n,y,
+BRUSH-E.ips,y,y,
+MPCanNotPlusMinus.ips,y,y,
+StopEx.ips,y,y,
+Gogo+Sketch v0.6 (FFIIIus).ips,y,y,
+RUNIC-E1.IPS,y,y,
+FF3-1WAY.IPS,y,y,
+PINROW-E.IPS,y,y,
+RefBeam.ips,y,y,
+BeheRow0.ips,y,y,
+CarveStone.ips,y,y,
+CONT-MP.IPS,y,y,
+CONTUPD.IPS,y,y,
+CyanMTek.ips,y,y,
+Equ-Any.ips,y,y,
+EquSlot.ips,y,y,
+FF3BIRD.IPS,y,y,
+FF3DIGIT.IPS,y,y,
+FF3JEWEL.IPS,y,y,
+FF3LAU20.IPS,y,y,
+ff3SepPwr.ips,y,y,
+FF3STACK.IPS,y,y,
+FF3TAPIR.IPS,y,y,
+FF3ZOMB.IPS,y,y,
+FF6ALLO.IPS,y,y,
+funk2C30.ips,y,y,
+GrdBar.ips,y,y,
+Gungho.ips,y,y,
+InvDrn.ips,y,y,
+MineCart.ips,y,y,
+MithSet.ips,y,y,
+MPFlag.ips,y,y,
+MUDMANT.IPS,y,y,
+PinkGogo.ips,y,y,
+RAGSTAT.IPS,y,y,
+RunPop0.ips,y,y,
+SCAVE3.IPS,y,y,
+SLOMP.ips,y,y,
+StepMP.ips,y,y,
+STIMER.IPS,y,y,
+SwordTech11B.ips,y,y,
+TimeDsp.ips,y,y,
+TKSide.ips,y,y,
+YSTREAK.IPS,y,y,
+auction_chocobo_fix_snes_nh.ips,n,y,
+Border Crossing US - no header.ips,n,y,
+Bridge Correction (no header).ips,n,y,
+Can't lose for winning - no header.ips,n,y,
+Tweak - Elemental - no header.ips,n,y,
+I condemn thee to hell! - no header.ips,n,y,
+Offering US - no header.ips,n,y,
+FF3-AnonymousAttack-N0.ips,n,y,
+FF3-Backstabu-N.ips,n,y,
+FF3-BackwardsJump-N0.ips,n,y,
+FF3-BanonRiding-N.ips,n,y,
+FF3-BetterDice-NC.ips,n,y,
+FF3-BlandEntrance-N.ips,n,y,
+FF3-CastleParty-N.ips,n,y,
+FF3-ChainOfCommand-NG.ips,n,y,
+FF3-DeadInAir-NS.ips,n,y,
+FF3-DoubleBlock-N.ips,n,y,
+FF3-FalseKnight-N0.ips,n,y,
+FF3-GameOver-N.ips,n,y,
+FF3-GeradSabin-N.ips,n,y,
+FF3-HalfKnife-N.ips,n,y,
+FF3-HastyT-Rex-N.ips,n,y,
+FF3-ImpCall-N.ips,n,y,
+FF3-ImpRage-N.ips,n,y,
+FF3-ImpRetort-NA.ips,n,y,
+FF3-ImpSkimp-N0.ips,n,y,
+FF3-ItemMagicCounter-ND.ips,n,y,
+FF3-KillerLife3-N.ips,n,y,
+FF3-KingsRobes-N0.ips,n,y,
+FF3-LoudMusic-N.ips,n,y,
+FF3-MagitekMadness-N0.ips,n,y,
+FF3-MenuMalarky-N.ips,n,y,
+FF3-MorphMayhem-N.ips,n,y,
+FF3-MultipleEvents-N.ips,n,y,
+FF3-NarsheDoor-N.ips,n,y,
+FF3-NoXInFight-NB0.ips,n,y,
+FF3-OffDeathRow-N.ips,n,y,
+FF3-OffTheHook-N.ips,n,y,
+FF3-Overhead-N.ips,n,y,
+FF3-PhoenixChest-N.ips,n,y,
+FF3-PreciousJewels-N.ips,n,y,
+FF3-Reflections-N0.ips,n,y,
+FF3-ReturnersDayOff-NV.ips,n,y,
+FF3-RockBottom-NP.ips,n,y,
+FF3-SelfSneeze-N.ips,n,y,
+FF3-ShadowCopy-N.ips,n,y,
+FF3-ShadowStatus-N.ips,n,y,
+FF3-StatusUnknown-N0.ips,n,y,
+FF3-StoneFaced-N1.ips,n,y,
+FF3-StoneZombie-N.ips,n,y,
+FF3-Throwback-NJ0.ips,n,y,
+FF3-Unequipium-N.ips,n,y,
+FF3-UpsideDown-N0.ips,n,y,
+FF3-VanishRunic-N0.ips,n,y,
+FF3-ZombieRipC-N.ips,n,y,
+FF3-ZombieTapirB-N.ips,n,y,
+FF3FC05.IPS,y,y,
+FF3IK.IPS,n,y,
+Fix Crusader - no header.ips,n,n,freezes battle when Setzer uses dice
+FIX4.IPS,n,y,
+For What Ails Ya - multi-steal - no header.ips,n,y,
+frozen_terra_fix_us_nh.ips,n,y,
+Ignore defense - v1.0 v1.1 - no header.ips,n,y,
+MP - no header.ips,n,y,
+opened_eyes_terra_fix_ALT_nh.ips,n,y,
+tritoch_anim_fix_us_nh.ips,n,y,
+US Air Anchor - no header.ips,n,y,
+Wrong Way, Idiot!.IPS,n,y,
+zozo_sign_petty_fix_nh.ips,n,y,
+d4s_ff3_palfix_noheader.ips,n,n,graphical corruption on intro credits screen
+FairHit11.ips,y,n,misses move characters forward
+rage_and_sketch_expansion_10.ips,y,n,forces all party damage to 0
+Tweak - Holy Randomness Batman! - no header.ips,n,n,freezes battle
+FF3-TurnAround-N.ips,n,n,freezes battle

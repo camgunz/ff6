@@ -1,10 +1,31 @@
+import os
 import csv
 
 from configparser import ConfigParser
 
+from rom import ROM
+
 __PROJECT_CONFIG_FILE_NAME = 'project.ini'
 __CONFIG = None
 __PATCH_LIST = None
+
+def build_rom(file_name=None):
+    config = get_config()
+    patch_list = get_patch_list()
+    ff3 = ROM.from_file(config['base_rom'])
+    for n, patch in enumerate(get_patch_list()):
+        if not patch.apply:
+            continue
+        print('Applying patch {} ({}/{})'.format(
+            patch.file_name,
+            n + 1,
+            len(patch_list),
+        ))
+        ff3.apply_patch(patch)
+    if file_name is None:
+        ff3.save_to_file(config['project_rom'])
+    else:
+        ff3.save_to_file(file_name)
 
 def get_patch_list():
     global __PATCH_LIST
@@ -14,13 +35,29 @@ def get_patch_list():
         patch_list = []
         with open(patch_list_file_name, 'r') as csv_fobj:
             for row in csv.DictReader(csv_fobj):
-                patch_list.append((
+                patch_list.append(Patch.from_file(
                     row['file_name'],
                     row['header'] == 'y',
-                    row['apply'] == 'y'
+                    row['apply'] == 'y',
+                    row['notes']
                 ))
         __PATCH_LIST = patch_list
     return __PATCH_LIST
+
+def save_patch_list():
+    config = get_config()
+    patch_list = get_patch_list()
+    patch_list_file_name = config['patch_list']
+    with open(patch_list_file_name, 'w') as csv_fobj:
+        writer = csv.writer(csv_fobj)
+        writer.writerow(('file_name', 'header', 'apply', 'notes'))
+        for patch in patch_list:
+            writer.writerow((
+                patch.file_name,
+                patch.header and 'y' or 'n',
+                patch.apply and 'y' or 'n',
+                patch.notes
+            ))
 
 def get_config():
     global __CONFIG
