@@ -32,11 +32,10 @@ class Patch:
         in_diff = False
         location = None
         size = None
-        current_diff = None # will be 2-Tuple (location, size)
         for n in range(len(base_rom.data)):
             base_rom_byte = base_rom.data[n]
             modded_rom_byte = modded_rom.data[n]
-            if current_diff:
+            if in_diff:
                 if base_rom_byte != modded_rom_byte:
                     size += 1
                 else:
@@ -45,24 +44,25 @@ class Patch:
                     location = None
                     size = None
             elif base_rom_byte != modded_rom_byte:
+                in_diff = True
                 location = n
                 size = 1
         data = bytearray()
         data.extend(struct.pack('5B', *[int(b) for b in Patch.HEADER_BYTES]))
         for location, size in diffs:
             location_bytes = (
-                (location & 0x00FF0000),
-                (location & 0x0000FF00),
+                (location & 0x00FF0000) >> 16,
+                (location & 0x0000FF00) >> 8,
                 (location & 0x000000FF)
             )
             size_bytes = (
-                (size & 0x0000FF00),
+                (size & 0x0000FF00) >> 8,
                 (size & 0x000000FF)
             )
             data_bytes = modded_rom.data[location:location+size]
             data.extend(struct.pack('3B', *location_bytes))
             data.extend(struct.pack('2B', *size_bytes))
-            data.extend(struct.pack('{}s'.format(size), *data_bytes))
+            data.extend(struct.pack('{}s'.format(size), data_bytes))
         data.extend(struct.pack('3B', *[int(b) for b in Patch.EOF_BYTES]))
         return Patch(file_name, header, apply, notes, data)
 

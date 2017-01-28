@@ -32,12 +32,12 @@ class Application(Frame):
         self.save_patch_button = Button(self)
         self.save_patch_button['text'] = 'Save Patch'
         self.save_patch_button['command'] = self.save_patch
-        self.launch_button = Button(self)
-        self.launch_button['text'] = 'Launch Game'
-        self.launch_button['command'] = self.launch_emulator
         self.rebuild_button = Button(self)
         self.rebuild_button['text'] = 'Rebuild From Patch List'
         self.rebuild_button['command'] = self.rebuild_rom
+        self.launch_button = Button(self)
+        self.launch_button['text'] = 'Launch Game'
+        self.launch_button['command'] = self.launch_emulator
         self.patch_file_name_label.grid(
             row=0,
             column=0,
@@ -67,13 +67,13 @@ class Application(Frame):
             pady=5,
             ipady=5
         )
-        self.launch_button.grid(
+        self.rebuild_button.grid(
             row=3,
             column=1,
             pady=5,
             ipady=5
         )
-        self.rebuild_button.grid(
+        self.launch_button.grid(
             row=3,
             column=2,
             pady=5,
