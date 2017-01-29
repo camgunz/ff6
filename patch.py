@@ -125,6 +125,6 @@ class Patch:
         patch_list = lib.get_patch_list()
         if self not in patch_list:
             patch_list.append(self)
-        lib.save_patch_list()
+        lib.save_patch_list(patch_list)
 
 # vi: et sw=4 ts=4 tw=79
