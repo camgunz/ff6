@@ -8,7 +8,6 @@ from patch import Patch
 
 __PROJECT_CONFIG_FILE_NAME = 'project.ini'
 __CONFIG = None
-__PATCH_LIST = None
 
 def build_rom(buf=None):
     config = get_config()
@@ -26,25 +25,21 @@ def build_rom(buf=None):
     return ff3
 
 def get_patch_list():
-    global __PATCH_LIST
-    if __PATCH_LIST is None:
-        config = get_config()
-        patch_list_file_name = config['patch_list']
-        patch_list = []
-        with open(patch_list_file_name, 'r') as csv_fobj:
-            for row in csv.DictReader(csv_fobj):
-                patch_list.append(Patch.from_file(
-                    os.path.join(config['patch_dir'], row['file_name']),
-                    row['header'] == 'y',
-                    row['apply'] == 'y',
-                    row['notes']
-                ))
-        __PATCH_LIST = patch_list
-    return __PATCH_LIST
-
-def save_patch_list():
     config = get_config()
-    patch_list = get_patch_list()
+    patch_list_file_name = config['patch_list']
+    patch_list = []
+    with open(patch_list_file_name, 'r') as csv_fobj:
+        for row in csv.DictReader(csv_fobj):
+            patch_list.append(Patch.from_file(
+                os.path.join(config['patch_dir'], row['file_name']),
+                row['header'] == 'y',
+                row['apply'] == 'y',
+                row['notes']
+            ))
+    return patch_list
+
+def save_patch_list(patch_list):
+    config = get_config()
     patch_list_file_name = config['patch_list']
     with open(patch_list_file_name, 'w', newline='') as csv_fobj:
         writer = csv.writer(csv_fobj)
