@@ -142,3 +142,4 @@ Tweak - Holy Randomness Batman! - no header.ips,n,n,freezes battle
 FF3-TurnAround-N.ips,n,n,freezes battle
 rename-fenix-down.ips,n,y,rename fenix down to phoenix down
 fix-mag-roader-battle-script.ips,n,y,"mag roader's battle script doesn't end in a ""end script"" byte; this patch adds it"
+harder_rats.ips,n,y,
