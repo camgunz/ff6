@@ -148,3 +148,8 @@ update-magitek.ips,n,y,
 harder_rats.ips,n,y,
 whelk-fight.ips,n,y,
 whelk-fight-dialogue.ips,n,y,
+edit-were-rats-slightly.ips,n,y,
+harden-solo-terra-narshe-cave-fights.ips,n,y,"Vaporites cause darkness and mute now, buffed Repo Man significantly"
+more-magitek-edits.ips,n,y,Remove TekBarrier from everyone and TekMissile from Wedge and Biggs
+buff-lobo-slightly.ips,n,y,makes lobo faster and stronger
+make-guard-faster.ips,n,y,buff guard speed slightly

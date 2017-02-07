@@ -1,4 +1,5 @@
 import subprocess
+import threading
 
 from tkinter import *
 from tkinter.ttk import *
@@ -29,15 +30,18 @@ class Application(Frame):
         )
         self.patch_description_label = Label(self, text='Description:')
         self.separator = Separator(self)
-        self.launch_button = Button(self)
-        self.launch_button['text'] = 'Launch Game'
-        self.launch_button['command'] = self.launch_emulator
+        self.edit_button = Button(self)
+        self.edit_button['text'] = 'Edit ROM'
+        self.edit_button['command'] = self.edit_rom
         self.save_patch_button = Button(self)
         self.save_patch_button['text'] = 'Save Patch'
         self.save_patch_button['command'] = self.save_patch
         self.rebuild_button = Button(self)
         self.rebuild_button['text'] = 'Rebuild From Patch List'
         self.rebuild_button['command'] = self.rebuild_rom
+        self.launch_button = Button(self)
+        self.launch_button['text'] = 'Launch Game'
+        self.launch_button['command'] = self.launch_emulator
         self.patch_file_name_label.grid(
             row=0,
             column=0,
@@ -61,7 +65,7 @@ class Application(Frame):
             columnspan=2,
         )
         self.separator.grid(row=2, column=0, ipady=5)
-        self.launch_button.grid(
+        self.edit_button.grid(
             row=3,
             column=0,
             pady=5,
@@ -79,15 +83,24 @@ class Application(Frame):
             pady=5,
             ipady=5
         )
+        self.launch_button.grid(
+            row=4,
+            column=0,
+            columnspan=3,
+            pady=5,
+            ipady=5
+        )
 
-    def rebuild_rom(self):
+    def run_editor(self):
         config = lib.get_config()
-        rom = lib.build_rom()
-        rom.save_to_file(config['project_rom'])
+        subprocess.run([config['editor'], config['project_rom']])
 
     def launch_emulator(self):
         config = lib.get_config()
         subprocess.run([config['emulator'], config['project_rom']])
+
+    def edit_rom(self):
+        threading.Thread(target=self.run_editor).start()
 
     def save_patch(self):
         config = lib.get_config()
@@ -102,7 +115,16 @@ class Application(Frame):
             project_rom
         )
         patch.save()
-        lib.build_rom()
+        patched_rom = lib.build_rom()
+        patched_rom.save_to_file(config['project_rom'])
+
+    def rebuild_rom(self):
+        config = lib.get_config()
+        rom = lib.build_rom()
+        rom.save_to_file(config['project_rom'])
+
+    def emulate(self):
+        threading.Thread(target=self.launch_emulator).start()
 
 def main():
     root = Tk()
