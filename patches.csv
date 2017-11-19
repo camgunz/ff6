@@ -153,3 +153,10 @@ harden-solo-terra-narshe-cave-fights.ips,n,y,"Vaporites cause darkness and mute 
 more-magitek-edits.ips,n,y,Remove TekBarrier from everyone and TekMissile from Wedge and Biggs
 buff-lobo-slightly.ips,n,y,makes lobo faster and stronger
 make-guard-faster.ips,n,y,buff guard speed slightly
+expand-battle-script-space.ips,n,y,Expand the space available to battle scripts
+increase-encounter-rate-in-solo-terra-narshe-cave.ips,n,y,Increase the encounter rate when soloing Terra in the Narshe caves
+buff-marshal.ips,n,y,Make the Marshal fight harder
+tonic-to-reanimate.ips,n,y,Replace tonic with reanimate - cures stop
+update-lobo-and-vomammoth-steals.ips,n,y,Set lobo and vomammoth steals to Phoenix Down and Reanimate (rare)
+mythril-knife-to-timeslicer.ips,n,y,Change the mythril knife to timeslicer 
+buff-leafer.ips,n,y,Buff leafer

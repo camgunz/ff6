@@ -17,14 +17,14 @@ class Patch:
         self.notes = notes
         self.data = bytearray(data)
 
-    @staticmethod
-    def from_file(file_path, header, apply, notes):
+    @classmethod
+    def from_file(cls, file_path, header, apply, notes):
         file_name = os.path.basename(file_path)
         with open(file_path, 'rb') as fobj:
-            return Patch(file_name, header, apply, notes, fobj.read())
+            return cls(file_name, header, apply, notes, fobj.read())
 
-    @staticmethod
-    def from_roms(file_name, header, apply, notes, base_rom, modded_rom):
+    @classmethod
+    def from_roms(cls, file_name, header, apply, notes, base_rom, modded_rom):
         ###
         # For simplicity, don't make any RLEs.
         ###
@@ -32,23 +32,31 @@ class Patch:
         in_diff = False
         location = None
         size = None
-        for n in range(len(base_rom.data)):
-            base_rom_byte = base_rom.data[n]
-            modded_rom_byte = modded_rom.data[n]
-            if in_diff:
-                if base_rom_byte != modded_rom_byte:
-                    size += 1
-                else:
+        for n in range(len(modded_rom.data)):
+            if n >= len(base_rom.data):
+                found_diff = True
+            else:
+                found_diff = base_rom.data[n] != modded_rom.data[n]
+            if not found_diff:
+                if in_diff:
                     diffs.append((location, size))
                     in_diff = False
                     location = None
                     size = None
-            elif base_rom_byte != modded_rom_byte:
+            elif not in_diff:
                 in_diff = True
                 location = n
                 size = 1
+            elif size == 65535:
+                diffs.append((location, size))
+                location = n
+                size = 1
+            else:
+                size += 1
+        if in_diff:
+            diffs.append((location, size))
         data = bytearray()
-        data.extend(struct.pack('5B', *[int(b) for b in Patch.HEADER_BYTES]))
+        data.extend(struct.pack('5B', *[int(b) for b in cls.HEADER_BYTES]))
         for location, size in diffs:
             location_bytes = (
                 (location & 0x00FF0000) >> 16,
@@ -63,8 +71,8 @@ class Patch:
             data.extend(struct.pack('3B', *location_bytes))
             data.extend(struct.pack('2B', *size_bytes))
             data.extend(struct.pack('{}s'.format(size), data_bytes))
-        data.extend(struct.pack('3B', *[int(b) for b in Patch.EOF_BYTES]))
-        return Patch(file_name, header, apply, notes, data)
+        data.extend(struct.pack('3B', *[int(b) for b in cls.EOF_BYTES]))
+        return cls(file_name, header, apply, notes, data)
 
     def __eq__(self, other):
         return self.file_name == other.file_name

@@ -12,7 +12,7 @@ __CONFIG = None
 def build_rom(buf=None):
     config = get_config()
     patch_list = get_patch_list()
-    ff3 = ROM.from_file(config['base_rom'])
+    ff6 = ROM.from_file(config['base_rom'])
     for n, patch in enumerate(get_patch_list()):
         if not patch.apply:
             continue
@@ -21,8 +21,8 @@ def build_rom(buf=None):
             n + 1,
             len(patch_list),
         ))
-        ff3.apply_patch(patch)
-    return ff3
+        ff6.apply_patch(patch)
+    return ff6
 
 def get_patch_list():
     config = get_config()

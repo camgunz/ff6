@@ -14,10 +14,10 @@ class ROM:
         else:
             raise Exception('Invalid header size %s' % (self.header_size))
 
-    @staticmethod
-    def from_file(file_name):
+    @classmethod
+    def from_file(cls, file_name):
         with open(file_name, 'rb') as fobj:
-            return ROM(fobj.read())
+            return cls(fobj.read())
 
     def apply_patch(self, patch):
         if patch.header:
