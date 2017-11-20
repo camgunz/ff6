@@ -164,3 +164,6 @@ revamp-daggers.ips,n,y,Change all daggers
 nerf-leafers-buff-dark-wind.ips,n,y,Nerf leafers a little and buff dark wind
 more-leafer-and-dark-wind-balancing.ips,n,y,Keep balancing leafer and dark wind
 buff-sand-ray-and-areneid.ips,n,y,Buff sand ray and areneid
+update-dagger-descriptions.ips,n,y,Make dagger descriptions a little more grammatically correct
+revamp-daggers-again.ips,n,y,Original dagger revamp didn't take
+no-question-marks-in-magitek-menu.ips,n,y,FF3usME 6.8.0 fixes the ??? in the Magitek menu bug
