@@ -3,8 +3,8 @@ import csv
 
 from configparser import ConfigParser
 
-from rom import ROM
-from patch import Patch
+from ff6.rom import ROM
+from ff6.patch import Patch
 
 __PROJECT_CONFIG_FILE_NAME = 'project.ini'
 __CONFIG = None

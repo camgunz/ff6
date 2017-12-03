@@ -1,7 +1,7 @@
 import os
 import struct
 
-import lib
+# import ff6.lib
 
 class Patch:
 
@@ -125,14 +125,12 @@ class Patch:
                 replacement_data = replacement_data[0]
                 yield ('patch', (loc, patch_size, replacement_data))
 
-    def save(self):
-        config = lib.get_config()
-        patch_file_path = os.path.join(config['patch_dir'], self.file_name)
-        with open(patch_file_path, 'wb') as patch_fobj:
-            patch_fobj.write(self.data)
-        patch_list = lib.get_patch_list()
-        if self not in patch_list:
-            patch_list.append(self)
-        lib.save_patch_list(patch_list)
-
-# vi: et sw=4 ts=4 tw=79
+    # def save(self):
+    #     config = lib.get_config()
+    #     patch_file_path = os.path.join(config['patch_dir'], self.file_name)
+    #     with open(patch_file_path, 'wb') as patch_fobj:
+    #         patch_fobj.write(self.data)
+    #     patch_list = lib.get_patch_list()
+    #     if self not in patch_list:
+    #         patch_list.append(self)
+    #     lib.save_patch_list(patch_list)

@@ -4,4 +4,5 @@ project.ini
 *.smc
 *.sfc
 *.srm
+*.rom
 *.exe

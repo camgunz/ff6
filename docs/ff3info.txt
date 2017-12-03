@@ -1,0 +1,1712 @@
+FF3 ROM INFO
+------------
+
+LDA \$[C-F][0-9, A-F][0-9, A-F][0-9, A-F][0-9, A-F][0-9, A-F],[AXY, axy]
+LDA \[\$[0-9, A-F][0-9, A-F]\],Y
+
+NOTE:  All pointers are to be considered relative (added to the constant in the description) unless
+       otherwise noted.
+       
+Types of Pointers
+-----------------
+PTR         Short (2 byte) relative pointer (add to constant)
+LPTR        Long (3 byte) relative pointer (add to constant)
+APTR        Long (3 byte) absolute pointer (no need to add)
+
+Positioned Text
+---------------
+Position is a word--calculate from (xx, yy), where xx and yy are 8-pixel 2-bitplane tiles, with
+the formula ((yy * $20) + xx) * 2 + $7889
+
+Raw Location    HiROM Location      Key     Description
+-------------------------------------------------------------------------------
+00C47F-00C48E   (C0C27F-C0C28E)     GFX     Something to do with the battle backgrounds
+
+00D03A-         (C0CE3A-      )     GFX     Offsets of Map Character Sprite Parts (2x3, 2 bytes each)
+
+00D2F2-         (C0D0F2-      )     GFX     Pointers to Map Character Graphics (2 bytes each)
+00D43C-         (C0D23C-      )     GFX     Bank pointers and Number of Bytes to Copy for Map Character Gfx (2 bytes each)
+
+00E1A0-00E29F   (C0DFA0-C0E09F)     DTE     DTE Table
+
+02D02B-         (C2CE2B-      )     GFX     Battle Character Palette Assignments (1 byte each)
+02D21A-02D233   (C2D01A-C2D033)     MONST   Pointers to Monster Formation Size Templates (13 elements) (+020200/+C20000)
+02D234-02D2F3   (C2D034-C2D0F3)     MONST   Monster Formation Size Templates
+                                
+035E1C-035E39   (C35C1C-C35C39)     BLTZ     Blitz Specification Characters (14 elements, 2 bytes each [character, rotation])
+
+037100-         (C36F00-      )     PAL     Menu Portrait Palette assignment (1 byte each)
+03711B-         (C36F1B-      )     PTR     Pointers to Menu Portrait Graphics (2 bytes each)
+
+03C20C-03C217   (C3C00C-C3C017)     PTR     Pointers to Shop Titles (+030200/+C30000)
+
+03C4FC-03C525   (C3C2FC-C3C325)     PTXT    Shop Title Positioned Text (5 items, variable length)
+                
+040200-040541   (C40000-C40341)     PTR     Map Event Trigger Pointers (+040200/+C40000)
+040542-041BFD   (C40342-C419FD)     TRG     Map Event Triggers (5 bytes each) (src x, src y, pointer to event code)
+041BFE-041C0F   (C419FE-C41A0F)     ---     UNUSED SPACE (18 bytes)
+041C10-041F51   (C41A10-C41D51)     PTR     NPC Data Pointers (+041C10/+C41A10)
+041F52-046C6B   (C41D51-C46A6B)     NPC     NPC Data
+046C6C-046CBF   (C46A6C-C46ABF)     ---     UNUSED SPACE (84 bytes)
+046CC0-047ABF   (C46AC0-C478BF)     MAGIC   Magic Data (256 items, 14 bytes each)
+047AC0-047C3F   (C478C0-C47A3F)     TXT2    Character Names (64 items, 6 bytes each)
+047C40-047C9F   (C47A40-C47A9F)     CHR     Blitz Specifications (8 elements, 12 bytes each)
+
+047CC0-04813F   (C47AC0-C47F3F)     SHOP    Shop Specifications (128 items, 9 bytes each [1 title byte, 8 items])
+048140-0481A7   (C47F40-C47FA7)     MONST   Ragnarok Metamorphosis Packages (26 items, 4 bytes each)
+
+0489C0-0491BF   (C487C0-C48FBF)     FONT    Fixed-Width Font Graphics Data (8x8x2, 8 bytes each, range 0x80-0xFF)
+0491C0-04923F   (C48FC0-C4903F)     FONT    Variable-Width Font Character Cell Widths (00-7F)
+
+0492C0-049AFF   (C490C0-C498FF)     FONT    Variable-Width Font Graphics Data (16x11x1, 22 bytes each, range 0x20-0x7F)
+
+05090E-05090F   (C5070E-C5070F)     DATA    Length of Main SPC Code Loop
+050910-0520C6   (C50710-C51EC6)     SPC     Main SPC Code Loop (Copied to SPC locations $0200-$19B6)
+
+0A0200-0CE7FF   (CA0000-CCE5FF)     EVNT    Event Code
+0CE800-0CE801   (CCE600-CCE601)     DATA    Index of the pointer in which the bank byte needs to be incremented
+0CE802-0D01FF   (CCE602-CCFFFF)     PTR     Pointers to Dialogue (+0D0200/+CD0000)
+0D0200-0EF2FF   (CD0000-CEF0FF)     TXT1    Dialogue (3326 items, variable length)
+0EF300-0EF7FF   (CEF100-CEF5FF)     TXT1    Location Names (448 items [73 actual], variable length)
+
+0EFD60-0EFD87   (CEFB60-CEFB87)     PTR     Pointers to Rare Item Descriptions (+0EFEB0/+CEFCB0)
+0EFD88-0EFD9F   (CEFB88-CEFB9F)     ---     UNUSED SPACE
+0EFDA0-0EFEA3   (CEFBA0-CEFCA3)     TXT2    Rare Item Names (20 elements, 13 bytes each)
+0EFEA4-0EFEAF   (CEFCA4-CEFCAF)     ---     UNUSED SPACE
+0EFEB0-0F01FF   (CEFCB0-CEFFFF)     TXT2    Rare Item Descriptions (20 elements, variable length)
+0F0200-0F31FF   (CF0000-CF2FFF)     MONST   Monster Stats (384 elements, 32 bytes each)
+0F3200-0F37FF   (CF3000-CF35FF)     MONST   Monster Items Stolen and Dropped (384 elements, 4 bytes each)
+
+0F3B40-0F3E3F   (CF3940-CF3C3F)     TXT2    Esper Descritions (27 items, variable length)
+0F3E40-0F3E9F   (CF3C40-CF3C9F)     TXT2    SwordTech Names (8 items, 12 bytes each)
+
+0F5200-0F55FF   (CF5000-CF53FF)     MONST   Monster Formations used in Event Scripts (256 elements, 4 bytes each)
+0F5B00-0F63FF   (CF5900-CF61FF)     MONST   Monster Formation Auxiliary Data (576 elements, 4 bytes each)
+0F6400-0F85BF   (CF6200-CF83BF)     MONST   Monster Formation Data (576 elements, 15 bytes each)
+0F85C0-0F85FF   (CF83C0-CF83FF)     ---     UNUSED SPACE (64 bytes)
+
+0FC250-0FD14F   (CFC050-CFCF4F)     TXT2    Enemy Names (384 items, 10 bytes each)
+0FD150-0FD2CF   (CFCF50-CFD0CF)     ---     UNUSED SPACE (384 bytes)
+0FD2D0-0FE1CF   (CFD0D0-CFDFCF)     TXT2    Enemy Attack Names (384 items, 10 bytes each)
+
+0FE1E0-0FE3DF   (CFDFE0-CFE1DF)     PTR     Pointers to Battle Dialogue (Bank 2) (+0F0200/+CF0000)
+0FE3E0-0FF64F   (CFE1E0-CFF44F)     TXT2    Battle Dialogue (Bank 2) (256 items, variable length)
+
+0FFE00-0FFEFF   (CFFC00-CFFCFF)     TXT2    Blitz Descriptions (8 items, variable length)
+0FFF00-0FFFFF   (CFFD00-CFFDFF)     TXT2    SwordTech Descriptions (8 items, variable length)
+
+1000AE-100146   (CFFEAE-CFFF46)     TXT2    Short Esper Bonus Descriptions (17 elements, 9 characters each)
+100147-10019D   (CFFF47-CFFF9D)     ---     UNUSED SPACE (87 bytes)
+10019E-1001AD   (CFFF9E-CFFFAD)     PTR     Pointers to Blitz Descriptions (+0FFE00/+CFFC00)
+1001AE-1001BD   (CFFFAE-CFFFBD)     PTR     Pointers to SwordTech Descriptions (+0FFF00/+CFFD00)
+1001BE-1001FF   (CFFFBE-CFFFFF)     ---     UNUSED SPACE (66 bytes)
+
+109A00-109A73   (D09800-D09873)     PTR     Pointers to Battle Event Scripts (+100200/+D00000) (58 elements)
+
+10D200-10D3FF   (D0D000-D0D1FF)     PTR     Pointers to Battle Dialogue (Bank 1) (+100200/+D00000)
+10D400-10FEFF   (D0D200-D0FCFF)     TXT2    Battle Dialogue (Bank 1) (256 items, variable length)
+
+11F200-11F99F   (D1F000-D1F79F)     TXT2    Battle Messages (256 items, variable length)
+11F9A0-11FB9F   (D1F7A0-D1F99F)     PTR     Pointers to Battle Messages (+110200/+D10000)
+
+127100-1271FF   (D26F00-D26FFF)     TXT2    Weapon/Armor Types (32 items, 7 bytes each)
+127200-12797F   (D27000-D2777F)     MONST   Monster Visual Specifications (384 elements, 5 bytes each)
+
+127A20-12AA1F   (D27820-D2A81F)     PAL     Monster Palettes (768 palettes, 8 colors each)
+12AA20-12AA21   (D2A820-D2A821)     PTR     Pointer to 8-High Monster Composition Data
+12AA22-12AA23   (D2A822-D2A823)     PTR     Pointer to 16-High Monster Composition Data
+12AA24-12AE23   (D2A824-D2AC23)     MONST   Monster 8-High Composition Data (128 elements, 8 bytes each)
+12AE24-12B423   (D2AC24-D2B223)     MONST   Monster 16-High Composition Data (48 elements, 32 bytes each)
+12B424-12B4FF   (D2B224-D2B2FF)     ---     UNUSED SPACE (220 bytes)
+12B500-12C1FF   (D2B300-D2BFFF)     TXT2    Item Names (256 items, 13 bytes each)
+
+12EE00-12EEFF   (D2EC00-D2ECFF)     PAL     World of Balance Palettes (8 palettes, 16 colors each)
+12EF00-12EFFF   (D2ED00-D2EDFF)     PAL     World of Ruin Palettes (8 palettes, 16 colors each)
+12F000-12F01F   (D2EE00-D2EE1F)     PAL     Setzer's Airship Palette (16 colors)
+12F100-12F11F   (D2EF00-D2EF1F)     PAL     Darryl's Airship Palette (16 colors)
+
+150200-         (D50000-      )     GFX     Character and Townsperson Sprite Graphics (4bp)
+
+185200-186FFF   (D85000-D86DFF)     ITEM    Item Data (256 items, 30 bytes each)
+187000-187127   (D86E00-D86F27)     ESPER   Esper Data (27 items, 11 bytes each)
+187128-1871FF   (D86F28-D86FFF)     ---     UNUSED SPACE (128 bytes)
+
+18CBA0-18D09F   (D8C9A0-D8CE9F)     TXT2    Spell Descriptions (64 items, variable length)
+18D0A0-18D17F   (D8CEA0-D8CF7F)     TXT2    Battle Command Names (32 items, 7 bytes each)
+18D180-18D1FF   (D8CF80-D8CFFF)     PTR     Pointers to Spell Descriptions (+18CBA0/+D8C9A0)
+
+19AA00-19CF0F   (D9A800-D9CD0F)     MAP     Location Tile Properties
+19CF10-19CF8F   (D9CD10-D9CD8F)     PTR     Pointers to Location Tile Properties (+19AA00/+D9A800)
+19CF90-19D3AF   (D9CD90-D9D1AF)     LPTR    Pointers to Location Map Data (352 items) (+19D3B0/+D9D1B0)
+19D3B0-1E01FF   (D9D1B0-DDFFFF)     MAP     Location Map Data
+1E0200-         (DE0000-      )     MAP     Location Tile Formation
+
+1FBC00-1FBCFF   (DFBA00-DFBAFF)     LPTR    Pointers to Location Tile Formation (+1E0200/+DE0000) (128 items)
+1FBD00-1FC101   (DFBB00-DFBF01)     PTR     Pointers to Entrance Triggers (+1FBD00/+DFBB00)
+1FC102-1FDBFF   (DFBF02-DFD9FF)     TRG     Entrance Triggers (6 bytes each)
+1FDC00-1FDCFF   (DFDA00-DFDAFF)     LPTR    Town Tile Graphics Pointers (+1FDD00/+DFDB00) (128 items)
+1FDD00-25F5FF   (DFDB00-E5F3FF)     GFX     Town Tile Graphics
+  21C6C0-21E6BF   (E1C4C0-E1E4BF)     GFX     Battle Background Top Graphics: Building
+  
+268200-2685FF   (E68000-E683FF)     PAL     Map Character and Townperson Sprite Palettes (16 colors each)
+268600-26897F   (E68400-E6877F)     PTR     Pointers to Location Names (+0EF300/+CEF100)
+
+26F6A0-26F701   (E6F4A0-E6F501)     CHR     HP modification constants by level (98 elements)
+26F702-26F763   (E6F502-E6F563)     CHR     MP modification constants by level (98 elements)
+
+26F767-26F80E   (E6F567-E6F60E)     TXT2    Black Magic Spell Names (24 items, 7 bytes each)
+26F80F-26F8A1   (E6F60F-E6F6A1)     TXT2    Effect Magic Spell Names (21 items, 7 bytes each)
+26F8A2-26F8E0   (E6F6A2-E6F6E0)     TXT2    White Magic Spell Names (9 items, 7 bytes each)
+26F8E1-26F9B8   (E6F6E1-E6F7B8)     TXT2    Esper Names (27 items, 8 bytes each)
+26F9B9-26F9EA   (E6F7B9-E6F7EA)     TXT2    Skean Attack Names (5 items, 10 bytes each)
+26F9EB-26FA30   (E6F7EB-E6F830)     ---     UNUSED SPACE (70 bytes)
+26FA31-26FA80   (E6F831-E6F880)     TXT2    Blitz Names (8 items, 10 bytes each)
+26FA81-26FB70   (E6F881-E6F970)     TXT2    Mog's Dance Attacks (24 items, 10 bytes each)
+26FB71-26FBAC   (E6F971-E6F9AC)     TXT2    Setzer's Slot Attacks (6 items, 10 bytes each)
+26FBAD-26FBFC   (E6F9AD-E6F9FC)     TXT2    Magitek Armor Attacks (8 items, 10 bytes each)
+26FBFD-26FCEC   (E6F9FD-E6FAEC)     TXT2    Lore Names (24 items, 10 bytes each)
+26FCED-26FFEE   (E6FAED-E6FDEE)     TXT2    Enemy Attacks (77 items, 10 bytes each)
+26FFEF-270066   (E6FDEF-E6FE66)     TXT2    Desperation Attacks (12 items, 10 bytes each)
+270067-27008E   (E6FE67-E6FE8E)     TXT2    Miscellaneous Attacks (Lagomorph, Interceptor, etc.) (4 items, 10 bytes each)
+27008F-27019C   (E6FE8F-E6FF9C)     TXT2    Esper Attacks (27 items, 10 bytes each)
+27019D-2701FC   (E6FF9D-E6FFFC)     TXT2    Mog's Dance Names (8 items, 12 bytes each)
+2701FD-2701FF   (E6FFFD-E6FFFF)     ---     UNUSED SPACE (3 bytes)
+
+270350-         (E70150-      )     PAL     Bottom Battle Background Palettes (16 colors each)
+
+271850-271A47   (E71650-E71847)     LPTR    Pointers to Top Battle Backgrounds (168 elements, 75 used)
+
+297200-         (E97000-      )     GFX     Monster Graphics
+
+2D0200-2D057F   (ED0000-ED037F)     GFX     Menu Window 1 Graphics
+2D0580-2D08FF   (ED0380-ED06FF)     GFX     Menu Window 2 Graphics
+2D0900-2D0C7F   (ED0700-ED0A7F)     GFX     Menu Window 3 Graphics
+2D0C80-2D0FFF   (ED0A80-ED0DFF)     GFX     Menu Window 4 Graphics
+2D1000-2D137F   (ED0E00-ED037F)     GFX     Menu Window 5 Graphics
+2D1380-2D16FF   (ED1180-ED06FF)     GFX     Menu Window 6 Graphics
+2D1700-2D1A7F   (ED1500-ED0A7F)     GFX     Menu Window 7 Graphics
+2D1A80-2D1DFF   (ED1880-ED0DFF)     GFX     Menu Window 8 Graphics
+2D1E00-2D1E1F   (ED1C00-ED1C1F)     PAL     Menu Window 1 Palette (16 colors each)
+2D1E20-2D1E3F   (ED1C20-ED1C3F)     PAL     Menu Window 2 Palette (16 colors each)
+2D1E40-2D1E5F   (ED1C40-ED1C5F)     PAL     Menu Window 3 Palette (16 colors each)
+2D1E60-2D1E7F   (ED1C60-ED1C7F)     PAL     Menu Window 4 Palette (16 colors each)
+2D1E80-2D1E9F   (ED1C80-ED1C9F)     PAL     Menu Window 5 Palette (16 colors each)
+2D1EA0-2D1EBF   (ED1CA0-ED1CBF)     PAL     Menu Window 6 Palette (16 colors each)
+2D1EC0-2D1EDF   (ED1CC0-ED1CDF)     PAL     Menu Window 7 Palette (16 colors each)
+2D1EE0-2D1EFF   (ED1CE0-ED1CEF)     PAL     Menu Window 8 Palette (16 colors each)
+2D1F00-2D5A5F   (ED1D00-ED585F)     GFX     Character Portraits
+2D5A60-2D5CBF   (ED5860-ED5ABF)     PAL     Menu Portrait Palettes (16 colors each)
+2D5CC0-         (ED5AC0-      )     GFX     Hand Cursor Graphics
+
+2D64C0-2D64C7   (ED62C0-ED62C7)     PAL     Battle Standard (White) Text Palette (4 colors)
+2D64C8-2D64CF   (ED62C8-ED62CF)     PAL     Battle Disabled (Grey) Text Palette (4 colors)
+2D64D0-2D64D7   (ED62D0-ED62D7)     PAL     Battle Active (Yellow) Text Palette (4 colors)
+2D64D8-2D64DF   (ED62D8-ED62DF)     PAL     Battle Blue Text Palette (4 colors)
+2D64E0-2D64E7   (ED62E0-ED62E7)     PAL     Empty Palette (4 colors)
+2D64E8-2D64EF   (ED62E8-ED62EF)     PAL     Battle Guage (Grey) Text Palette (4 colors)
+2D64F0-2D64F7   (ED62F0-ED62F7)     PAL     Battle Green Text Palette (4 colors)
+2D64F8-2D64FF   (ED62F8-ED62FF)     PAL     Battle Red Text Palette (4 colors)
+2D6500-2D65FF   (ED6300-ED63FF)     PAL     Battle/Menu Character Sprite Palettes (8 palettes, 16 colors each)
+2D6600-2D799F   (ED6400-ED779F)     TXT2    Item Descriptions (256 elements, variable length)
+2D79A0-2D7C6F   (ED77A0-ED7A6F)     TXT2    Lore Descriptions (24 elements, variable length)
+2D7C70-2D7C9F   (ED7A70-ED7A9F)     PTR     Pointers to Lore Descriptions (24 elements)
+2D7CA0-2D7E9F   (ED7AA0-ED7C9F)     PTR     Pointers to Item Descriptions (256 elements)
+2D7EA0-2D841F   (ED7CA0-ED821F)     CHR     Character Initial Statistics (64 elements, 22 bytes each)
+2D8420-2D84F3   (ED8220-ED82F3)     CHR     Experience Needed for Level Up ()
+
+2D9100-2DC67E   (ED8F00-EDC47E)     LOC     Location Properties (416 elements, 33 bytes each)
+2DC67F          (EDC47F)            ---     UNUSED SPACE (1 byte)
+2DC680-2DCC7F   (EDC480-EDCA7F)     PAL     Location Map Palettes (48 elements, 16 colors each)
+
+2E0000-2E01CF   (EDFE00-EDFFCF)     TXT2    Long Esper Bonus Descriptions (variable length)
+2E01CF-2E01FF   (EDFFD0-EDFFFF)     PTR     Pointers to Long Esper Bonus Descriptions
+
+2E4A42-2E4A51   (EE4842-EE4851)     DATA    Sprites used for various positions of map character
+
+2E9D14-2E9F13   (EE9B14-EE9D13)     MAP     World of Balance Tile Properties
+2E9F14-2EA113   (EE9D14-EE9F13)     MAP     World of Ruin Tile Properties
+
+2ED634-2F134E   (EED434-EF114E)     MAP     World of Balance Map Data (compressed)
+2F134F-2F344F   (EF114F-EF324F)     GFX     World of Balance Tile Graphics (compressed)
+
+2F4C46-2F6C55   (EF4A46-EF6A55)     GFX     World of Ruin Tile Graphics (compressed)
+2F6C56-2F9F16   (EF6A56-EF9D16)     MAP     World of Ruin Map Data (compressed)
+
+2FE69B-2FEAB2   (EFE49B-EFE8B2)     MAP     World of Balance Miniature Map (compressed)
+2FEAB3-2FEF25   (EFE8B3-EFED25)     MAP     World of Ruin Miniature Map (compressed)
+
+World Map Related Pointers:
+Raw Loc.    HiROM Loc.      Contents    Decomp. Size    Description
+-------------------------------------------------------------------
+2EB400      (EEB200)        $EEB290     8192 B
+2EB403      (EEB203)        $EEB290     8192 B
+2EB406      (EEB206)        $EEB290     8192 B
+2EB409      (EEB209)        $EEC295     4096 B
+2EB40C      (EEB20C)        $EEC702     6144 B          Setzer's Airship Graphics
+2EB40F      (EEB20F)        $EED434     65536 B         World of Balance Map Data
+2EB412      (EEB212)        $EF114F     9344 B          World of Balance Tile Graphics
+2EB415      (EEB215)        $EF3250     16327 B
+2EB418      (EEB218)        $EF4846
+2EB41B      (EEB21B)        $EF4846
+2EB41E      (EEB21E)        $EF4A46     9344 B          World of Ruin Tile Graphics
+2EB421      (EEB221)        $EF6A56     65536 B         World of Ruin Map Data
+2EB424      (EEB224)        $EF6A56     65536 B         World of Ruin Map Data
+2EB427      (EEB227)        $EF9D17     16384 B
+2EB42A      (EEB22A)        $EFB631     9344 B
+2EB42D      (EEB22D)        $EFC624     6144 B          Chocobo Graphics
+2EB430      (EEB230)        $EFC624     6144 B          Chocobo Graphics
+2EB433      (EEB233)        $EFCE77
+2EB436      (EEB236)        $EFCE77
+2EB439      (EEB239)        $EFCE97
+2EB43C      (EEB23C)        $EFCE97
+2EB43F      (EEB23F)        $EFCEB7     2048 B          Airship Shadow Graphics
+2EB442      (EEB242)        $EFCEB7     2048 B          Airship Shadow Graphics
+2EB445      (EEB245)        $EFCFB9     6144 B          Misc. World Graphics (Figaro Castle, smoke, flying morphed Terra, ship)
+2EB448      (EEB248)        $EFDC4C     6144 B          Chocobo Graphics
+2EB44B      (EEB24B)        $EFE49B     2048 B          World of Balance Miniature Map
+2EB44E      (EEB24E)        $EFE8B3     2048 B          World of Ruin Miniature Map
+2EB451      (EEB251)        $EFED26     6144 B          Daryl's Airship Graphics
+2EB454      (EEB254)        $EFFAC8
+
+----
+Notable Locations in RAM
+
+$000520-$000540                 Current Location Data
+$000559                         Screen scroll status (0: scroll, 1: don't scroll)
+$00056E                         Last selected choice in a multiple choice dialogue (zero-based indexing)
+$001616-$00163A                 Character 0 stats
+$001860-$001862                 Current GP
+$001869-$001968                 Current items in inventory
+$001969-$001A68                 Number of those items in inventory
+$001A69-$001B38                 Espers current held by party
+$001E80-$001F5F                 Event conditionality bits
+
+----
+Structures and other Described Data
+
+Menu Window Graphics ($0380 bytes):
+$0000-$01FF                         Window Client Area (4 tiles x 4 tiles, 8 pixels each)
+$0200-$021F                         Border, Top-Left corner
+$0220-$023F                         Border, Top, first piece
+$0240-$025F                         Border, Top, second piece
+$0260-$027F                         Border, Top-Right corner
+$0280-$029F                         Border, Left, first piece
+$02A0-$02BF                         Border, Right, first piece
+$02C0-$02DF                         Border, Left, second piece
+$02E0-$02FF                         Border, Right, second piece
+$0300-$031F                         Border, Bottom-Left corner
+$0320-$033F                         Border, Bottom, first piece
+$0340-$035F                         Border, Bottom, second piece
+$0360-$037F                         Border, Bottom-Right
+
+Something:
+C2D034 (0): 0000 0808 0001 0808 0010 0808 0011 0808
+C2D044 (1): 0000 0808 0001 0808 0010 0404 8010 0404 0011 0404 8011 0404
+C2D05C (2): 0000 0C08 0010 0C08
+C2D064 (3): 0000 0810 0001 0810
+C2D06C (4): 0000 0C08 0010 0808 0011 0808
+C2D078 (5): 0000 0810 0001 0808 0011 0808
+C2D084 (6): 0000 1010
+C2D088 (7): 0000 0C0C 8001 040C 0018 0404 8018 0404 0019 0404 8019 0404
+C2D0A0 (8): 0000 0808 0010 0808 0001 0408 0011 0408
+C2D0B0 (9): 0000 0C0C
+C2D0B4 (A): 0000 080C 0001 0408 0011 0408 0018 0404 8018 0404
+C2D0C8 (B): 0000 0408 8000 0408 0001 0408 0011 0408 0010 0808
+C2D0DC (C): 0000 0808 0001 0808 0010 0408 8010 0408 0011 0408 8011 0408
+
+NPC Data:
+$0004                               Horizontal (X) position
+$0005                               Vertical (Y) position
+$0006                               Graphic set
+$0007:0-3                           Graphic index
+     :4                             Walk behind character
+     :5                             Walk on top of character
+     :6                             Character is a chocobo
+     :7                             Character is Magitek armor
+$0008:0-1                           Direction facing (0: up, 1: right, 2: down, 3: left)
+
+Monster Formation:
+$0000:4-7                           ?
+$0001                               Enemies Present (--xxxxxx)
+$0002                               Enemy 1 ID
+$0003                               Enemy 2 ID
+$0004                               Enemy 3 ID
+$0005                               Enemy 4 ID
+$0006                               Enemy 5 ID
+$0007                               Enemy 6 ID
+$0008                               Enemy 1 Position (8 bits, xxxxyyyy)
+$0009                               Enemy 2 Position (8 bits, xxxxyyyy)
+$000A                               Enemy 3 Position (8 bits, xxxxyyyy)
+$000B                               Enemy 4 Position (8 bits, xxxxyyyy)
+$000C                               Enemy 5 Position (8 bits, xxxxyyyy)
+$000D                               Enemy 6 Position (8 bits, xxxxyyyy)
+$000E                               Enemies that are Bosses (--xxxxxx)
+
+Monster Formation Auxiliary Data:
+$0000:0-3                           Appearance effects
+     :4                             Disable normal attacks
+     :5                             Disable back attacks
+     :6                             Disable pincer attacks
+     :7                             Disable side attacks
+$0001:1                             Disable fanfare
+     :2                             ??
+     :7                             Enable event script
+$0002                               Battle event script
+$0003:0                             ??
+     :1                             ??
+     :2                             Show attack-type windows
+     :3-5                           Battle music
+     :6                             ??
+     :7                             Continue current music
+
+Monster Data:
+$0000                               Strength
+$0001                               Speed
+$0002                               Hit % Rate
+$0003                               Evade % Rate
+$0004                               Mag. Block % Rate
+$0005                               Defense
+$0006                               Magic Defense
+$0007                               Magic Power
+$0008-$0009                         HP
+$000A-$000B                         MP
+$000C-$000D                         Experience Points
+$000E-$000F                         Gold
+$0010                               Level
+$0011:0-4                           Ragnarok metamorphosis specs.
+     :5-7                           Miss ratio for metamorphosis
+$0012:0                             Dies if MP becomes 0
+     :2                             Hide enemy's name
+     :7                             Undead
+$0013:3                             Can't run
+     :4                             Can't scan
+$0014                               ?
+$0015                               ?
+$0016                               ?
+$0017                               Elements that absorb HP
+$0018                               Elements that have no effect
+$0019                               Elements the enemy is weak against
+$001A                               Attack Type
+$001B                               Condition Effects 1
+$001C                               Condition Effects 2
+$001D                               Condition Effects 3
+$001E                               Condition Effects 4
+$001F:0-5                           Special Attack
+     :6                             Special attack causes no damage
+
+Monster Graphics Specifications:
+$0000-$0001                         Pointer to graphic data
+$0002                               ?
+$0003                               Palette index
+$0004                               Size template
+
+Location Entrance Trigger:
+$0000                               Source X coordinate of trigger
+$0001                               Source Y coordinate of trigger
+$0002-$0003                         Destination index
+                                    (this & 0x0800):  Show name of location at top of screen
+                                    (this & 0x1000):  Character faces right when entering
+                                    (this & 0x2000):  Character faces down when entering
+                                    (this & 0x3000):  Character faces left when entering
+$0004                               Destination X coordinate
+$0005                               Destination Y coordinate
+
+Location Event Trigger:
+$0000                               Source X coordinate of trigger
+$0001                               Source Y coordinate of trigger
+$0002-$0004                         Pointer to event code (+0A0200/+CA0000)
+
+Location Properties:
+$0000                               Name of Location
+$0001                               Layers to animate
+$0004                               Tile Properties (mult. by 2)
+$0005:7                             0=no attacks, 1=attacks
+$0007-$000A                         Tile Graphic Sets (32 bits, 7 each: ----aaaaaaabbbbbbbcccccccddddddd, mult. by 2)
+$000B-$000C                         Tile Formations (16 bits, 7 each: aaaaaaabbbbbbb--, mult. by 2)
+$000D-$0010                         Map Data (32 bits, 10 each: --aaaaaaaaaabbbbbbbbbbcccccccccc, mult. by 2)
+$0012                               BG0 Left Shift Amount
+$0013                               BG0 Upward Shift Amount
+$0014                               BG2 Left Shift Amount
+$0015                               BG2 Upward Shift Amount
+$0019                               Palette Index
+$001C                               Song Index
+$001E                               Map Width
+$001F                               Map Height
+$0020                               Layer Priorities
+
+Esper Data:
+$0000                               Spell 1 learn rate
+$0001                               Spell 1
+$0002                               Spell 2 learn rate
+$0003                               Spell 2
+$0004                               Spell 3 learn rate
+$0005                               Spell 3
+$0006                               Spell 4 learn rate
+$0007                               Spell 4
+$0008                               Spell 5 learn rate
+$0009                               Spell 5
+$000A                               Bonus at level up
+
+Magic Data:
+$0000                               Targetting
+$0001                               Elemental Properties
+$0002                               Spell Effect
+$0003                               Where used/Damage type
+$0004                               Spell Effect 2
+$0005                               MP Cost
+$0006                               Power
+$0007                               ?
+$0008                               Success Rate
+$0009                               Special Effect
+$000A                               Condition Effects 1
+$000B                               Condition Effects 2
+$000C                               Condition Effects 3
+$000D                               Condition Effects 4
+
+Where Used/Damage Type:
+01: Useable on the field            10:
+02:                                 20:
+04:                                 40: Character sacrifices self after casting
+08:                                 80: Affect MP
+
+Spell Effect 2:
+01: Restore HP or MP                10:
+02: Absorb HP or MP                 20:
+04: Remove Status Conditions        40:
+08: Induce Status Conditions        80: Power represents 1/16ths of value affected
+
+Slashed values are LOW nibble/HIGH nibble.
+
+Item:           Tools               Weapon              Armor/Shield/Hat    Relic               Item                
+--------------------------------------------------------------------------------------------------------------------
+$0000           Type (0)            Type (1)            Type (2, 3, 4)      Type (5)            Type (6)            
+$0001-$0002     --                  Equippable Chars.   Equippable Chars.   Equippable Chars.   --                  
+$0003           --                  --                  Spell Learn Rate    Spell Learn Rate    --                  
+$0004           --                  --                  Spell Learned       Spell Learned       --                  
+$0005           --                  Field Effects       Field Effects       Field Effects       --                  
+$0006           --                  Cond. 1 Protection  Cond. 1 Protection  Cond. 1 Protection  --                  
+$0007           --                  Cond. 2 Protection  Cond. 2 Protection  Cond. 2 Protection  --                  
+$0008           --                  Cond. 3 when Equip  Cond. 3 when Equip  Cond. 3 when Equip  --                  
+$0009           --                  Status Effects 1    Status Effects 1    Status Effects 1    --                  
+$000A           --                  Battle Effects 1    Battle Effects 1    Battle Effects 1    --                  
+$000B           --                  Status Effects 2    Status Effects 2    Status Effects 2    --                  
+$000C           --                  Battle Effects 2    Battle Effects 2    Battle Effects 2    --                  
+$000D           --                  Battle Effects 3    Battle Effects 3    Battle Effects 3    --                  
+$000E           Targetting          Targetting          Targetting          Targetting          Targetting      
+$000F           --                  Elem. Properties    Elem. 50% Dmg.      Elem. 50% Dmg.      --                  
+$0010           --                  Vigor+/Speed+       Vigor+/Speed+       Vigor+/Speed+       --                  
+$0011           --                  Stamina+/Mag.Pwr.+  Stamina+/Mag.Pwr.+  Stamina+/Mag.Pwr.+  --                  
+$0012           Attack When Used    Attack when Used    Attack when Used    Attack when Used    --                  
+$0013                               Weapon Properties                                           Item Properties
+$0014           Attack Strength     Battle Power        Defense Power       Defense Power       HP/MP Affected
+$0015           Hit Rate            Hit Rate            Magic Defense       Magic Defense       Cond. 1 when Used
+$0016           --                  --                  Elem. Absorb HP     Elem. Absorb HP     Cond. 2 when Used
+$0017           --                  --                  Elem. No Effect     Elem. No Effect     Cond. 3 when Used
+$0018           --                  --                  Elem. Weak Point    Elem. Weak Point    Cond. 4 when Used
+$0019           --                  --                  Cond. 2 when Equip  Cond. 2 when Equip  --                  
+$001A           --                  Evade%/MBlock%      Evade%/MBlock%      Evade%/MBlock%      --                  
+$001B           --                  ???/Spec.Atk.                                               Special Action
+$001C-$001D     Price               Price               Price               Price               Price               
+
+Item Type:
+00: Tool                04: Hat         |   10: Can be thrown
+01: Weapon              05: Relic       |   20: Usable as an item in battle
+02: Armor               06: Item        |   40: Usable on the field (Items only)
+03: Shield
+
+Targetting:
+01: Affects single ally or enemy        10: Auto-accept default selection
+02: Affects enemies or allies only      20: Multiple selection possible
+04: Affects all allies and enemies      40: Enemy selected by default
+08: Affects all allies or all enemies   80: Random selection among all enemies and allies
+
+Item Properties:
+01:                                 10: Restores MP
+02:                                 20: Removes Status Conditions
+04:                                 40: Causes damage
+08: Restores HP                     80: Manipulates 1/16ths of actual value affected
+
+Item Special Action:
+01: Summon random esper
+02: Super Ball attack
+03: Remove character from battle
+04: Elixir/Megalixir
+05: Remove all characters from battle
+06: Attracts Gau when encountered on the Veldt
+FF: No special action
+
+Special Attack:
+0:  None                                8:  
+1:  Steal Item                          9:  Dice
+2:  Attack increases as HP increases    A:  Attack increases as HP decreases
+3:  Kill (with X)                       B:  Wind attack
+4:  Cause 2x damage to humans           C:  Recover HP
+5:  Drain HP                            D:  Kill 
+6:  Drain MP                            E:  Uses MP to inflict mortal blow
+7:  Attack with MP                      F:  Uses (more) MP to inflict mortal blow
+
+Field Effects:
+01: Reduce enemy attacks        10:
+02: Prevent enemy attacks       20: Characters walk 2x speed
+04:                             40:
+08:                             80: Character gains 1 HP per step
+
+Status Effects 1:
+01: Raise Attack Damage         10: Raise HP by 12.5%
+02: Raise Magic Damage          20: Raise MP by 25%
+04: Raise HP by 25%             40: Raise MP by 50%
+08: Raise HP by 50%             80: Raise MP by 12.5%
+
+Status Effects 2:
+01: Increase Steal Rate         10: 100% Hit Rate
+02:                             20: Halve MP Consumption
+04:                             40: Reduce MP Consumption to 1
+08:                             80: Raise Vigor
+
+Condition Effects 1:
+01: Dark                        10: Vanish
+02: Zombie                      20: Imp
+04: Poison                      40: Petrify
+08: Enable Magitek Commands     80: Death
+
+Condition Effects 2:
+01: Condemned                   10: Berserk
+02: Kneeling                    20: Confusion
+04: Blink                       40: HP Drain
+08: Silence                     80: Sleep
+
+Condition Effects 3:
+01: Dance, but Float for Equip  10: Stop
+02: Regen                       20: Shell
+04: Slow                        40: Safe
+08: Haste                       80: Reflect
+
+Condition Effects 4:
+01: Rage                        10: Casting Spell
+02: Frozen                      20: Removed from Battle
+04: Protection from Death       40: Randomly defended by Interceptor
+08: Morph into Esper            80: Float
+
+Battle Effects 1:
+01:                     10: Sketch->Control
+02:                     20: Slot->GP Rain
+04: Fight->Jump         40: Steal->Capture
+08: Magic->X-Magic      80: Jump continuously
+
+Battle Effects 2:
+01: Fight->X-Fight                      10: Can equip a weapon in each hand
+02: Randomly Counter Attacks            20: Wearer can equip heavy armor
+04: Increases chance of evading attack  40: Wearer protects those with low HP
+08: Attack with two hands               80:
+
+Battle Effects 3:
+01: Casts Shell when HP is low          10: Doubles Gold received
+02: Casts Safe when HP is low           20:
+04: Casts Rflect when HP is low         40:
+08: Doubles Experience received         80: Makes body cold
+
+Weapon Properties:
+01:                     10:
+02: SwdTech             20: Same damage from back row
+04:                     40: 2-Hand
+08:                     80: Runic
+
+Percentage Modifiers:
+00: No change           06: -10%
+01: +10%                07: -20%
+02: +20%                08: -30%
+03: +30%                09: -40%
+04: +40%                0A: -50%
+05: +50% 
+
+Status Value Modifiers:
+00: No change           08: No change
+01: +1                  09: -1
+02: +2                  0A: -2
+03: +3                  0B: -3
+04: +4                  0C: -4
+05: +5                  0D: -5
+06: +6                  0E: -6
+07: +7                  0F: -7
+
+Elemental Properties:
+01: Fire                10: Wind
+02: Ice                 20: Pearl/Holy
+04: Lightning           40: Earth
+08: Poison              80: Water
+
+----
+Shop Title Identifiers
+
+Low nybble            High nybble
+0: (Blank)          | 0: Items cost normal price
+1: Weapon           | 1: Items cost twice normal price
+2: Armor            | 2: Items cost 1.5X normal price
+3: Item             | 3: Items cost half price when Edgar or Sabin is in party
+4: Relics
+5: Vendor
+
+----
+Map Tile Properties
+
+Sample:  Grass from WoB (0x0044)
+
+0000000001000100
+|||||||||||||||+-  0: 0--Chocobo can travel on tile, 1--Chocobo cannot travel on tile
+||||||||||||||+--  1: 0--Airship can land, 1--Airship cannot land
+|||||||||||||+---  2 \ Size of shadow cast by airship
+||||||||||||+----  3 / 00-smallest, 01-small, 10-large, 11-largest
+|||||||||||+-----  4: 0--Can walk on/off tile, 1--Cannot walk on/off tile
+||||||||||+------  5: 0--Character is opaque, 1--Bottom of character is transparent
+|||||||||+-------  6: 0--Deactivate enemy encounters, 1--Activate enemy encounters
+||||||||+--------  7: 
+|||||||+---------  8 \
+||||||+----------  9  } Battle Background Image (see below)
+|||||+----------- 10 /
+||||+------------ 11: 
+|||+------------- 12:
+||+-------------- 13:
+|+--------------- 14:
++---------------- 15:
+
+----
+Locations
+
+000     World of Balance
+001     World of Ruin
+002     Serpent Trench
+003     --
+004     --
+005     --
+006     Setzer's Airship (black background)
+007     Setzer's Airship--Rooms
+008     --
+009     Scenario Selection Screen
+00A     Setzer's Airship, flying through the sky
+00B     Darryl's Airship, with Darryl at the helm
+00C     Setzer's Airship--Casino Room (no exits)
+00D     Setzer's Airship, party standing on deck
+00E     Chocobo Stable (World of Balance)
+00F     Houses in South Figaro
+010     Chocobo Stable (World of Ruin)
+011     Airship (World of Ruin, Bahamut magicite received)
+012     Narshe (WoB)-Mountaintop cliff (from intro)
+013     Narshe (WoB) (from intro--some places are inaccessible)
+014     Narshe (WoB) (normal)
+015     Narshe-Mountains between Narshe and the caves above Narshe
+016     Narshe-Mountaintop maze above Narshe
+017     Narshe-Mountaintop cliff (normal)
+018     Narshe-Weapon Shop
+019     Narshe-Armor Shop
+01A     Narshe-Item Shop
+01B     Narshe-Relic Shop
+01C     Narshe-Inn
+01D     Narshe-Cafe
+01E     Narshe-Elder's House
+01F     Chocobo Stable
+020     Narshe (WoR)
+021     Narshe (WoR)-Mountains between Narshe and the caves above Narshe
+022     Narshe (WoR)-Mountaintop maze above Narshe (Ice Dragon)
+023     Narshe (WoR)-Mountaintop cliff
+024     Narshe Caves (Mag Roader?)
+025     Underneath Narshe
+026     Moogle's Cave
+027     Narshe-Mountain Path to Maze
+028     Narshe Caves (no enemies)
+029     Narhse Caves (beginning)
+02A     
+02B
+02C     Underneath Narshe (doesn't work)
+02D
+02E
+02F     South Figaro (doesn't work)
+030
+031     
+032     Underneath Narshe
+033
+034
+035
+036
+037     Figaro Castle
+038     
+039     Figaro Castle-various rooms
+03A     
+03B     "
+03C
+03D     Figaro Castle-various basement rooms
+03E
+03F     
+040
+041
+042
+043
+044     Cave to South Figaro (World of Ruin)
+045     Cave to South Figaro (World of Balance)
+046     
+047
+048
+049
+04A     South Figaro (World of Ruin)
+04B     South Figaro (World of Balance)
+04C     
+04D
+04E
+04F
+050
+051     South Figaro-Large House
+052
+053     South Figaro-Large House, basement
+054     South Figaro-Duncan's House, basement
+055     
+056     South Figaro-Duncan's House
+057     
+058     South Figaro-Inn
+059     
+05A
+05B
+05C
+05D
+05E     Nikeah (?)-Some rooms (as well as Cid's house on the Solitary Island)
+05F
+060     Mt. Kolts
+061     Mt. Kolts with Fog
+062     Mt. Kolts-last area (where Vargas is)
+063
+064     Mt. Kolts-Inner caves
+065     
+066
+067
+068
+069     Classroom-Advanced Battle Tactics
+06A     Classroom-Battle Tactics
+06B     Classroom-Environmental Science
+06C     
+06D     Returners' Hideout
+06E
+06F     Returners' Hideout-Inn
+070
+071     Lete River
+072     Lete River-Inner Caves
+073     Crazy Old Man's House
+074     Albrook-Shops
+075     Imperial Camp
+076
+077
+078     Doma Castle-from poison scene?
+079     Doma Castle-World of Balance
+07A
+07B     Doma Castle-inner rooms
+07C     
+07D     Doma Castle-dimmed with enemies (from Cyan's dream)
+07E     Doma Castle-dimmed rooms with enemies (from Cyan's dream)
+07F     Duncan's House--World of Ruin
+080
+081
+082
+083     Crazy Old Man's House--World of Ruin
+084     Phantom Forest--Entrance
+085     Phantom Forest--Recovery Spring
+086     Phantom Forest--Exit
+087     Phantom Forest--to train platform
+088
+089     Phantom Train Platform--Train left, Cyan sad
+08A
+08B
+08C
+08D
+08E     Phantom Train
+08F
+090     Phantom Train--Switch car, from Cyan's dream
+091     Phantom Train--Seating car
+092     Phantom Train--Engine room
+093     Phantom Train--Dining car
+094
+095     Phantom Train--Seating car 2
+096
+097     Phantom Train--Rroom car 1
+098     Phantom Train--Car with ghost
+099     Phantom Train--Save point
+09A
+09B     Baren Falls--Cave
+09C     Baren Falls--Cliff
+09D     Mobliz--World of Balance
+09E     Mobliz--World of Ruin
+09F     Riverbank where Gau finds the party
+0A0     Mobliz--Inn
+0A1     Mobliz--Arsenal
+0A2     Mobliz--Relics
+0A3     Mobliz--Armor Shop
+0A4     Mobliz--Item Shop
+0A5     Mobliz--Wounded Soldier's House
+0A6     Baren Falls--Entrance
+0A7     Mt. Crescent
+0A8     River leading to Serpent Trench
+0A9     Nikeah--World of Balance
+0AA     Riverbank with Clyde and Baram
+0AB     
+0AC
+0AD
+0AE
+0AF     Serpent Trench--Caves
+0B0     Mt. Zozo--Outside
+0B1     Mt. Zozo--Outside, cliff with treasure chest
+0B2     Mt. Zozo--Outside, cliff connecting dragon room to Cyan's room
+0B3     Mt. Zozo--First inner chamber
+0B4     
+0B5     Mt. Zozo--Cliff outside Cyan's room
+0B6
+0B7
+0B8
+0B9     Colloseum Builder's House--World of Balance
+0BA
+0BB     Nikeah--Port        
+0BC     Kohlingen--World of Balance
+0BD     Kohlingen--World of Ruin
+0BE
+0BF     Kohlingen--Inn
+0C0     Kohlingen--?
+0C1     Kohlingen--Arsenal
+0C2     Kohlingen--General Store
+0C3     
+0C4
+0C5
+0C6     Jidoor--World of Balance
+0C7
+0C8     Jidoor--Auction House
+0C9     Jidoor--Item Shop
+0CA     Jidoor--Relics
+0CB     Jidoor--Armor Shop
+0CC     Jidoor--Weapon Shop
+0CD     
+0CE     Jidoor--Inn
+0CF     Jidoor--Owzer's House (dimmed, enemies)
+0D0     Jidoor--Owzer's House (dimmed, no enemies)
+0D1     Jidoor--Owzer's House
+0D2
+0D3
+0D4
+0D5
+0D6
+0D7     Airship flying scene
+0D8     Gestahl, Madonna, and Maduin outside Esperville
+0D9     Esperville
+0DA     Esper Cave
+0DB     Esperville Houses
+0DC
+0DD     Zozo
+0DE     
+0DF
+0E0     
+0E1     Zozo--Buildings
+0E2     "
+0E3
+0E4
+0E5
+0E6
+0E7     Opera House--Stage, dancing
+0E8
+0E9     Opera House--Stage, fighting
+0EA     
+0EB     Opera House--Rafters
+0EC     Opera House--Castle Scene
+0ED
+0EE
+0EF     Opera House--Rafters (alone)
+0F0     
+0F1
+0F2     Vector
+0F3     Vector--Imperial Castle
+0F4     Vector--Imperial Castle, roof
+0F5     Vector--Inn
+0F6     Vector--Weapon Shop
+0F7     Vector--Cafe
+0F8     Vector--Armor Shop
+0F9     Vector--?
+0FA     Vector--Imperial Castle, inside
+0FB
+0FC
+0FD     Vector--on fire
+0FE
+0FF
+100
+101
+102
+103
+104
+105
+106     Magitek Factory--Inside
+107     Magitek Factory--Inside, 2nd
+108     Magitek Factory--Chamber where Shiva and Ifrit are found
+109
+10A     Magitek Factory--Elevator with Cid
+10B
+10C
+10D
+10E
+10F
+110
+111
+112     Magitek Research Facility--Tube Room
+113     
+114     The place Zone Eater sucks you into
+115
+116     Gogo's Room
+117
+118
+119     Umaro's Lair
+11A
+11B
+11C     Maranda--World of Balance
+11D     Doma (after liberation?)
+11E
+11F     Kefka's Domain
+120     (?)--Inn
+121     (?)--Weapon Shop
+122     (?)--Armor Shop
+123
+124
+125     Kefka's Domain
+126     Kefka's Domain
+127     Kefka's Domain
+128     "
+129     Daryll's Tomb
+12A     Daryll's Tomb--Basement 1
+12B     Daryll's Tomb--Basement 2
+12C     Daryll's Tomb--Basement 3
+12D     Daryll's Tomb--Long Staircase
+12E
+12F     Kefka's Domain
+130
+131     Tzen--World of Ruin, predestruction
+132     Tzen--World of Ruin, postdestruction
+133     Jidoor (WoR)--Item Shop
+134     Jidoor (WoR)--Inn
+135     Jidoor (WoR)--Weapon Shop
+136     Jidoor (WoR)--Armor Shop
+137
+138     Jidoor (WoR)--Relics
+139     Phoenix Cave--Small Lava Room
+13A     Phoenix Cave--Foggy Lava Room
+13B     Phoenix Cave--Top Level
+13C
+13D
+13E     Phoenix Cave--Entrance
+13F     Mountain Cliff from Cyan's dream
+140     Mines from Cyan's dream
+141     Switch car from Cyan's dream
+142     Seating car from Cyan's dream
+143     Albrook--World of Balance
+144     Albrook--World of Ruin
+145     Albrook--Inn
+146     Albrook--Weapon Shop
+147     Albrook--Armor Shop
+148     Albrook--Item Shop
+149     
+14A     Albrook--Cafe
+14B     
+14C     Albrook--Docks
+14D     
+14E     Kefka's Domain--Main Area
+14F     
+150     Final Room--Confrontation with Kefka
+151     Kefka's Domain--Room with Weights and Switches
+152     
+153
+154     Thamasa--World of Balance
+155     Thamasa--World of Balance (people lying on ground)
+156
+157     Thamasa--World of Balance       
+158     Thamasa--World of Ruin
+159     Thamasa--Arsenal
+15A     Thamasa--Inn
+15B     Thamasa--Item Shop
+15C     Thamasa--Elder's House
+15D
+15E
+15F     Thamasa--Burning House
+160     Magitek Research Facility
+161     Cave in the Veldt
+162     Kefka's Domain--Goddess room, etc.
+163
+164     Final Room--Confrontation with Kefka
+165     Final Room--Confrontation with Kefka
+166     Floating Island--Save Point
+167     Fanatics Tower
+168     Fanatics Tower
+169     Fanatics Tower
+16A     Fanatics Tower--Entrance
+16B     Fanatics Tower
+16C     Fanatics Tower--Roof
+16D     Fanatics Tower--Treasure Room
+16E     Fanatics Tower--Treasure Room, on roof
+16F     Fanatics Tower--Treasure Room
+170     Fanatics Tower--Treasure Room, White Dragon
+171     Fanatics Tower--Treasure Room
+172     Fanatics Tower--Treasure Room
+173     Cave near Thamasa, with the Three Statues
+174
+175     Cave near Thamasa, outside cliffs, left
+176     Cave near Thamasa, outside cliffs, right
+177     Cave near Thamasa, Esper room
+178
+179     Imperial Base
+17A     Rooms in Vector and Imperial Base
+17B     "
+17C     Large Overworld Map (from Floating Island)
+17D
+17E     Cave to the Sealed Gate
+17F     Cave to the Sealed Gate--Basement 1
+180     Cave to the Sealed Gate--Basement 1 (Lava colored)
+181     Cave to the Sealed Gate--Small Lava Room with moving bridges
+182     Cave to the Sealed Gate--Basement 4
+183     Cave to the Sealed Gate--Basement 4
+184
+185
+186     Land that rises and breaks for the World of Ruin
+187     Sealed Gate
+188     Jidoor--Floating Island casting shadow
+189     Floating Island--being destroyed, Naughtys attack
+18A     Floating Island
+18B     Piece of land that gets torn apart
+18C     Cid's House on Solitary Island--Outside
+18D
+18E     Solitary Island--Beach
+18F     Solitary Island--Cliff
+190     Solitary Island--Beach
+191     Caves to the Ancient Castle
+192     Caves to the Ancient Castle
+193
+194     Hidon's Cave
+195     Hidon's Cave
+196     Ancient Castle--Basement 1
+197     Ancient Castle--Entrance
+198     Ancient Castle--Basement 1
+199     Kefka's Domain--Pipe Room
+19A     Kefka's Domain
+19B
+19C
+19D     Colloseum--Rooms
+19E
+
+Event Commands
+--------------
+Character Action Queue Specification:
+xx nn                       xx = Character Number, nn = Number of actions to perform (including the final end command)
+                            If nn & 0x80, the next action will not take place until this and any before it are complete.
+
+$E3-$E4         Timer?
+$E5-$E7         Current event "PC"
+$E8-$EA         Current "stack pointer"
+$EB             Parameter byte 1
+$EC             Parameter byte 2
+$ED             Parameter byte 3
+$EE             Parameter byte 4
+$EF             Parameter byte 5
+
+General Actions: (Jump table at $C098C4)
+----------------
+35 xx                   $C09C44     
+36 xx                   $C09C6F
+37 xx yy                $C09C8F     Assign graphic set yy to object xx
+38                      $C09D0E     Hold screen--does not scroll when character moves
+39                      $C09D16     Free screen--does scroll when character moves
+3A                      $C09D1E
+3B                      $C09D2E     Position character in a "ready-to-go" stance
+3C c1 c2 c3 c4          $C09D6D     Put characters c1-4 in the party
+3D xx                   $C09E3C     Create object xx
+3E xx                   $C09E67     Delete object xx
+3F xx yy                $C09D3B     Assign character xx to party yy (if yy == 0, remove character from party)
+40 xx yy                $C0A07C     Assign properties yy to character xx
+41 xx                   $C0A2FA     Show object xx
+42 xx                   $C0A336     Hide object xx
+43 xx yy                $C09CA9     Assign palette yy to object xx
+44 xx yy                $C09CCA
+45                      $C09CE2     Refresh objects
+46 xx                   $C09CEA     Make xx the current party
+47                      $C09D03     
+48 xxxx                 $C0A475     Display dialogue message xxxx, continue executing commands
+49                      $C0A4A6     If dialogue window is up, wait for keypress then dismiss
+4A                      $C0A4B0
+4B xxxx                 $C0A4BC     Display dialogue message xxxx, halt execution until gone
+                                    If xxxx & 0x4000, only the text will be shown (no dialogue window)
+                                    If xxxx & 0x8000, the text will be shown at the bottom of the screen
+4C xx yy                $C0A591
+4D xx bb                $C0A578     Battle Enemy Set xx, Background Scenery bb
+                                    bb:
+                                    00: Grass                       10: Inside of Train Car                 20: Owzer's House                   30: Airship, WoB, right
+                                    01: Brown Forest                11: Blue/Purple Cave                    21: Running on Train Tracks         31: --
+                                    02: Desert                      12: Icy Field                           22: Bridge near Sealed Gate         32: --
+                                    03: Green Forest                13: Bright Town                         23: Underwater                      33: Statue 1
+                                    04: Building                    14: Factory                             24: Zozo                            34: Statue 2
+                                    05: World of Ruin               15: Floating Island                     25: Airship, WoB, centered          35: Statue 3
+                                    06: The Veldt                   16: Kefka's Domain                      26: Tomb                            36: Kefka's Background
+                                    07: Falling through the Clouds  17: Opera Stage                         27: Doma                            37: Tentacles
+                                    08: Dark Town                   18: Opera House Rafters                 28: Kefka's Domain                  3F: Narshe
+                                    09: Grey Cave                   19: Flaming House                       29: Airship, WoR, right
+                                    0A: Brown Cave                  1A: Castle                              2A: Red Cave
+                                    0B: Mountain Top                1B: Magitek Research Facility w/ Tubes  2B: Light Building
+                                    0C: Mountain Cave               1C: Colloseum                           2C: Riding Car out of MagResFac
+                                    0D: Raft on a River             1D: Magitek Research Facility           2D: Fanatics' Tower
+                                    0E: Imperial Base               1E: Village                             2E: Cyan's Dream World
+                                    0F: On Top of Train Car         1F: Waterfall                           2F: Desert
+4E                      $C0A4F9
+4F                      $C0A5F3     Exit current location
+50 xx                   $C0A5FD     Tint screen (cumulative) (takes 32 executions at intensity 15 to saturate)
+51 xx pb pe             $C0A640  ?  Modify BG color range from [pb, pe]
+52 xx                   $C0A686     Tint characters (cumulative)
+53 xx pb pe             $C0A6C5  ?  Modify OBJ color range [pb, pe]
+54                      $C0A784
+55 ci                   $C0A795     Flash screen with color component(s) c, intensity i
+56 ci                   $C0A7BA     Increase color component(s) c, intensity i
+57 ci                   $C0A7D0     Decrease color component(s) c, intensity i
+                                    Color components:
+                                    2: Red                      A: Red + Blue (Magenta)
+                                    4: Green                    C: Green + Blue (Cyan)
+                                    6: Red + Green (Yellow)     E: Red + Green + Blue (White)
+                                    8: Blue
+
+58 xx                   $C0A7E6     Shake the screen (xx?)
+59 xx                   $C0A80A     Unfade the screen at speed x
+5A _x                   $C0A817     Fade the screen at speed x
+5B                      $C0A826
+5C                      $C0A82D
+5D xx yy                $C0A838     Scroll BG0, speed xx x yy (00 --> 7F left/up, 80 <-- FF right/down)
+5E xx yy                $C0A8CE     Scroll BG1, speed xx x yy (00 --> 7F left/up, 80 <-- FF right/down)
+5F xx yy                $C0A964     Scroll BG2, speed xx x yy (00 --> 7F left/up, 80 <-- FF right/down)
+60 xx yy                $C0A9FA
+61 _c pb pe             $C0AA3D  ?  Desaturate color component(s) c from color range [pb, pe]
+62 xx                   $C0AACB     Mosaic screen with speed xx (lower == slower)
+63 xx                   $C0AADB
+64 xx yy                $C0AAE9
+65 xx yy                $C0AB09
+6A nnnn xx yy ff        $C0AB47     Loads map nnnn, positions party at (xx, yy)
+                                    ff:
+                                    01:     Party is in airship
+                                    02:     Party is on Chocobo
+6B nnnn xx yy ff        $C0AB55     Loads map nnnn, positions party at (xx, yy)
+6C xxxx yyyy zzzz       $C0AC0B
+70 xx yy                $C0A881     Scroll BG0
+71 xx yy                $C0A917     Scroll BG1
+72 xx yy                $C0A9AD     Scroll BG2
+73 xx yy rr cc data...  $C0AC45     Copy data of size rr*cc to current map's BG0 at (xx, yy) and refresh background
+74 xx yy rr cc data...  $C0AC62     Copy data of size rr*cc to current map's BG0 at (xx, yy)
+75                      $C0AC1F     Refresh background after map has been changed
+77 xx                   $C09F32
+78 xx                   $C09C7F
+79 xx yy zz             $C0A36A
+7A xx yy zz aa          $C0A42A
+7B                      $C0A441
+7C xx                   $C0A455
+7D xx                   $C0A465
+7E xx yy                $C0A39A     Move the characters to (xx, yy) on the current map
+7F xx yy                $C0A03A     Change character xx's name to yy
+80 xx                   $C0ACF0     Place item xx in inventory
+81 xx                   $C0AD2D     Remove item xx from inventory
+82                      $C0A570
+84 xxxx                 $C0AD50     Give xxxx amount of GP to party
+85 xxxx                 $C0AD7F     Take xxxx amount of GP from party
+86 xx                   $C0ADB8     Give Esper xx to party
+87 xx                   $C0ADD7     Take Esper xx from party
+                                    Espers:
+                                    36: Ramuh           40: Tritoch         4A: Phantom
+                                    37: Ifrit           41: Odin            4B: Sraphim
+                                    38: Shiva           42: Raiden          4C: Golem
+                                    39: Siren           43: Bahamut         4D: Unicorn
+                                    3A: Terrato         44: Alexandr        4E: Fenrir
+                                    3B: Shoat           45: Crusader        4F: Starlet
+                                    3C: Maduin          46: Ragnarok        50: Phoenix
+                                    3D: Bismark         47: Kirin
+                                    3E: Stray           48: ZoneSeek
+                                    3F: Palidor         49: Carbunkl
+88 xx c1 c2             $C0AE2D     Remove status conditions c1 and c2 from character xx (c1 = Condition Effects 1, c2 = Condition Effects 4)
+89 xx c1 c2             $C0AE47     Inflict status conditions c1 and c2 on character xx (c1 = Condition Effects 1, c2 = Condition Effects 4)
+8A xx c1 c2             $C0AE61     Toggle status conditions c1 and c2 for character xx (c1 = Condition Effects 1, c2 = Condition Effects 4)
+8B xx yy                $C0AE7B
+8C xx yy                $C0AF3E
+8D xx                   $C09FCE     Remove all equipment from character xx and place it in the inventory
+8E                      $C0A54E
+8F                      $C0AFF8
+90                      $C0B002
+91                      $C0B23F     Pause for 15 units
+92                      $C0B249     Pause for 30 units
+93                      $C0B253     Pause for 45 units
+94                      $C0B25D     Pause for 60 units
+95                      $C0B267     Pause for 120 units
+96                      $C0A7F0     Refresh screen after a menu or battle
+97                      $C0A7FD     Fade screen to black
+98 xx                   $C0B00F     Invoke name change screen for character xx
+99 xx yy zz             $C0B035     Invoke party selection screen:  xx = number of groups
+9A                      $C0B0B2     Invoke Coliseum item selection screen
+9B xx                   $C0B06D     Invoke shop xx
+9C xx                   $C0B08C
+9D                      $C0B09C     Invoke Party Order screen (from final battle)
+A0 xx yy zz aa bb       $C0B0E0
+A1 xx                   $C0B10E
+A2                      $C0B130
+A6                      $C0BA09
+A7 xx                   $C0BA14
+A8                      $C0BA51     Show Floating Island soaring into the sky
+A9                      $C0B966     Show title screen
+AA                      $C0B992     Show intro with Magitek Armor walking through snowfields
+AB                      $C0B91B     Invoke game loading screen
+AC                      $C0B95E
+AD                      $C0BA69     Show world getting torn apart
+AE                      $C0B9C5     Show train car ride out of the Magitek Factory
+AF                      $C0A503     Invoke random Coliseum battle
+B0 xx                   $C0B138     Repeat the the following commands (until B1 is encountered) xx times
+B1                      $C0B145     End block of commands to repeat with B0
+B2 aaaaaa               $C0B1A1     Jump to subroutine aaaaaa (+$CA0000/$0A0200)
+B3 xx aaaaaa            $C0B1DF
+B4 xx                   $C0B21D     Pause for xx units
+B5 xx                   $C0B227     Pause for 15 * xx units
+B6 aaaaaa ...           $C0B6D3     Branch to the nth address following B6, where n is the last item selected from a
+                                    multiple-choice dialogue window.  Each address is 3 bytes, added to $CA0000/$0A0200.
+B7 xx aaaaaa            $C0B299     Branch to aaaaaa (+$CA0000/$0A0200) if bit $1DC9 + $xx is clear
+B8 xx                   $C0B6AB     Set bit $1DC9 + $xx
+B9 xx                   $C0B6BF     Clear bit $1DC9 + $xx
+BA xx                   $C0BA31
+BB                      $C0B9BE
+BC xx yy                $C0B16F     Return if bit $1E80 + $xx is clear
+BD aaaaaa               $C0B271     Increment $1F6D, if ($C0FD00 + ($1F6D)) >= $80, branch to aaaaaa + $CA0000/$0A0200
+BE nn xaaaaa ...        $C0B6F7     Jump to indexed subroutine based on the state of bit $1EB4(x)
+                                    Number of parameters = (nn * 3) + 1 (+1 accounts for the nn)
+BF                      $C0B9E7     Show airship scene from the ending
+
+C0-CF Conditionals:
+    If MSB of bit to test is 0, the bit will be compared to 0, else it will be compared to 1.
+    [In a nutshell, if(tx && 0x8000) -> if(*tx); if(!(tx && 0x8000)) -> if(!(*tx))]
+    If result of all comparisons is true, branch will occur; otherwise, execution will occur at the next command.
+    Each condition to test (the bit value) is 2 bytes--the address to branch to is 3 bytes, and is added to $CA0000/$0A0200.
+C0-C7: $C0B2C8, C8-CF: $C0B32D
+
+C0 t1 addr                          if(t1) branch; else continue;
+C1 t1 t2 addr                       if(t1 || t2) branch; else continue;
+C2 t1 t2 t3 addr                    if(t1 || t2 || t3) branch; else continue;
+C3 t1 t2 t3 t4 addr                 if(t1 || t2 || t3 || t4) branch; else continue;
+C4 t1 t2 t3 t4 t5 addr              if(t1 || t2 || t3 || t4 || t5) branch; else continue;
+C5 t1 t2 t3 t4 t5 t6 addr           if(t1 || t2 || t3 || t4 || t5 || t6) branch; else continue;
+C6 t1 t2 t3 t4 t5 t6 t7 addr        if(t1 || t2 || t3 || t4 || t5 || t6 || t7) branch; else continue;
+C7 t1 t2 t3 t4 t5 t6 t7 t8 addr     if(t1 || t2 || t3 || t4 || t5 || t6 || t7 || t8) branch; else continue;
+C8 t1 addr                          if(t1) branch; else continue;
+C9 t1 t2 addr                       if(t1 && t2) branch; else continue;
+CA t1 t2 t3 addr                    if(t1 && t2 && t3) branch; else continue;
+CB t1 t2 t3 t4 addr                 if(t1 && t2 && t3 && t4) branch; else continue;
+CC t1 t2 t3 t4 t5 addr              if(t1 && t2 && t3 && t4 && t5) branch; else continue;
+CD t1 t2 t3 t4 t5 t6 addr           if(t1 && t2 && t3 && t4 && t5 && t6) branch; else continue;
+CE t1 t2 t3 t4 t5 t6 t7 addr        if(t1 && t2 && t3 && t4 && t5 && t6 && t7) branch; else continue;
+CF t1 t2 t3 t4 t5 t6 t7 t8 addr     if(t1 && t2 && t3 && t4 && t5 && t6 && t7 && t8) branch; else continue;
+
+D0 xx                   $C0B593     Set event bit $1E80 + xx ($1E80 + $0xx)
+D1 xx                   $C0B5CF     Clear event bit $1E80 + xx ($1E80 + $0xx)
+D2 xx                   $C0B5A7     Set event bit $1EA0 + xx ($1E80 + $1xx)
+D3 xx                   $C0B5E3     Clear event bit $1EA0 + xx ($1E80 + $1xx)
+D4 xx                   $C0B5BB     Set event bit $1EC0 + xx ($1E80 + $2xx)
+D5 xx                   $C0B5F7     Clear event bit $1EC0 + xx ($1E80 + $2xx)
+D6 xx                   $C0B60B     Set event bit $1EE0 + xx ($1E80 + $3xx)
+D7 xx                   $C0B65B     Clear event bit $1EE0 + xx ($1E80 + $3xx)
+D8 xx                   $C0B61F     Set event bit $1F00 + xx ($1E80 + $4xx)
+D9 xx                   $C0B66F     Clear event bit $1F00 + xx ($1E80 + $4xx)
+DA xx                   $C0B633     Set event bit $1F20 + xx ($1E80 + $5xx)
+DB xx                   $C0B683     Clear event bit $1F20 + xx ($1E80 + $5xx)
+DC xx                   $C0B647     Set event bit $1F40 + xx ($1E80 + $6xx)
+DD xx                   $C0B697     Clear event bit $1F40 + xx ($1E80 + $6xx)
+DE                      $C0B40B
+DF                      $C0B465
+E0                      $C0B513
+E1                      $C0B51E
+E2                      $C0B4B9
+E3                      $C0B3B7     Load bits $1EB4(0-7) and $1EB5(0-7) with the available characters
+E4                      $C0B39E
+E7                      $C0B394
+E8 xx yyyy              $C0B529     Set word $1FC2 + $xx to yyyy
+E9 xx yyyy              $C0B53C
+EA xx yyyy              $C0B556
+EB xx yyyy              $C0B571
+EF xx yy                $C0B7AA
+F0 xx                   $C0B780     Play song xx
+F1 xx yy                $C0B7D4     Fade in song xx with speed yy (higher == slower)
+F2 xx                   $C0B811     Fade out current song with speed xx (higher == slower)
+F3 xx                   $C0B827
+F4 xx                   $C0B854     Play sound effect xx
+F5 xx yy zz             $C0B85E
+F6 xx yy zz             $C0B889
+F7                      $C0B8A1
+F8                      $C0B8AF
+F9 xx                   $C0B8BA
+FA                      $C0B8C7
+FE                      $C0B8D7     Return
+
+Special Event Bits:
+-------------------
+D2 CE       $1E80($1CE) [$1EB9, bit 6]      Enables party switching with the Y button
+
+
+Movement Actions: (Jump table at $C07807, beginning with $C6)
+-----------------
+00-3F                               Graphical Actions
+40-7F                               Graphical Actions 00-3F, flipped horizontally
+80                                  Move Character Up--1 tile
+81                                  Move Character Right--1 tile
+82                                  Move Character Down--1 tile
+83                                  Move Character Left--1 tile
+84                                  Move Character Up--2 tiles
+85                                  Move Character Right--2 tiles
+86                                  Move Character Down--2 tiles
+87                                  Move Character Left--2 tiles
+88                                  Move Character Up--3 tiles
+89                                  Move Character Right--3 tiles
+8A                                  Move Character Down--3 tiles
+8B                                  Move Character Left--3 tiles
+8C                                  Move Character Up--4 tiles
+8D                                  Move Character Right--4 tiles
+8E                                  Move Character Down--4 tiles
+8F                                  Move Character Left--4 tiles
+90                                  Move Character Up--5 tiles
+91                                  Move Character Right--5 tiles
+92                                  Move Character Down--5 tiles
+93                                  Move Character Left--5 tiles
+94                                  Move Character Up--6 tiles
+95                                  Move Character Right--6 tiles
+96                                  Move Character Down--6 tiles
+97                                  Move Character Left--6 tiles
+98                                  Move Character Up--7 tiles
+99                                  Move Character Right--7 tiles
+9A                                  Move Character Down--7 tiles
+9B                                  Move Character Left--7 tiles
+9C                                  Move Character Up--8 tiles
+9D                                  Move Character Right--8 tiles
+9E                                  Move Character Down--8 tiles
+9F                                  Move Character Left--8 tiles
+A0                                  Move Character Right/Up--1x1 tile
+A1                                  Move Character Right/Down--1x1 tile
+A2                                  Move Character Left/Down--1x1 tile
+A3                                  Move Character Left/Up--1x1 tile
+A4                                  Move Character Right/Up--1x2 tile
+A5                                  Move Character Right/Up--2x1 tile
+A6                                  Move Character Right/Down--2x1 tile
+A7                                  Move Character Right/Down--1x2 tile
+A8                                  Move Character Left/Down--1x2 tile
+A9                                  Move Character Left/Down--2x1 tile
+AA                                  Move Character Left/Up--2x1 tile
+AB                                  Move Character Left/Up--1x2 tile
+C0                                  Set character's speed (within the event) to slowest
+C1                                  Set character's speed (within the event) to slow
+C2                                  Set character's speed (within the event) to normal
+C3                                  Set character's speed (within the event) to fast
+C4                                  Set character's speed (within the event) to fastest
+C6                      $C0787B     Set character to walk when moving
+C7                      $C07886     Set character to stay still when moving
+C8                      $C07891
+C9                      $C07A05
+CC                      $C078AB     Turn current character up
+CD                      $C078B7     Turn current character right
+CE                      $C078C4     Turn current character down
+CF                      $C078D1     Turn current character left
+D0                      $C078DE
+D1                      $C07928     Make current character disappear
+D5 xx yy                $C07A1E     Set position to (xx, yy)
+D7                      $C07A65
+DC                      $C07A94     Make character jump (low)
+DD                      $C07A9C     Make character jump (high)
+E0 xx                   $C07AA4     Pause for xx units
+E1 xx                   $C07969     Set event bit $1E80 + xx ($1E80 + $0xx)
+E2 xx                   $C07983     Set event bit $1EA0 + xx ($1E80 + $1xx)
+E3 xx                   $C0799D     Set event bit $1EC0 + xx ($1E80 + $2xx)
+E4 xx                   $C079B7     Clear event bit $1E80 + xx ($1E80 + $0xx)
+E5 xx                   $C079D1     Clear event bit $1EA0 + xx ($1E80 + $1xx)
+E6 xx                   $C079EB     Clear event bit $1EC0 + xx ($1E80 + $2xx)
+F9 aaaaaa               $C07ACF     Branch to queue code at aaaaaa (+CA0000/+0A0200)
+FA xx                   $C07B0C     Increment $1F6D, if ($C0FD00 + ($1F6D)) >= $80, branch backwards xx bytes in the queue
+FB xx                   $C07B19     Increment $1F6D, if ($C0FD00 + ($1F6D)) >= $80, branch forwards xx bytes in the queue
+FC xx                   $C07B26     Branch backwards xx bytes in the queue
+FD xx                   $C07B4B     Branch forwards xx bytes in the queue
+FF                      $C07B70     End queue
+
+Battle Event Commands:
+----------------------
+00 xx                   $C1970C     Display message xx at the top of the screen
+01 xx                   $C196C1     Display message xx at the bottom of the screen
+02                      $C1FFE3     --
+03 xx                   $C1FF78
+04 xx                   $C1FF78
+05 xx                   $C1FF78
+06 xx                   $C1FF78
+07                      $C1FF60
+08                      $C1FF60
+09                      $C1FF60
+0A                      $C1FF60
+0B                      $C1FF60
+0C                      $C1FF60
+0D                      $C1FE2D
+0E                      $C1FF47
+0F                      $C1FF55     Execute queues
+10                      $C196AD
+11                      $C196AA     Open dialogue window at the bottom of the screen
+12                      $C1FEB9
+13                      $C1FDE8
+14                      $C1FDED
+
+11                      Open dialogue window at the bottom of the screen
+01 2F                   Display message $2F at the bottom of the screen
+03 29                   Queue for KEFKA
+    CA
+    CD
+0F                      Execute queues
+01 30                   Display message $30 at the bottom of the screen
+0E
+03 05                   Queue for SABIN
+    0D
+    CE
+04 29                   Queue for KEFKA
+    40
+    CE
+0F                      Execute queues
+01 31                   Display message $31 at the bottom of the screen
+0E
+03 05                   Queue for SABIN
+    30
+    CE
+04 29                   Queue for KEFKA
+    58
+    CE
+0F                      Execute queues
+0E
+03 03                   Queue for SHADOW
+    68
+    CE
+04 29                   Queue for SABIN
+    78
+    CE
+0F                      Execute queues
+10
+FF                      End Event
+
+Pseudorepresentations of Event Commands:
+----------------------------------------
+
+Pseudorepresentation of Event 13/26x32
+
+Event13/26x32
+{
+    78(0E);
+    78(0F);
+    QueueObject(00, 2 bytes, wait)
+    {
+        Object_D7();
+        Object_EndQueue();
+    }
+    3C(00, FF, FF, FF);
+    CreateObject(00);
+    RefreshObjects();
+    3D(0E);
+    3D(0F);
+    QueueObject(0E, 6 bytes, wait)
+    {
+        Object_SetPosition(26, 32);
+        Object_TurnDown();
+        Object_SetSpeedNormal();
+        Object_EndQueue();
+    }
+    QueueObject(0F, 6 bytes, wait)
+    {
+        Object_SetPosition(26, 32);
+        Object_TurnDown();
+        Object_SetSpeedNormal();
+        Object_EndQueue();
+    }
+    41(0E);
+    41(0F);
+    RefreshObjects();
+    QueueObject(0E, 3 bytes, no wait)
+    {
+        Object_MoveDown2();
+        Object_TurnUp();
+        Object_EndQueue();
+    }
+    QueueObject(0F, 7 bytes, wait)
+    {
+        Object_MoveDown1();
+        Object_MoveRight2();
+        Object_TurnDown();
+        Object_Pause(2);
+        Object_TurnLeft()
+        Object_EndQueue();
+    }
+    DisplayDialogueAndWait(000C);
+    QueueObject(0E, 3 bytes, no wait)
+    {
+        Object_MoveUp2();
+        Object_Hide();
+        Object_EndQueue();
+    }
+    QueueObject(0F, 4 bytes, wait)
+    {
+        Object_MoveLeft2();
+        Object_MoveUp1();
+        Object_Hide();
+        Object_EndQueue();
+    }
+    QueueObject(00, 8 bytes, wait)
+    {
+        Object_TurnRight();
+        Object_Pause(2);
+        Object_TurnUp();
+        Object_Pause(6);
+        Object_MoveUp1();
+        Object_EndQueue();
+    }
+    36(0E);
+    36(0F);
+    Return();
+}
+
+Event13/26x26
+{
+    If(bit $128 == 0) branch to 0A60B3;
+    3D(10);
+    3D(11);
+    QueueObject(10, 4 bytes, wait)
+    {
+        Object_SetPosition(25, 20);
+        Object_EndQueue();
+    }
+    QueueObject(11, 4 bytes, wait)
+    {
+        Object_SetPosition(27, 20);
+        Object_EndQueue();
+    }
+    41(10);
+    41(11);
+    RefreshObjects();
+    QueueObject(10, 2 bytes, no wait)
+    {
+        Object_MoveDown3();
+        Object_EndQueue();
+    }
+    QueueObject(11, 2 bytes, wait)
+    {
+        Object_MoveDown3();
+        Object_EndQueue();
+    }
+    DisplayDialogueAndWait(000D, bottom);
+    QueueObject(10, 3 bytes, no wait)
+    {
+        Object_MoveDown3();
+        Object_TurnRight();
+        Object_EndQueue();
+    }
+    QueueObject(11, 3 bytes, wait)
+    {
+        Object_MoveDown3();
+        Object_TurnLeft();
+        Object_EndQueue();
+    }
+    InvokeBattle(01, Narshe background);
+    JumpToSubroutine($0A60A9)
+    {
+        B7(40, B25E00);
+        B2(66E502)
+        FE;
+    }
+    42(10);
+    42(11);
+    RefreshObjects();
+    RefreshScreen();
+    5C;
+    SetEventBit($128);
+    3A;
+    Return();
+}
+
+Info on save points (0CA45E):
+{
+    if(bit 001 == 0) branch to 0CA468;
+    DisplayDialogueAndWait($0014);
+    Return();
+}
+
+SPC Note Info
+-------------
+00-0A       Play note, frequency 0
+10-1A       Play note, frequency 1
+20-2A       Play note, frequency 2
+30-3A       Play note, frequency 3
+40-4A       Play note, frequency 4
+50-5A       Play note, frequency 5
+60-6A       Play note, frequency 6
+70-7A       Play note, frequency 7
+80-8A       Play note, frequency 8
+90-9A       Play note, frequency 9
+A0-AA       Play note, frequency 10
+B0-BA       Play silence
+C4 xx       Set volume of channel to xx (00-7F), higher values == greater volume.
+C5 ss xx    Fade volume to xx at speed ss
+C6 xx       Pan song left->right as xx (00-7F) increases
+C7 xx       Pan song right->left as xx (00-7F) increases
+//C8            Created an odd ascending portamento effect.
+CD xx       Pan repeatedly back and forth at speed xx (00-FF), higher values == slower panning.
+CE          Disable pan loop
+D7          Raise octave by 1
+D8          Lower octave by 1
+DE          Disables DF.
+//DF            Created an odd volume "cut" very shortly into the note... 
+//E4            Creates a portamento effect linking all following notes with pitch slides.
+E5          Disables E4.
+E6          Enable vibrato.
+E7          Disable vibrato.
+F0 xx       Set tempo to xx (00-FF), higher values == faster tempo.
+F1 ss xx    Fade tempo to xx at speed ss
+F2 xx       Set echo to xx
+F3 ss xx    Fade echo to xx at speed ss
+
+SAFER SEIFER
+
+0x70ba2: Table of loop start for the samples (2 bytes for each sample)
+0x70ae7: Table of addresses for samples (3 bytes)
+0x70e11: Table of the samples used in each song (16x2 bytes)
+0x70d18: Table of adresses of the songs (3 bytes)
+0x70c1e: Table of relative frequencies for each sample (1 signed byte, add 256 to get the relative frequency)
+There are 82 songs in FF6US.
+The samples begin with the length of the sample in bytes, then the sample comes after it, in BRR format. Every 16 samples are compressed into 9 bytes. They have the following format:
+rrrrffle 01 23 45 67 89 AB CD EF
+rrrr - Granularity (shift every nybble upwards by this granularity)
+ff - filter designation
+l - looping sample, only used in the last block
+e - end of sample
+Example:
+01010000 01 23 21 0F ED CB CD EF
+becomes
+0000 0020 0040 0060 0040 0020 0000 FFE0 FFC0 FFA0 FF80 FF60 FF80 FFA0 FFC0 FFE0
+
+The songs begin with 19 words. Word 3 to 11 contains the low 16-bit half of the offset to each channel's data. The high half is the same as the address to the table if the low part is higher than the low part of the address of the table, if it is lower, the high half is the high half of the address to the table +1.
+The format of each channel in the song:
+Bytes below 0xC4 - Divide by 14 to get the note. 12 is nothing and 13 means note off. The remainder is an offset to a table which contains the length of the note. The table is:
+192, 96, 64, 72, 48, 32, 36, 24, 16, 12, 8, 6, 4, 3
+C4 xx: Volume
+C5 tt xx: VolSlide
+C6 xx: Pan
+C7 tt xx: PanSlide
+C8 tt xx: Portamento. Xx denotes the increase in pitch. When this is immediately followed by a note, the portamento comes after the note.
+C9 ss tt dd: Vibrato. Ss is the speed of the vibrato. Tt is the time until the vibrato appears. Dd is the depth.
+CA: Vibrato off
+CB ss tt dd: Tremolo
+CC: Tremolo off
+CD ?? ??: Pan sweep back and forth
+CE: Pansweep off
+D6: Set octave
+D7: 1 Octave up
+D8: 1 Octave down
+DA: Set transpose
+DB: Add to transpose
+DC: Change sample
+E2 xx: Loop start. Xx is number of times to loop -1.
+There can be up to 4 nested loops.
+E3: Loop end
+E8 xx: Set the length of the next note
+EB: End of channel
+F0: Set speed
+F5 xx aaaa: When instruction has been executed xx times, jump to aaaa and end the most recent loop
+F6 aaaa: Jump to aaaa
+FB: set drum mode on
+FC: set drum mode off
+I don't know where the table for the drums is, but it is 36 bytes for each song containing the instrument, note and pan position for each drum.

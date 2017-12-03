@@ -1,6 +1,6 @@
 import struct
 
-from patch import Patch
+from ff6.patch import Patch
 
 class ROM:
 
@@ -13,6 +13,7 @@ class ROM:
             self.has_header = True
         else:
             raise Exception('Invalid header size %s' % (self.header_size))
+        self.ensure_has_header()
 
     @classmethod
     def from_file(cls, file_name):
@@ -52,5 +53,3 @@ class ROM:
     def save_to_file(self, file_name):
         with open(file_name, 'wb') as fobj:
             fobj.write(self.data)
-
-# vi: et sw=4 ts=4 tw=79
