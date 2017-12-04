@@ -1,6 +1,15 @@
 import struct
 
+from ff6.dte import DTE_BATTLE
 from ff6.patch import Patch
+
+def _8bit_signed(num):
+    if num < 8:
+        return num
+    if num == 8:
+        return 0
+    if num > 7:
+        return -(num % 8)
 
 class ROM:
 
@@ -53,3 +62,48 @@ class ROM:
     def save_to_file(self, file_name):
         with open(file_name, 'wb') as fobj:
             fobj.write(self.data)
+
+    def read_byte(self, location):
+        return struct.unpack_from('B', self.data, location)[0]
+
+    def read_nybbles(self, location):
+        byte = struct.unpack_from('B', self.data, location)[0]
+        return (((byte & 0xF0) >> 4), (byte & 0x0F))
+
+    def read_signed_nybbles(self, location):
+        byte = struct.unpack_from('B', self.data, location)[0]
+        return (_8bit_signed((byte & 0xF0) >> 4), _8bit_signed(byte & 0x0F))
+
+    def read_bits(self, location, bit_count):
+        assert bit_count > 0
+        mask = (1 << (bit_count - 1) - 1)
+        byte = struct.unpack_from('B', self.data, location)[0]
+        return byte & mask
+
+    def read_bit(self, location, bit_index):
+        assert bit_index >= 0
+        mask = 1 << bit_index
+        byte = struct.unpack_from('B', self.data, location)[0]
+        if byte & mask:
+            return True
+        return False
+
+    def read_5_and_3_bits(self, location):
+        byte = struct.unpack_from('B', self.data, location)[0]
+        return (((byte & 0x1F) >> 5), (byte & 0x07))
+
+    def read_short(self, location):
+        return struct.unpack_from('<H', self.data, location)[0]
+
+    def read_bytes(data, location, size):
+        return struct.unpack_from('%ds' % (size), self.data, location)[0]
+
+    def read_string(self, location, size):
+        return struct.unpack_from('%ds' % (size), self.data, location)[0].decode('ascii')
+
+    def read_dte_battle_string(self, location, size):
+        dte_battle_indices = struct.unpack_from('%ds' % (size),
+                                                self.data,
+                                                location)[0]
+        return ''.join([DTE_BATTLE[index] for index in dte_battle_indices])
+

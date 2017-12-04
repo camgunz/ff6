@@ -44,22 +44,24 @@ class Targeting(Enum):
 
 class ItemProperty(Enum):
     NoItemProperty          = 0
+    ReverseDamageOnUndead   = 1 << 1
     RestoresHP              = 1 << 3
     RestoresMP              = 1 << 4
     RemovesStatusConditions = 1 << 5
     CausesDamage            = 1 << 6
     EffectIsProportionate   = 1 << 7
 
-class SpecialAction(Enum):
+class ItemSpecialAction(Enum):
+    NoSpecialAction1               = 0
     SummonsRandomEsper             = 1
-    isSuperBall                    = 2
+    IsSuperBall                    = 2
     RemovesCharacterFromBattle     = 3
     IsElixir                       = 4
-    RemovesAllCharactersFromBattle = 5
+    WarpsCharactersFromBattle      = 5
     AttractsGau                    = 6
-    NoSpecialAction                = 255
+    NoSpecialAction2               = 255
 
-class SpecialAttack(Enum):
+class WeaponSpecialAttack(Enum):
     NoSpecialAttack                   = 0
     Steals                            = 1
     AttackPowerIncreasesAsHPIncreases = 2
@@ -67,14 +69,32 @@ class SpecialAttack(Enum):
     DoublesHumanDamage                = 4
     DrainsHP                          = 5
     DrainsMP                          = 6
-    AffectsMP                         = 7
+    UsesMPForCritical                 = 7
+    RandomlyThrows                    = 8
     IsDice                            = 9
     AttackPowerIncreasesAsHPDecreases = 10
     HasWindAttack                     = 11
     RecoversHP                        = 12
     Kills                             = 13
-    UsesMPForCritical                 = 14
-    UsesMoreMPForCritical             = 15
+    RandomlyBreaks                    = 14
+
+class WeaponEvadeAnimation(Enum):
+    Nothing1                 = 0
+    Nothing2                 = 1
+    Nothing3                 = 2
+    Nothing4                 = 3
+    Knife1                   = 4
+    Sword1                   = 5
+    BucklerPhysical          = 6
+    RedCape1                 = 7
+    Nothing5                 = 8
+    Nothing6                 = 9
+    BucklerMagical           = 10
+    Nothing7                 = 11
+    Knife2                   = 12
+    Sword2                   = 13
+    BuckerPhysicalAndMagical = 14
+    RedCape2                 = 15
 
 class FieldEffect(Enum):
     ReducesEnemyAttacks  = 1
@@ -180,6 +200,100 @@ class Element(Enum):
     Earth     = 1 << 6
     Water     = 1 << 7
 
+class MetamorphChance(Enum):
+    Always = 0
+    ThreeQuarters = 1
+    Half = 2
+    Quarter = 3
+    Eighth = 4
+    Sixteenth = 5
+    ThirtySecond = 6
+    NoChance = 7
+
+class MonsterFlag1(Enum):
+    DiesIfMPExhausted = 1 << 0
+    NameHidden        = 1 << 2
+    Undead            = 1 << 7
+
+class MonsterFlag2(Enum):
+    BlocksRun     = 1 << 3
+    NullifiesScan = 1 << 4
+
+class MonsterSpecialAttackEffect(Enum):
+    Blind                 = 0
+    Zombie                = 1
+    Poison                = 2
+    Clear                 = 4
+    Imp                   = 5
+    Stone                 = 6
+    Death                 = 7
+    Count                 = 8
+    NearDeath             = 9
+    Image                 = 10
+    Mute                  = 11
+    Berzerk               = 12
+    Confused              = 13
+    HPDrain               = 14
+    Sleep                 = 15
+    Dance                 = 16
+    Regen                 = 17
+    Slow                  = 18
+    Haste                 = 19
+    Stop                  = 20
+    Shell                 = 21
+    Safe                  = 22
+    Wall                  = 23
+    Rage                  = 24
+    Freeze                = 25
+    Life3                 = 26
+    Morph                 = 27
+    Chant                 = 28
+    DisappearAndBerzerk   = 29
+    DogBlock              = 30
+    Float                 = 31
+    PhysicalLevelOne      = 32
+    PhysicalLevelTwo      = 33
+    PhysicalLevelThree    = 34
+    PhysicalLevelFour     = 35
+    PhysicalLevelFive     = 36
+    PhysicalLevelSix      = 37
+    PhysicalLevelSeven    = 38
+    PhysicalLevelEight    = 39
+    PhysicalLevelNine     = 40
+    PhysicalLevelTen      = 41
+    PhysicalLevelEleven   = 42
+    PhysicalLevelTwelve   = 43
+    PhysicalLevelThirteen = 44
+    PhysicalLevelFourteen = 45
+    PhysicalLevelFifteen  = 46
+    PhysicalLevelSixteen  = 47
+    Drain                 = 48
+    Osmose                = 49
+
+class MonsterAttackType(Enum):
+    HorizontalCut1              = 0x00
+    SlashCut1                   = 0x01
+    SlashCut2                   = 0x02
+    HorizontalCut2              = 0x03
+    SlashCut3                   = 0x04
+    RedHorizontalCut            = 0x05
+    PurpleHorizontalCut         = 0x06
+    BlueSlashCut                = 0x07
+    GreenSlashCut               = 0x08
+    BlueHorizontalCut           = 0x09
+    SlashCut4                   = 0x0A
+    SlashCut5                   = 0x0B
+    YellowSlashCut1             = 0x0C
+    RedThinWhipLash             = 0x0D
+    BlueWhipLash                = 0x0E
+    YellowSlashCut2             = 0x0F
+    RedTripleHorizontalCut      = 0x20
+    WhiteHalfCircle             = 0x2F
+    GreenWhipLash               = 0x40
+    CardsThrow                  = 0x4F
+    GreySlashPlusSpellCastCount = 0x80
+    WhiteStars                  = 0xFF
+
 def camel_to_snake(s):
     accepted_abbreviations = ('GP', 'HP', 'MP')
     sio = StringIO(s[0].lower())
@@ -205,6 +319,18 @@ def check_data_value(name, value, enum):
         if value == e.value:
             return value
     raise ValueError('Invalid %s value %s' % (name, value))
+
+def get_enum_member(name, enum, value):
+    for e in enum:
+        if value == e.value:
+            return e
+    raise ValueError('Invalid %s value %s' % (name, value))
+
+def check_data_member(name, value, enum):
+    for e in enum:
+        if value == e:
+            return value
+    raise ValueError('Invalid %s member %s' % (name, value))
 
 def get_matching_values(name, value, enum, prefix=None, suffix=None):
     prefix = prefix or ''
