@@ -1,15 +1,18 @@
 from ff6.data import *
 from ff6.type_checks import *
-from ff6.typed_object import TypedObject
+from ff6.typed_object import TypedObject, TypedObjectContainer
 
 class Monster(TypedObject):
 
     NameSize = 10
     DataSize = 32
+    TypeName = 'Monster'
 
     @classmethod
     def _attributes(cls):
         return super()._attributes() + (
+            ('number', check_u8),
+            ('name', check_str),
             ('strength', check_u8),
             ('speed', check_u8),
             ('hit_rate', check_u8),
@@ -24,7 +27,7 @@ class Monster(TypedObject):
             ('gp', check_u16),
             ('level', check_u8),
             ('morph_package', check_u5),
-            ('morph_chance', check_u3),
+            ('morph_chance', check_enum_member(MetamorphChance)),
             ('dies_if_mp_exhausted', check_bool),
             ('name_hidden', check_bool),
             ('undead', check_bool),
@@ -87,7 +90,8 @@ class Monster(TypedObject):
             ('immune_to_removed', check_bool),
             ('immune_to_defended_by_interceptor', check_bool),
             ('immune_to_float', check_bool),
-            ('special_attack_effect', check_enum_member(SpecialAttackEffect)),
+            ('special_attack_effect',
+                    check_enum_member(MonsterSpecialAttackEffect)),
             ('special_attack_causes_no_damage', check_bool)
         )
 
@@ -98,8 +102,8 @@ class Monster(TypedObject):
         name = rom.read_dte_battle_string(name_start, cls.NameSize)
         data_offset = cls.DataSize * number
         data_start = rom.MonsterDataOffset + data_offset
-        strength = rom.read_byte(data_start + 0)
-        speed = rom.read_byte(data_start + 1)
+        speed = rom.read_byte(data_start + 0)
+        strength = rom.read_byte(data_start + 1)
         hit_rate = rom.read_byte(data_start + 2)
         evade = rom.read_byte(data_start + 3)
         magic_block = rom.read_byte(data_start + 4)
@@ -111,25 +115,26 @@ class Monster(TypedObject):
         xp = rom.read_short(data_start + 12)
         gp = rom.read_short(data_start + 14)
         level = rom.read_byte(data_start + 16)
-        morph_chance_and_package = rom.read_nybbles(data_start + 17)
-        morph_chance = get_enum_member(
-            'morph chance', MetamorphChance, morph_chance_and_package[0])
-        morph_package = morph_chance_and_package[1]
-        print(name, bin(rom.read_byte(data_start + 17)), bin(morph_chance.value), bin(morph_package))
+        morph_chance = rom.read_high_bits(data_start + 17, 3)
+        morph_chance = get_enum_member('morph chance', MetamorphChance, morph_chance)
+        morph_package = rom.read_low_bits(data_start + 17, 5)
         monster_flags1 = rom.read_byte(data_start + 18)
         monster_flags2 = rom.read_byte(data_start + 19)
-        absorbed_elements = rom.read_byte(data_start + 22)
-        nullified_elements = rom.read_byte(data_start + 23)
-        weak_elements = rom.read_byte(data_start + 24)
-        attack_type = rom.read_byte(data_start + 25)
-        attack_type = get_enum_member(
-            'attack type', MonsterAttackType, attack_type)
-        immune_cond1 = rom.read_byte(data_start + 26)
-        immune_cond2 = rom.read_byte(data_start + 27)
-        immune_cond3 = rom.read_byte(data_start + 28)
-        immune_cond4 = rom.read_byte(data_start + 29)
-        special_attack_effect = rom.read_bits(data_start + 30, 6)
-        special_attack_causes_no_damage = rom.read_bit(data_start + 30, 6)
+        absorbed_elements = rom.read_byte(data_start + 23)
+        nullified_elements = rom.read_byte(data_start + 24)
+        weak_elements = rom.read_byte(data_start + 25)
+        attack_type = rom.read_byte(data_start + 26)
+        # attack_type = get_enum_member(
+        #     'attack type', MonsterAttackType, attack_type)
+        immune_cond1 = rom.read_byte(data_start + 27)
+        immune_cond2 = rom.read_byte(data_start + 28)
+        immune_cond3 = rom.read_byte(data_start + 29)
+        immune_cond4 = rom.read_byte(data_start + 30)
+        special_attack_effect = rom.read_low_bits(data_start + 31, 6)
+        special_attack_effect = get_enum_member('special attack effect',
+                                                MonsterSpecialAttackEffect,
+                                                special_attack_effect)
+        special_attack_causes_no_damage = rom.read_bit(data_start + 31, 7)
         attributes = {}
         enum_params = [
             ('monster flags 1', monster_flags1, MonsterFlag1),
@@ -144,6 +149,8 @@ class Monster(TypedObject):
         ]
         for args in enum_params:
             attributes.update(get_matching_values_as_params(*args))
+        attributes['name'] = name
+        attributes['number'] = number
         attributes['strength'] = strength
         attributes['speed'] = speed
         attributes['hit_rate'] = hit_rate
@@ -163,18 +170,9 @@ class Monster(TypedObject):
         attributes['special_attack_effect'] = special_attack_effect
         attributes['special_attack_causes_no_damage'] = \
             special_attack_causes_no_damage
+        return cls(**attributes)
 
-class Monsters:
-
-    MonsterCount = 256
-
-    def __init__(self, rom, monsters):
-        self._rom = rom
-        self._monsters = monsters
-
-    @classmethod
-    def from_rom(cls, rom):
-        monsters = []
-        for n in range(cls.MonsterCount):
-            monsters.append(Monster.from_rom(rom, n))
-        return cls(rom, monsters)
+class Monsters(TypedObjectContainer):
+    ObjectCount = 256
+    ObjectType = Monster
+    Name = 'Monsters'

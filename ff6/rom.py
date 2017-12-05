@@ -74,19 +74,23 @@ class ROM:
         byte = struct.unpack_from('B', self.data, location)[0]
         return (_8bit_signed((byte & 0xF0) >> 4), _8bit_signed(byte & 0x0F))
 
-    def read_bits(self, location, bit_count):
+    def read_low_bits(self, location, bit_count):
         assert bit_count > 0
-        mask = (1 << (bit_count - 1) - 1)
+        mask = (1 << bit_count) - 1
         byte = struct.unpack_from('B', self.data, location)[0]
         return byte & mask
 
+    def read_high_bits(self, location, bit_count):
+        assert bit_count > 0
+        mask = (255 >> bit_count)
+        byte = struct.unpack_from('B', self.data, location)[0]
+        return (byte & mask) >> (8 - bit_count)
+
     def read_bit(self, location, bit_index):
         assert bit_index >= 0
-        mask = 1 << bit_index
+        mask = 1 << (bit_index - 1)
         byte = struct.unpack_from('B', self.data, location)[0]
-        if byte & mask:
-            return True
-        return False
+        return (byte & mask) and True or False
 
     def read_5_and_3_bits(self, location):
         byte = struct.unpack_from('B', self.data, location)[0]

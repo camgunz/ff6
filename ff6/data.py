@@ -219,6 +219,30 @@ class MonsterFlag2(Enum):
     BlocksRun     = 1 << 3
     NullifiesScan = 1 << 4
 
+class MonsterAttackType(Enum):
+    HorizontalCut1              = 0x00
+    SlashCut1                   = 0x01
+    SlashCut2                   = 0x02
+    HorizontalCut2              = 0x03
+    SlashCut3                   = 0x04
+    RedHorizontalCut            = 0x05
+    PurpleHorizontalCut         = 0x06
+    BlueSlashCut                = 0x07
+    GreenSlashCut               = 0x08
+    BlueHorizontalCut           = 0x09
+    SlashCut4                   = 0x0A
+    SlashCut5                   = 0x0B
+    YellowSlashCut1             = 0x0C
+    RedThinWhipLash             = 0x0D
+    BlueWhipLash                = 0x0E
+    YellowSlashCut2             = 0x0F
+    RedTripleHorizontalCut      = 0x20
+    WhiteHalfCircle             = 0x2F
+    GreenWhipLash               = 0x40
+    CardsThrow                  = 0x4F
+    GreySlashPlusSpellCastCount = 0x80
+    WhiteStars                  = 0xFF
+
 class MonsterSpecialAttackEffect(Enum):
     Blind                 = 0
     Zombie                = 1
@@ -269,30 +293,6 @@ class MonsterSpecialAttackEffect(Enum):
     PhysicalLevelSixteen  = 47
     Drain                 = 48
     Osmose                = 49
-
-class MonsterAttackType(Enum):
-    HorizontalCut1              = 0x00
-    SlashCut1                   = 0x01
-    SlashCut2                   = 0x02
-    HorizontalCut2              = 0x03
-    SlashCut3                   = 0x04
-    RedHorizontalCut            = 0x05
-    PurpleHorizontalCut         = 0x06
-    BlueSlashCut                = 0x07
-    GreenSlashCut               = 0x08
-    BlueHorizontalCut           = 0x09
-    SlashCut4                   = 0x0A
-    SlashCut5                   = 0x0B
-    YellowSlashCut1             = 0x0C
-    RedThinWhipLash             = 0x0D
-    BlueWhipLash                = 0x0E
-    YellowSlashCut2             = 0x0F
-    RedTripleHorizontalCut      = 0x20
-    WhiteHalfCircle             = 0x2F
-    GreenWhipLash               = 0x40
-    CardsThrow                  = 0x4F
-    GreySlashPlusSpellCastCount = 0x80
-    WhiteStars                  = 0xFF
 
 def camel_to_snake(s):
     accepted_abbreviations = ('GP', 'HP', 'MP')

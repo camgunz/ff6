@@ -1,6 +1,6 @@
 from ff6.data import *
 from ff6.type_checks import *
-from ff6.typed_object import TypedObject
+from ff6.typed_object import TypedObject, TypedObjectContainer
 
 class InventoryItem(TypedObject):
 
@@ -251,6 +251,8 @@ class DefensiveEquipment(Equipment):
 
 class Tool(InventoryItem):
 
+    TypeName = 'Tool'
+
     @classmethod
     def _attributes(cls):
         return super()._attributes() + (
@@ -295,9 +297,20 @@ class Tool(InventoryItem):
 
 class Weapon(Equipment):
 
+    TypeName = 'Weapon'
+
     @classmethod
     def _attributes(cls):
         return super()._attributes() + (
+            ('hit_rate', check_u8),
+            ('causes_regen', check_bool),
+            ('causes_slow', check_bool),
+            ('causes_haste', check_bool),
+            ('causes_stop', check_bool),
+            ('causes_shell', check_bool),
+            ('causes_safe', check_bool),
+            ('causes_reflect', check_bool),
+            ('causes_float', check_bool),
             ('usable_with_bushido', check_bool),
             ('same_damage_from_back_row', check_bool),
             ('usable_with_two_hands', check_bool),
@@ -337,7 +350,7 @@ class Weapon(Equipment):
         weapon_properties = rom.read_byte(data_start + 19)
         battle_power = rom.read_byte(data_start + 20)
         hit_rate = rom.read_byte(data_start + 21)
-        evade_and_mblock = rom.read_signed_nybbles(data_start + 26)
+        evade, mblock = rom.read_nybbles(data_start + 26)
         special_attack_and_evade_animation = rom.read_nybbles(data_start + 27)
         price = rom.read_short(data_start + 28)
         attributes = {}
@@ -354,7 +367,8 @@ class Weapon(Equipment):
         attributes['hit_rate'] = hit_rate
         attributes['vigor'], attributes['speed'] = vigor_and_speed
         attributes['stamina'], attributes['magic_power'] = stamina_and_mpow
-        attributes['evade'], attributes['magic_block'] = evade_and_mblock
+        attributes['evade'] = evade * 10
+        attributes['magic_block'] = mblock * 10
         attributes['price'] = price
         enum_params = [
             ('usability', usability, InventoryItemUsability),
@@ -389,31 +403,75 @@ class Weapon(Equipment):
 
 class Armor(DefensiveEquipment):
 
+    TypeName = 'Armor'
+
     _InventoryItemType = InventoryItemType.Armor
 
 class Shield(DefensiveEquipment):
+
+    TypeName = 'Shield'
 
     _InventoryItemType = InventoryItemType.Shield
 
 class Hat(DefensiveEquipment):
 
+    TypeName = 'Hat'
+
     _InventoryItemType = InventoryItemType.Hat
 
 class Relic(DefensiveEquipment):
+
+    TypeName = 'Relic'
 
     _InventoryItemType = InventoryItemType.Relic
 
 class Item(InventoryItem):
 
+    TypeName = 'Item'
+
     @classmethod
     def _attributes(cls):
         return super()._attributes() + (
+            ('causes_dark', check_bool),
+            ('causes_zombie', check_bool),
+            ('causes_poison', check_bool),
+            ('causes_magitek', check_bool),
+            ('causes_vanish', check_bool),
+            ('causes_imp', check_bool),
+            ('causes_petrify', check_bool),
+            ('causes_death', check_bool),
+            ('causes_condemned', check_bool),
+            ('causes_kneeling', check_bool),
+            ('causes_blink', check_bool),
+            ('causes_silence', check_bool),
+            ('causes_berserk', check_bool),
+            ('causes_confusion', check_bool),
+            ('causes_hp_drain', check_bool),
+            ('causes_sleep', check_bool),
+            ('causes_dance_or_float', check_bool),
+            ('causes_regen', check_bool),
+            ('causes_slow', check_bool),
+            ('causes_haste', check_bool),
+            ('causes_stop', check_bool),
+            ('causes_shell', check_bool),
+            ('causes_safe', check_bool),
+            ('causes_reflect', check_bool),
+            ('causes_rage', check_bool),
+            ('causes_frozen', check_bool),
+            ('causes_protection_from_death', check_bool),
+            ('causes_morph', check_bool),
+            ('causes_casting', check_bool),
+            ('causes_removed', check_bool),
+            ('causes_defended_by_interceptor', check_bool),
+            ('causes_float', check_bool),
+            ('reverse_damage_on_undead', check_bool),
             ('restores_hp', check_bool),
             ('restores_mp', check_bool),
             ('removes_status_conditions', check_bool),
             ('causes_damage', check_bool),
             ('effect_is_proportionate', check_bool),
-            ('effect_strength', check_u8)
+            ('effect_strength', check_u8),
+            ('special_action', check_enum_member(ItemSpecialAction))
         )
 
     @classmethod
@@ -457,42 +515,32 @@ class Item(InventoryItem):
             attributes.update(get_matching_values_as_params(*args))
         attributes['special_action'] = get_enum_member(
             'special action', ItemSpecialAction, special_action)
+        if 'no_item_property' in attributes:
+            del attributes['no_item_property']
         return cls(**attributes)
 
-class Items:
+class Items(TypedObjectContainer):
 
-    ItemCount = 256
-
-    def __init__(self, rom, items):
-        self._rom = rom
-        self._items = items
+    ObjectCount = 256
+    ObjectType = Item
+    Name = 'Items'
 
     @classmethod
-    def from_rom(cls, rom):
-        items = []
-        for n in range(cls.ItemCount):
-            item_location = rom.ItemDataOffset + (n * InventoryItem.DataSize)
-            item_type = rom.read_byte(item_location) & 0x0F
-            if item_type == InventoryItemType.Tool.value:
-                items.append(Tool.from_rom(rom, n))
-            elif item_type == InventoryItemType.Weapon.value:
-                items.append(Weapon.from_rom(rom, n))
-            elif item_type == InventoryItemType.Armor.value:
-                items.append(Armor.from_rom(rom, n))
-            elif item_type == InventoryItemType.Shield.value:
-                items.append(Shield.from_rom(rom, n))
-            elif item_type == InventoryItemType.Hat.value:
-                items.append(Hat.from_rom(rom, n))
-            elif item_type == InventoryItemType.Relic.value:
-                items.append(Relic.from_rom(rom, n))
-            elif item_type == InventoryItemType.Item.value:
-                items.append(Item.from_rom(rom, n))
-            else:
-                raise ValueError('Unknown item type in ROM (got %s)' % (type))
-        return cls(rom, items)
-
-    def __getitem__(self, item):
-        return self._items[item]
-
-    def __repr__(self):
-        return 'Items(%s)' % (', '.join([str(item) for item in self._items]))
+    def get_object_from_rom(cls, rom, n):
+        item_location = rom.ItemDataOffset + (n * InventoryItem.DataSize)
+        item_type = rom.read_byte(item_location) & 0x0F
+        if item_type == InventoryItemType.Tool.value:
+            return Tool.from_rom(rom, n)
+        if item_type == InventoryItemType.Weapon.value:
+            return Weapon.from_rom(rom, n)
+        if item_type == InventoryItemType.Armor.value:
+            return Armor.from_rom(rom, n)
+        if item_type == InventoryItemType.Shield.value:
+            return Shield.from_rom(rom, n)
+        if item_type == InventoryItemType.Hat.value:
+            return Hat.from_rom(rom, n)
+        if item_type == InventoryItemType.Relic.value:
+            return Relic.from_rom(rom, n)
+        if item_type == InventoryItemType.Item.value:
+            return Item.from_rom(rom, n)
+        raise ValueError('Unknown item type in ROM (got %s)' % (type))
