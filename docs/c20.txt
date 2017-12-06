@@ -1,0 +1,195 @@
+C2/0F9A: DA           PHX
+C2/0F9B: 5A           PHY      (Y = equip/relic slot, 0 to 5?)
+C2/0F9C: EB           XBA 
+C2/0F9D: A9 1E        LDA #$1E
+C2/0F9F: 20 81 47     JSR $4781       (multiply index by size of item data block)
+C2/0FA2: AA           TAX         
+C2/0FA3: BF 05 50 D8  LDA $D85005,X   (field effects)
+C2/0FA7: 0C DF 11     TSB $11DF
+C2/0FAA: C2 20        REP #$20        (Set 16-bit accumulator)
+C2/0FAC: BF 06 50 D8  LDA $D85006,X
+C2/0FB0: 0C D2 11     TSB $11D2       (status bytes 1 and 2 protection)
+C2/0FB3: BF 08 50 D8  LDA $D85008,X
+C2/0FB7: 0C D4 11     TSB $11D4       (11D4 = equipment status byte 3,
+                                       11D5 = raise attack damage, raise magic damage,
+                                       and HP and MP % boosts)
+C2/0FBA: BF 0A 50 D8  LDA $D8500A,X   
+
+(battle effects 1 and "status effects 2".  latter is nothing to do with status ailments. 
+11D6:
+01: Increase Preemptive Atk chance  10: Sketch -> Control
+02: Prevent Back/Pincer attacks     20: Slot -> GP Rain
+    (this won't work for battles
+     where back/pincer are forced)
+04: Fight -> Jump                   40: Steal -> Capture
+08: Magic -> X-Magic                80: Jump continuously
+
+11D7:
+01: Increase Steal Rate         10: 100% Hit Rate
+02: --                          20: Halve MP Consumption
+04: Increase Sketch Rate        40: Reduce MP Consumption to 1
+08: Increase Control Rate       80: Raise Vigor               .  yousei's doc)
+
+C2/0FBE: 0C D6 11     TSB $11D6
+C2/0FC1: BF 0C 50 D8  LDA $D8500C,X  (battle effects 2 and 3)
+C2/0FC5: 0C D8 11     TSB $11D8
+
+(11D8:
+01: Fight -> X-Fight                    10: Can equip a weapon in each hand
+02: Randomly Counter Attacks            20: Wearer can equip heavy armor
+04: Increases chance of evading attack  40: Wearer protects those with low HP
+08: Attack with two hands               80:
+
+11D9:
+01: Casts Shell when HP is low          10: Doubles Gold received
+02: Casts Safe when HP is low           20:
+04: Casts Rflect when HP is low         40:
+08: Doubles Experience received         80: Makes body cold
+
+C2/0FC8: BF 10 50 D8  LDA $D85010,X   (Vigor+ / Speed+ / Stamina+ / MagPwr+ , by ascending address)
+C2/0FCC: A0 06 00     LDY #$0006
+C2/0FCF: 48           PHA
+C2/0FD0: 29 0F 00     AND #$000F      (isolate bottom nibble)
+C2/0FD3: 89 08 00     BIT #$0008      (if top bit of stat boost is set, adjustment will be negative)
+C2/0FD6: F0 04        BEQ $0FDC       (if not, branch)
+C2/0FD8: 49 F7 FF     EOR #$FFF7      (create a signed 16-bit negative value)
+C2/0FDB: 1A           INC             
+C2/0FDC: 18           CLC 
+C2/0FDD: 79 A0 11     ADC $11A0,Y
+C2/0FE0: 99 A0 11     STA $11A0,Y     (make adjustment to stat, ranging from -7 to +7)
+                                      ($11A6 = Vigor, 11A4 = Speed, 11A2 = Stamina, 11A0 = Mag Pwr)
+C2/0FE3: 68           PLA 
+C2/0FE4: 4A           LSR 
+C2/0FE5: 4A           LSR 
+C2/0FE6: 4A           LSR 
+C2/0FE7: 4A           LSR             (get next highest nibble)
+C2/0FE8: 88           DEY 
+C2/0FE9: 88           DEY 
+C2/0FEA: 10 E3        BPL $0FCF       (loop for all 4 stats)
+C2/0FEC: BF 1A 50 D8  LDA $D8501A,X   (Evade/MBlock byte)
+C2/0FF0: DA           PHX 
+C2/0FF1: 48           PHA 
+C2/0FF2: 29 0F 00     AND #$000F      (isolate evade)
+C2/0FF5: 0A           ASL
+C2/0FF6: AA           TAX             (evade nibble * 2, turn into pointer)
+C2/0FF7: BF 05 11 C2  LDA $C21105,X   (get actual evade boost/reduction of item)
+C2/0FFB: 18           CLC 
+C2/0FFC: 6D A8 11     ADC $11A8
+C2/0FFF: 8D A8 11     STA $11A8       (add it to other evade boosts)
+C2/1002: 68           PLA 
+C2/1003: 29 F0 00     AND #$00F0      (isolate mblock)
+C2/1006: 4A           LSR
+C2/1007: 4A           LSR 
+C2/1008: 4A           LSR 
+C2/1009: AA           TAX             (mblock nibble * 2, turn into pointer) 
+C2/100A: BF 05 11 C2  LDA $C21105,X   (get actual mblock boost/reduction of item)
+C2/100E: 18           CLC 
+C2/100F: 6D AA 11     ADC $11AA
+C2/1012: 8D AA 11     STA $11AA       (add it to other mblock boosts)
+C2/1015: FA           PLX 
+C2/1016: E2 20        SEP #$20        (Set 8-bit Accumulator)
+C2/1018: BF 14 50 D8  LDA $D85014,X   (get weapon battle power / armor defense power)
+C2/101C: EB           XBA 
+C2/101D: BF 02 50 D8  LDA $D85002,X   (get top byte of equippable chars?)
+C2/1021: 0A           ASL 
+C2/1022: 0A           ASL             (carry = Specs active when Imp?)
+C2/1023: A5 FE        LDA $FE         (Character Status Byte 1)
+C2/1025: B0 02        BCS $1029       (branch if imp-activated)
+C2/1027: 49 20        EOR #$20        (flip Imp status)
+C2/1029: 89 20        BIT #$20        (character has Imp status?)
+C2/102B: D0 03        BNE $1030       
+C2/102D: A9 01        LDA #$01        (if you're an Imp and specs aren't Imp-activated,
+                                       defense/battle power = 1.  or if you're not an Imp
+                                       and the specs are Imp-activated, battle/defense
+                                       power = 1)
+C2/102F: EB           XBA 
+C2/1030: EB           XBA             (if imp-activation and imp status match, put the
+                                       original Battle/Defense Power back in bottom of A)
+
+(note that Item #255 has a Battle Power of 10, so bare hands will actually be
+ stronger than Imp Halberd on a non-Imp)
+
+C2/1031: 85 FD        STA $FD        
+C2/1033: BF 00 50 D8  LDA $D85000,X  (item type)
+C2/1037: 29 07        AND #$07       (isolate classification)
+C2/1039: 3A           DEC 
+C2/103A: F0 76        BEQ $10B2      (if it's a weapon, branch)
+C2/103C: BF 19 50 D8  LDA $D85019,X
+C2/1040: 0C BC 11     TSB $11BC      (equipment status byte 2)
+C2/1043: BF 0F 50 D8  LDA $D8500F,X  (50% resist elements)
+C2/1047: EB           XBA 
+C2/1048: BF 18 50 D8  LDA $D85018,X  (weak to elements)
+C2/104C: C2 20        REP #$20       (Set 16-bit Accumulator)
+C2/104E: 0C B8 11     TSB $11B8      (bottom = weak elements, top = 50% resist elements)
+C2/1051: BF 16 50 D8  LDA $D85016,X
+C2/1055: 0C B6 11     TSB $11B6      (bottom = absorbed elements, top = nullified elements)
+C2/1058: E2 20        SEP #$20       (Set 8-bit Accumulator)
+C2/105A: 18           CLC 
+C2/105B: A5 FD        LDA $FD        (get equipment Defense Power)
+C2/105D: 6D BA 11     ADC $11BA      (add it into Defense so far)
+C2/1060: 90 02        BCC $1064
+C2/1062: A9 FF        LDA #$FF
+C2/1064: 8D BA 11     STA $11BA      (if defense exceeds 255, make it 255)
+C2/1067: 18           CLC 
+C2/1068: BF 15 50 D8  LDA $D85015,X  (get equipment Magic Defense)
+C2/106C: 6D BB 11     ADC $11BB      (add it into MagDef so far)
+C2/106F: 90 02        BCC $1073
+C2/1071: A9 FF        LDA #$FF
+C2/1073: 8D BB 11     STA $11BB      (if magic defense exceeds 255, make it 255)
+C2/1076: 7A           PLY 
+C2/1077: A9 02        LDA #$02
+C2/1079: 1C D5 11     TRB $11D5  (clear "raise magic damage" bit in Item Bonuses --
+                                  raise fight, raise magic, HP + %, MP + %)
+C2/107C: F0 08        BEQ $1086  
+C2/107E: 0C D7 11     TSB $11D7  (if Earring effect is set in current equipment slot, set
+                                  it in Item Special 2:
+                                  boost steal, single Earring, boost sketch, boost control,
+                                  sniper sight, gold hairpin, economizer, vigor + 50%)
+C2/1081: F0 03        BEQ $1086
+C2/1083: 0C D5 11     TSB $11D5  (if Earring effect had also been set by other equipment
+                                  slots, set it again in item bonuses, where it will actually
+                                  represent _double_ Earring, even though the initial data
+                                  byte would have it set even for a lone Earring)
+
+                                 (if all this crazy bit swapping seems convuluted, keep in
+                                  mind that $11D5 isn't RELOADED for each equipment slot;
+                                  it's ADDED to via the TSB at C2/0FB7.  thus, we must clear
+                                  the Earring bit in $11D5 for each of the 6 equip slots if
+                                  we wish to see whether the CURRENT slot gives us the
+                                  Earring effect.)
+
+C2/1086: 7B           TDC 
+C2/1087: BF 1B 50 D8  LDA $D8501B,X  (item byte 1B, special action)
+C2/108B: 99 BE 11     STA $11BE,Y
+C2/108E: 89 0C        BIT #$0C    (shield animation for blocked physical/magic attacks
+                                   or weapon parry?)
+C2/1090: F0 1E        BEQ $10B0   (if none of above, branch)
+C2/1092: 48           PHA         (save old Byte 1B)       
+C2/1093: 29 03        AND #$03    (isolate bottom 2 bits.  for a given item:
+                                   bit 0 = big weapon parry anim.
+                                   bit 1 = "any" shield block, all except cursed shld.
+                                   both = zephyr cape.  neither = small weapon parry
+
+                                   bit 2 = physical block: shield, weapon parry, or zephyr cape)
+                                   bit 3 = magical shield block.  shields only?  )
+
+C2/1095: AA           TAX         (put Acc in X.  Following loop gives us 2^X)
+C2/1096: 7B           TDC         (clear Acc)
+C2/1097: 38           SEC         (set carry flag)
+C2/1098: 2A           ROL         (rotate carry into lowest bit of Acc)
+C2/1099: CA           DEX         (decrement X, which was 0-3)
+C2/109A: 10 FC        BPL $1098   (loop if X>=0)
+C2/109C: EB           XBA 
+C2/109D: 68           PLA         (retrieve item byte 1B)    
+C2/109E: 89 04        BIT #$04   
+C2/10A0: F0 05        BEQ $10A7   (branch if physical block animation not set)
+C2/10A2: EB           XBA 
+C2/10A3: 0C D0 11     TSB $11D0   (if one of above was set, store our 2^X value)
+C2/10A6: EB           XBA 
+C2/10A7: 89 08        BIT #$08   
+C2/10A9: F0 05        BEQ $10B0   (if no magic attack block for shield, branch)
+C2/10AB: EB           XBA 
+C2/10AC: 0C D1 11     TSB $11D1   (if there was, store our 2^X value)
+C2/10AF: EB           XBA 
+C2/10B0: FA           PLX 
+C2/10B1: 60           RTS

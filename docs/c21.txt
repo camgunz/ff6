@@ -1,0 +1,48 @@
+C2/10B2: 7B           TDC
+C2/10B3: 1A           INC
+C2/10B4: A8           TAY         (Y = 1)
+C2/10B5: 1A           INC         (Accumulator = 2)
+C2/10B6: 85 FF        STA $FF
+C2/10B8: A3 01        LDA $01,S   (equipment/relic slot - 0 to 5?)
+C2/10BA: C9 02        CMP #$02    
+C2/10BC: B0 B8        BCS $1076   (if it's not slot 0 or 1, one of the arms, return
+                                   to caller)
+C2/10BE: 3A           DEC         
+C2/10BF: F0 03        BEQ $10C4   (if it was slot 1, branch)
+C2/10C1: 88           DEY         (point to slot 0)
+C2/10C2: 06 FF        ASL $FF     ($FF = 4)
+C2/10C4: B9 C6 11     LDA $11C6,Y (get item # from the slot)
+C2/10C7: 1A           INC 
+C2/10C8: D0 04        BNE $10CE   (if the item is not Empty #255, branch)
+C2/10CA: 06 FF        ASL $FF
+C2/10CC: 06 FF        ASL $FF    
+C2/10CE: A5 FF        LDA $FF     ($FF = 2 if this is 2nd hand and it's occupied by weapon,
+                                   4 if this is 1st hand and it's occupied by weapon,
+                                   8 if this is 2nd hand and it's empty,
+                                   16 if this is 1st hand and it's empty.
+                                   And $FF is never set if the hand holds a nonweapon)
+
+C2/10D0: 0C CE 11     TSB $11CE      (turn on the current $FF bit in $11CE, which
+                                      will hold info about both hands)
+C2/10D3: BF 16 50 D8  LDA $D85016,X
+C2/10D7: 99 B2 11     STA $11B2,Y
+C2/10DA: BF 0F 50 D8  LDA $D8500F,X  (elemental properties)
+C2/10DE: 99 B0 11     STA $11B0,Y
+C2/10E1: A5 FD        LDA $FD        (get equipment Battle Power)
+C2/10E3: 79 AC 11     ADC $11AC,Y    (add it to Battle Power so far)
+C2/10E6: 90 02        BCC $10EA
+C2/10E8: A9 FF        LDA #$FF
+C2/10EA: 99 AC 11     STA $11AC,Y    (if the Battle Power exceeded 255, make it 255)
+C2/10ED: BF 15 50 D8  LDA $D85015,X  (hit rate)
+C2/10F1: 99 AE 11     STA $11AE,Y
+C2/10F4: BF 12 50 D8  LDA $D85012,X  (random weapon spellcast)
+C2/10F8: 99 B4 11     STA $11B4,Y    
+C2/10FB: BF 13 50 D8  LDA $D85013,X  (weapon properties)
+C2/10FF: 99 DA 11     STA $11DA,Y    (11DA=
+
+                        01:                     10: --
+                        02: SwdTech             20: Same damage from back row
+                        04: --                  40: 2-Hand
+                        08: --                  80: Runic)
+
+C2/1102: 4C 76 10     JMP $1076

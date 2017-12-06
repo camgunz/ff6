@@ -167,7 +167,8 @@ class DefensiveEquipment(Equipment):
             ('causes_berserk', check_bool),
             ('causes_confusion', check_bool),
             ('causes_hp_drain', check_bool),
-            ('causes_sleep', check_bool)
+            ('causes_sleep', check_bool),
+            ('evade_animation', check_enum_member(WeaponEvadeAnimation))
         )
 
     @classmethod
@@ -204,6 +205,8 @@ class DefensiveEquipment(Equipment):
         weak_elements = rom.read_byte(data_start + 24)
         cond_caused2 = rom.read_byte(data_start + 25)
         evade_and_mblock = rom.read_signed_nybbles(data_start + 26)
+        evade_animation = rom.read_low_bits(data_start + 27, 4)
+        # special_attack, evade_animation = rom.read_nybbles(data_start + 27)
         price = rom.read_short(data_start + 28)
         attributes = {}
         if type != cls._InventoryItemType.value:
@@ -220,6 +223,8 @@ class DefensiveEquipment(Equipment):
         attributes['vigor'], attributes['speed'] = vigor_and_speed
         attributes['stamina'], attributes['magic_power'] = stamina_and_mpow
         attributes['evade'], attributes['magic_block'] = evade_and_mblock
+        attributes['evade_animation'] = get_enum_member(
+                'evade_animation', WeaponEvadeAnimation, evade_animation)
         attributes['price'] = price
         enum_params = [
             ('usability', usability, InventoryItemUsability),

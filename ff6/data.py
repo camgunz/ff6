@@ -255,7 +255,7 @@ class MonsterSpecialAttackEffect(Enum):
     NearDeath             = 9
     Image                 = 10
     Mute                  = 11
-    Berzerk               = 12
+    Berserk               = 12
     Confused              = 13
     HPDrain               = 14
     Sleep                 = 15
@@ -272,7 +272,7 @@ class MonsterSpecialAttackEffect(Enum):
     Life3                 = 26
     Morph                 = 27
     Chant                 = 28
-    DisappearAndBerzerk   = 29
+    DisappearAndBerserk   = 29
     DogBlock              = 30
     Float                 = 31
     PhysicalLevelOne      = 32
