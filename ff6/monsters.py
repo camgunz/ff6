@@ -30,9 +30,21 @@ class Monster(TypedObject):
             ('morph_chance', check_enum_member(MetamorphChance)),
             ('dies_if_mp_exhausted', check_bool),
             ('name_hidden', check_bool),
+            ('human', check_bool),
+            ('weak_against_imps', check_bool),
             ('undead', check_bool),
+            ('harder_to_run_from', check_bool),
+            ('attacks_first', check_bool),
+            ('blocks_suplex', check_bool),
             ('blocks_run', check_bool),
-            ('nullifies_scan', check_bool),
+            ('blocks_scan', check_bool),
+            ('blocks_sketch', check_bool),
+            ('special_event', check_bool),
+            ('blocks_control', check_bool),
+            ('covers_allies', check_bool),
+            ('uses_runic', check_bool),
+            ('starts_with_life_3', check_bool),
+            ('starts_with_float', check_bool),
             ('absorbs_fire', check_bool),
             ('absorbs_ice', check_bool),
             ('absorbs_lightning', check_bool),
@@ -57,7 +69,7 @@ class Monster(TypedObject):
             ('weak_to_pearl', check_bool),
             ('weak_to_earth', check_bool),
             ('weak_to_water', check_bool),
-            ('attack_type', check_u8),
+            ('attack_type', check_enum_member(MonsterAttackType)),
             ('immune_to_dark', check_bool),
             ('immune_to_zombie', check_bool),
             ('immune_to_poison', check_bool),
@@ -120,12 +132,13 @@ class Monster(TypedObject):
         morph_package = rom.read_low_bits(data_start + 17, 5)
         monster_flags1 = rom.read_byte(data_start + 18)
         monster_flags2 = rom.read_byte(data_start + 19)
+        monster_flags3 = rom.read_byte(data_start + 20)
         absorbed_elements = rom.read_byte(data_start + 23)
         nullified_elements = rom.read_byte(data_start + 24)
         weak_elements = rom.read_byte(data_start + 25)
         attack_type = rom.read_byte(data_start + 26)
-        # attack_type = get_enum_member(
-        #     'attack type', MonsterAttackType, attack_type)
+        attack_type = get_enum_member(
+            'attack type', MonsterAttackType, attack_type)
         immune_cond1 = rom.read_byte(data_start + 27)
         immune_cond2 = rom.read_byte(data_start + 28)
         immune_cond3 = rom.read_byte(data_start + 29)
@@ -139,6 +152,7 @@ class Monster(TypedObject):
         enum_params = [
             ('monster flags 1', monster_flags1, MonsterFlag1),
             ('monster flags 2', monster_flags2, MonsterFlag2),
+            ('monster flags 3', monster_flags3, MonsterFlag3),
             ('absorbed elements', absorbed_elements, Element, 'absorbs_'),
             ('nullified elements', nullified_elements, Element, 'nullifies_'),
             ('weak elements', weak_elements, Element, 'weak_to_'),
