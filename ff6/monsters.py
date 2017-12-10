@@ -4,19 +4,12 @@ from ff6.typed_object import *
 
 class Monster(FF6Object):
 
-    NameSize   = 10
-    NameOffset = 0x000FC250
-    DataOffset = 0x000F0200
-    DataSize   = 32
-    TypeName   = 'Monster'
-
-    @property
-    def name_offset(self):
-        return self.NameOffset + (self.NameSize * self.number)
-
-    @property
-    def data_offset(self):
-        return self.DataOffset + (self.DataSize * self.number)
+    NameSize             = 10
+    NameOffset           = 0x000FC250
+    DataSize             = 32
+    DataOffset           = 0x000F0200
+    DropsAndStealsOffset = 0x000F3200
+    TypeName             = 'Monster'
 
     def _build_fields(self):
         return super()._build_fields() + (
@@ -60,9 +53,13 @@ class Monster(FF6Object):
                      self.data_offset + 31),
         )
 
-    def save_to_rom(self):
-        for field in self.fields:
-            field.save_to_rom()
+    @property
+    def name_offset(self):
+        return self.NameOffset + (self.NameSize * self.number)
+
+    @property
+    def data_offset(self):
+        return self.DataOffset + (self.DataSize * self.number)
 
 class Monsters(TypedObjectContainer):
 

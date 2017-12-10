@@ -8,8 +8,8 @@ class InventoryItem(FF6Object):
     DataSize   = 30
     DataOffset = 0x00185200
 
-    def __init__(self, rom, number):
-        super().__init__(rom, number)
+    def load(self):
+        super().load()
         if self.type != self.ItemType:
             raise ValueError('%s: Expected type %s; got %s' % (
                 self.name,
@@ -27,7 +27,9 @@ class InventoryItem(FF6Object):
 
     def _build_fields(self):
         return super()._build_fields() + (
-            BattleStrField(self, 'name', self.NameSize, self.name_offset + 0),
+            Enum8Field(self, 'icon_type', EquipmentIconType, self.name_offset),
+            BattleStrField(self, 'name', self.NameSize - 1,
+                           self.name_offset + 1),
             Enum3LowField(self, 'type', InventoryItemType,
                           self.data_offset + 0),
             Flags5HighField(self, InventoryItemUsability, self.data_offset + 0),

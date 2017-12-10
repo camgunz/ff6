@@ -28,6 +28,25 @@ class InventoryItemType(IntEnum):
     Relic          = 5
     Item           = 6
 
+class EquipmentIconType(IntEnum):
+    Knife    = 0xD8
+    Sword    = 0xD9
+    Spear    = 0xDA
+    Katana   = 0xDB
+    Rod      = 0xDC
+    Brush    = 0xDD
+    Shuriken = 0xDE
+    Special  = 0xDF
+    Gambler  = 0xE0
+    Claw     = 0xE1
+    Shield   = 0xE2
+    Hat      = 0xE3
+    Armor    = 0xE4
+    Tool     = 0xE5
+    Skean    = 0xE6
+    Relic    = 0xE7
+    NoIcon   = 0xFF
+
 class InventoryItemUsability(IntFlag):
     Throwable      = 1 << 0
     UsableInBattle = 1 << 1
