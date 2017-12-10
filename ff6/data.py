@@ -1,7 +1,7 @@
 from io import StringIO
 from enum import IntEnum, IntFlag
 
-class Character(IntFlag):
+class EquipInfo(IntFlag):
     Terra  = 1 << 0
     Locke  = 1 << 1
     Cyan   = 1 << 2

@@ -42,8 +42,8 @@ class Equipment(InventoryItem):
 
     def _build_fields(self):
         return super()._build_fields() + (
-            Flags16Field(self, Character, self.data_offset + 1,
-                         suffix='equippable_by_'),
+            Flags16Field(self, EquipInfo, self.data_offset + 1,
+                         suffix='_equips'),
             U8Field(self, 'spell_learn_rate', self.data_offset + 3),
             U8Field(self, 'spell_learned', self.data_offset + 4),
             Flags8Field(self, FieldEffect, self.data_offset + 5),
