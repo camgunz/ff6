@@ -1,8 +1,5 @@
 from io import StringIO
 
-from ff6 import util
-from ff6.type_checks import *
-
 def _value_in_range(name, val, min_val, max_val):
     val = int(val)
     return val >= min_val and val <= max_val
@@ -230,6 +227,17 @@ class U3HighField(NumberRangeCheckMixin, AbstractField):
     def save_to_rom(self):
         self.rom.write_high_bits(self.offset, 3, self.binary_value)
 
+class U3LowField(NumberRangeCheckMixin, AbstractField):
+
+    MinValue = 0
+    MaxValue = 7
+
+    def load_from_rom(self):
+        self.binary_value = self.rom.read_low_bits(self.offset, 3)
+
+    def save_to_rom(self):
+        self.rom.write_low_bits(self.offset, 3, self.binary_value)
+
 class S4HighField(NumberRangeCheckMixin, AbstractField):
 
     MinValue = -8
@@ -267,6 +275,17 @@ class U4LowField(NumberRangeCheckMixin, AbstractField):
 
     MinValue = 0
     MaxValue = 15
+
+    def load_from_rom(self):
+        self.binary_value = self.rom.read_low_bits(self.offset, 4)
+
+    def save_to_rom(self):
+        self.rom.write_low_bits(self.offset, 4, self.binary_value)
+
+class U5HighField(NumberRangeCheckMixin, AbstractField):
+
+    MinValue = 0
+    MaxValue = 31
 
     def load_from_rom(self):
         self.binary_value = self.rom.read_low_bits(self.offset, 4)
@@ -350,6 +369,9 @@ class BattleStrField(AbstractField):
                                          self.binary_value)
 
 class Enum3HighField(BaseEnumField, U3HighField):
+    pass
+
+class Enum3LowField(BaseEnumField, U3LowField):
     pass
 
 class Enum4HighField(BaseEnumField, U4HighField):
@@ -445,6 +467,9 @@ class BaseFlagsField(AbstractField):
     def is_set(self):
         return None not in [getattr(self.obj, e.name, None) for e in self.enum]
 
+class Flags5HighField(BaseFlagsField, U5HighField):
+    pass
+
 class Flags4HighField(BaseFlagsField, U4HighField):
     pass
 
@@ -494,22 +519,16 @@ class TypedObjectContainer:
     ObjectType = object
     Name = 'TypedObjectContainer'
 
-    def __init__(self, rom, objects):
+    def __init__(self, rom):
         self._rom = rom
-        self._objects = objects
-
-    @classmethod
-    def get_object_from_rom(cls, rom, n):
-        return cls.ObjectType(rom, n)
-
-    @classmethod
-    def from_rom(cls, rom):
-        objects = []
-        for n in range(cls.ObjectCount):
-            if n in cls.Blanks:
+        self._objects = []
+        for n in range(self.ObjectCount):
+            if n in self.Blanks:
                 continue
-            objects.append(cls.get_object_from_rom(rom, n))
-        return cls(rom, objects)
+            self._objects.append(self._get_object_from_rom(rom, n))
+
+    def _get_object_from_rom(self, rom, n):
+        return self.ObjectType(rom, n)
 
     def __getitem__(self, item):
         if isinstance(item, int):

@@ -8,8 +8,8 @@ class FF6ROM(ROM):
 
     def __init__(self, data):
         super().__init__(data)
-        self.items = Items.from_rom(self)
-        self.monsters = Monsters.from_rom(self)
+        self.items = Items(self)
+        self.monsters = Monsters(self)
 
     @classmethod
     def from_file(cls, file_name):

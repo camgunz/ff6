@@ -8,6 +8,15 @@ class InventoryItem(FF6Object):
     DataSize   = 30
     DataOffset = 0x00185200
 
+    def __init__(self, rom, number):
+        super().__init__(rom, number)
+        if self.type != self.ItemType:
+            raise ValueError('%s: Expected type %s; got %s' % (
+                self.name,
+                self.ItemType,
+                self.type
+            ))
+
     @property
     def name_offset(self):
         return self.NameOffset + (self.NameSize * self.number)
@@ -19,9 +28,9 @@ class InventoryItem(FF6Object):
     def _build_fields(self):
         return super()._build_fields() + (
             BattleStrField(self, 'name', self.NameSize, self.name_offset + 0),
-            Enum3HighField(self, 'type', InventoryItemType,
-                           self.data_offset + 0),
-            Flags4LowField(self, InventoryItemUsability, self.data_offset + 0),
+            Enum3LowField(self, 'type', InventoryItemType,
+                          self.data_offset + 0),
+            Flags5HighField(self, InventoryItemUsability, self.data_offset + 0),
             Flags8Field(self, Targeting, self.data_offset + 14, prefix='targets_'),
             U16Field(self, 'price', self.data_offset + 28),
         )
@@ -80,7 +89,8 @@ class DefensiveEquipment(Equipment):
 
 class Tool(InventoryItem):
 
-    TypeName = 'Tool'
+    ItemType = InventoryItemType.Tool
+    TypeName = ItemType.name
 
     def _build_fields(self):
         return super()._build_fields() + (
@@ -91,7 +101,8 @@ class Tool(InventoryItem):
 
 class Weapon(Equipment):
 
-    TypeName = 'Weapon'
+    ItemType = InventoryItemType.Weapon
+    TypeName = ItemType.name
 
     def _build_fields(self):
         return super()._build_fields() + (
@@ -103,32 +114,25 @@ class Weapon(Equipment):
         )
 
 class Armor(DefensiveEquipment):
-
-    TypeName = 'Armor'
-
-    _InventoryItemType = InventoryItemType.Armor
+    ItemType = InventoryItemType.Armor
+    TypeName = ItemType.name
 
 class Shield(DefensiveEquipment):
-
-    TypeName = 'Shield'
-
-    _InventoryItemType = InventoryItemType.Shield
+    ItemType = InventoryItemType.Shield
+    TypeName = ItemType.name
 
 class Hat(DefensiveEquipment):
-
-    TypeName = 'Hat'
-
-    _InventoryItemType = InventoryItemType.Hat
+    ItemType = InventoryItemType.Hat
+    TypeName = ItemType.name
 
 class Relic(DefensiveEquipment):
-
-    TypeName = 'Relic'
-
-    _InventoryItemType = InventoryItemType.Relic
+    ItemType = InventoryItemType.Relic
+    TypeName = ItemType.name
 
 class Item(InventoryItem):
 
-    TypeName = 'Item'
+    ItemType = InventoryItemType.Item
+    TypeName = ItemType.name
 
     def _build_fields(self):
         return super()._build_fields() + (
@@ -153,9 +157,8 @@ class Items(TypedObjectContainer):
     ObjectType = Item
     Name = 'Items'
 
-    @classmethod
-    def get_object_from_rom(cls, rom, n):
-        item_location = cls.ObjectType.DataOffset + (n * cls.ObjectType.DataSize)
+    def _get_object_from_rom(self, rom, n):
+        item_location = self.ObjectType.DataOffset + (n * self.ObjectType.DataSize)
         item_type = rom.read_byte(item_location) & 0x0F
         if item_type == InventoryItemType.Tool.value:
             return Tool(rom, n)
