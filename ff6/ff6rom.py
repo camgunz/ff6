@@ -4,10 +4,6 @@ from ff6.monsters import Monsters
 
 class FF6ROM(ROM):
 
-    ItemNamesOffset             = 0x0012B500
-    ItemDataOffset              = 0x00185200
-    MonsterNamesOffset          = 0x000FC250
-    MonsterDataOffset           = 0x000F0200
     MonsterDropsAndStealsOffset = 0x000F3200
 
     def __init__(self, data):

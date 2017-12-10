@@ -1,7 +1,7 @@
 from io import StringIO
-from enum import Enum
+from enum import IntEnum, IntFlag
 
-class Character(Enum):
+class Character(IntFlag):
     Terra  = 1 << 0
     Locke  = 1 << 1
     Cyan   = 1 << 2
@@ -17,8 +17,9 @@ class Character(Enum):
     Gogo   = 1 << 12
     Umaro  = 1 << 13
     Imp    = 1 << 14
+    Heavy  = 1 << 15
 
-class InventoryItemType(Enum):
+class InventoryItemType(IntEnum):
     Tool           = 0
     Weapon         = 1
     Armor          = 2
@@ -27,12 +28,12 @@ class InventoryItemType(Enum):
     Relic          = 5
     Item           = 6
 
-class InventoryItemUsability(Enum):
-    Throwable      = 1 << 4
-    UsableInBattle = 1 << 5
-    UsableInField  = 1 << 6
+class InventoryItemUsability(IntFlag):
+    Throwable      = 1 << 0
+    UsableInBattle = 1 << 1
+    UsableInField  = 1 << 2
 
-class Targeting(Enum):
+class Targeting(IntFlag):
     SingleAllyOrEnemy     = 1 << 0
     AlliesOrEnemiesOnly   = 1 << 1
     AllAlliesAndEnemies   = 1 << 2
@@ -42,7 +43,7 @@ class Targeting(Enum):
     EnemiesByDefault      = 1 << 6
     Random                = 1 << 7
 
-class ItemProperty(Enum):
+class ItemProperty(IntFlag):
     NoItemProperty          = 0
     ReverseDamageOnUndead   = 1 << 1
     RestoresHP              = 1 << 3
@@ -51,7 +52,7 @@ class ItemProperty(Enum):
     CausesDamage            = 1 << 6
     EffectIsProportionate   = 1 << 7
 
-class ItemSpecialAction(Enum):
+class ItemSpecialAction(IntEnum):
     NoSpecialAction1               = 0
     SummonsRandomEsper             = 1
     IsSuperBall                    = 2
@@ -61,7 +62,7 @@ class ItemSpecialAction(Enum):
     AttractsGau                    = 6
     NoSpecialAction2               = 255
 
-class WeaponSpecialAttack(Enum):
+class WeaponSpecialAttack(IntEnum):
     NoSpecialAttack                   = 0
     Steals                            = 1
     AttackPowerIncreasesAsHPIncreases = 2
@@ -78,7 +79,7 @@ class WeaponSpecialAttack(Enum):
     Kills                             = 13
     RandomlyBreaks                    = 14
 
-class WeaponEvadeAnimation(Enum):
+class EvadeAnimation(IntEnum):
     Nothing1                 = 0
     Nothing2                 = 1
     Nothing3                 = 2
@@ -96,13 +97,13 @@ class WeaponEvadeAnimation(Enum):
     BuckerPhysicalAndMagical = 14
     RedCape2                 = 15
 
-class FieldEffect(Enum):
-    ReducesEnemyAttacks  = 1
-    PreventsEnemyAttacks = 2
-    DoublesWalkingSpeed  = 32
-    CuresOneHPPerStep    = 64
+class FieldEffect(IntFlag):
+    ReducesEnemyAttacks  = 1 << 0
+    PreventsEnemyAttacks = 1 << 1
+    DoublesWalkingSpeed  = 1 << 5
+    CuresOneHPPerStep    = 1 << 7
 
-class StatusEffect1(Enum):
+class StatusEffect1(IntFlag):
     RaisesAttackDamage = 1 << 0
     RaisesMagicDamage  = 1 << 1
     RaisesHPOneQuarter = 1 << 2
@@ -112,14 +113,16 @@ class StatusEffect1(Enum):
     RaisesMPOneHalf    = 1 << 6
     RaisesMPOneEighth  = 1 << 7
 
-class StatusEffect2(Enum):
+class StatusEffect2(IntFlag):
     IncreasesStealRate     = 1 << 0
+    IncreasesSketchRate    = 1 << 2
+    IncreasesControlRate   = 1 << 3
     EnablesPerfectHitRate  = 1 << 4
     HalvesMPConsumption    = 1 << 5
     SetsMPConsumptionToOne = 1 << 6
     RaisesVigor            = 1 << 7
 
-class Condition1(Enum):
+class Condition1(IntFlag):
     Dark    = 1 << 0
     Zombie  = 1 << 1
     Poison  = 1 << 2
@@ -129,7 +132,7 @@ class Condition1(Enum):
     Petrify = 1 << 6
     Death   = 1 << 7
 
-class Condition2(Enum):
+class Condition2(IntFlag):
     Condemned = 1 << 0
     Kneeling  = 1 << 1
     Blink     = 1 << 2
@@ -139,7 +142,7 @@ class Condition2(Enum):
     HPDrain   = 1 << 6
     Sleep     = 1 << 7
 
-class Condition3(Enum):
+class Condition3(IntFlag):
     DanceOrFloat = 1 << 0
     Regen        = 1 << 1
     Slow         = 1 << 2
@@ -149,7 +152,7 @@ class Condition3(Enum):
     Safe         = 1 << 6
     Reflect      = 1 << 7
 
-class Condition4(Enum):
+class Condition4(IntFlag):
     Rage                  = 1 << 0
     Frozen                = 1 << 1
     ProtectionFromDeath   = 1 << 2
@@ -159,15 +162,17 @@ class Condition4(Enum):
     DefendedByInterceptor = 1 << 6
     Float                 = 1 << 7
 
-class BattleEffect1(Enum):
-    EnablesJump          = 1 << 2
-    EnablesXMagic        = 1 << 3
-    EnablesControl       = 1 << 4
-    EnablesGPRain        = 1 << 5
-    EnablesCapture       = 1 << 6
-    ForcesContinuousJump = 1 << 7
+class BattleEffect1(IntFlag):
+    IncreasesPreemptiveAttackRate = 1 << 0
+    AllowsRunningInSideAttack     = 1 << 1
+    EnablesJump                   = 1 << 2
+    EnablesXMagic                 = 1 << 3
+    EnablesControl                = 1 << 4
+    EnablesGPRain                 = 1 << 5
+    EnablesCapture                = 1 << 6
+    ForcesContinuousJump          = 1 << 7
 
-class BattleEffect2(Enum):
+class BattleEffect2(IntFlag):
     EnablesXFight          = 1 << 0
     RandomlyCounterAttacks = 1 << 1
     IncreasesEvadeChance   = 1 << 2
@@ -176,7 +181,7 @@ class BattleEffect2(Enum):
     EnablesHeavyArmor      = 1 << 5
     ProtectsAllies         = 1 << 6
 
-class BattleEffect3(Enum):
+class BattleEffect3(IntFlag):
     CastsShellOnLowHP   = 1 << 0
     CastsSafeOnLowHP    = 1 << 1
     CastsReflectOnLowHP = 1 << 2
@@ -184,13 +189,13 @@ class BattleEffect3(Enum):
     DoublesGold         = 1 << 4
     MakesBodyCold       = 1 << 7
 
-class WeaponProperty(Enum):
+class WeaponProperty(IntFlag):
     UsableWithBushido     = 1 << 1
     SameDamageFromBackRow = 1 << 5
     UsableWithTwoHands    = 1 << 6
     UsableWithRunic       = 1 << 7
 
-class Element(Enum):
+class Element(IntFlag):
     Fire      = 1 << 0
     Ice       = 1 << 1
     Lightning = 1 << 2
@@ -200,7 +205,7 @@ class Element(Enum):
     Earth     = 1 << 6
     Water     = 1 << 7
 
-class MetamorphChance(Enum):
+class MetamorphChance(IntEnum):
     Always = 0
     ThreeQuarters = 1
     Half = 2
@@ -210,14 +215,14 @@ class MetamorphChance(Enum):
     ThirtySecond = 6
     NoChance = 7
 
-class MonsterFlag1(Enum):
+class MonsterFlag1(IntFlag):
     DiesIfMPExhausted = 1 << 0
     NameHidden        = 1 << 2
     Human             = 1 << 4
     WeakAgainstImps   = 1 << 6
     Undead            = 1 << 7
 
-class MonsterFlag2(Enum):
+class MonsterFlag2(IntFlag):
     HarderToRunFrom = 1 << 0
     AttacksFirst    = 1 << 1
     BlocksSuplex    = 1 << 2
@@ -227,13 +232,13 @@ class MonsterFlag2(Enum):
     SpecialEvent    = 1 << 6
     BlocksControl   = 1 << 7
 
-class MonsterFlag3(Enum):
+class MonsterFlag3(IntFlag):
     CoversAllies    = 1 << 0
     UsesRunic       = 1 << 1
     StartsWithLife3 = 1 << 2
     StartsWithFloat = 1 << 7
 
-class MonsterAttackType(Enum):
+class MonsterAttackType(IntEnum):
     MultipleSpikedStars                     = 0
     WhiteDiagonalSlash                      = 1
     ThinWhiteDiagonalSlash                  = 2
@@ -291,10 +296,11 @@ class MonsterAttackType(Enum):
     WhiteAndGreyDiagonalSlash8              = 54
     WhiteAndGreyDiagonalSlash9              = 55
     WhiteOutlineWhipLashRunningAwaySound    = 63
+    TurnAllCharactersToStone                = 68
     GlitchyFallenOne                        = 88
     GlitchySilence                          = 255
 
-class MonsterSpecialAttackEffect(Enum):
+class MonsterSpecialAttackEffect(IntEnum):
     Blind                 = 0
     Zombie                = 1
     Poison                = 2
@@ -344,67 +350,17 @@ class MonsterSpecialAttackEffect(Enum):
     PhysicalLevelSixteen  = 47
     Drain                 = 48
     Osmose                = 49
-
-def camel_to_snake(s):
-    accepted_abbreviations = ('GP', 'HP', 'MP')
-    sio = StringIO(s[0].lower())
-    skip = False
-    for n in range(len(s)):
-        if skip:
-            skip = False
-        elif s[n:n+2] in accepted_abbreviations:
-            if n != 0:
-                sio.write('_')
-            sio.write('%s' % (s[n:n+2].lower()))
-            skip = True
-        elif n == 0:
-            sio.write(s[n].lower())
-        elif s[n].islower():
-            sio.write(s[n])
-        else:
-            sio.write('_%s' % (s[n].lower()))
-    return sio.getvalue()
-
-def check_data_value(name, value, enum):
-    for e in enum:
-        if value == e.value:
-            return value
-    raise ValueError('Invalid %s value %s' % (name, value))
-
-def get_enum_member(name, enum, value):
-    for e in enum:
-        if value == e.value:
-            return e
-    raise ValueError('Invalid %s value %s' % (name, value))
-
-def check_data_member(name, value, enum):
-    for e in enum:
-        if value == e:
-            return value
-    raise ValueError('Invalid %s member %s' % (name, value))
-
-def get_matching_values(name, value, enum, prefix=None, suffix=None):
-    prefix = prefix or ''
-    suffix = suffix or ''
-    return {''.join((prefix, e.name, suffix)):
-            (value & e.value != 0) for e in enum}
-
-def get_matching_values_as_params(name, value, enum, prefix=None, suffix=None):
-    prefix = prefix or ''
-    suffix = suffix or ''
-    return {''.join((prefix, camel_to_snake(e.name), suffix)):
-            (value & e.value != 0) for e in enum}
-
-def get_matching_values_as_params_limit_one(value, enum, prefix=None,
-                                                         suffix=None,
-                                                         ignores=None):
-    prefix = prefix or ''
-    suffix = suffix or ''
-    ignores = ignores or []
-    params = {camel_to_snake(e.name):
-              e.value == value for e in enum if e.value not in ignores}
-    if len(list(filter(None, params.values()))) > 1:
-        names = [e.name for e in enum if e.value not in ignores]
-        msg = 'Only one of %s or %s may be given'
-        raise ValueError(msg % (', '.join(names[:-1]), names[-1]))
-    return params
+    RemoveReflect1        = 50
+    RemoveReflect2        = 51
+    RemoveReflect3        = 52
+    RemoveReflect4        = 53
+    RemoveReflect5        = 54
+    RemoveReflect6        = 55
+    RemoveReflect7        = 56
+    RemoveReflect8        = 57
+    RemoveReflect9        = 58
+    RemoveReflect10       = 59
+    RemoveReflect11       = 60
+    RemoveReflect12       = 61
+    RemoveReflect13       = 62
+    RemoveReflect14       = 63

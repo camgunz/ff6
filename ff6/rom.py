@@ -3,13 +3,13 @@ import struct
 from ff6.dte import DTE_BATTLE
 from ff6.patch import Patch
 
-def _8bit_signed(num):
-    if num < 8:
-        return num
-    if num == 8:
-        return 0
-    if num > 7:
-        return -(num % 8)
+def _signed(num, bit_width):
+   max_val = (1 << (bit_width - 1))
+   if num < max_val:
+       return num
+   if num == max_val:
+       return 0
+   return -(num % max_val)
 
 class ROM:
 
@@ -72,19 +72,33 @@ class ROM:
 
     def read_signed_nybbles(self, location):
         byte = struct.unpack_from('B', self.data, location)[0]
-        return (_8bit_signed((byte & 0xF0) >> 4), _8bit_signed(byte & 0x0F))
+        return (_signed((byte & 0xF0) >> 4, 4), _signed(byte & 0x0F, 4))
 
-    def read_low_bits(self, location, bit_count):
-        assert bit_count > 0
-        mask = (1 << bit_count) - 1
+    def read_low_bits(self, location, bit_width):
+        assert bit_width > 0
+        mask = (1 << bit_width) - 1
         byte = struct.unpack_from('B', self.data, location)[0]
         return byte & mask
 
-    def read_high_bits(self, location, bit_count):
-        assert bit_count > 0
-        mask = (255 >> bit_count)
+    def read_low_signed_bits(self, location, bit_width):
+        assert bit_width > 0
+        mask = (1 << bit_width) - 1
         byte = struct.unpack_from('B', self.data, location)[0]
-        return (byte & mask) >> (8 - bit_count)
+        return _signed(byte & mask, bit_width)
+
+    def read_high_bits(self, location, bit_width):
+        assert bit_width > 0
+        assert bit_width <= 8
+        mask = (255 >> bit_width)
+        byte = struct.unpack_from('B', self.data, location)[0]
+        return (byte & mask) >> (8 - bit_width)
+
+    def read_high_signed_bits(self, location, bit_width):
+        assert bit_width > 0
+        assert bit_width <= 8
+        mask = (255 >> bit_width)
+        byte = struct.unpack_from('B', self.data, location)[0]
+        return _signed((byte & mask) >> (8 - bit_width), bit_width)
 
     def read_bit(self, location, bit_index):
         assert bit_index >= 0
