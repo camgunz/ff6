@@ -133,6 +133,7 @@ class ROM:
             byte |= mask
         else:
             byte &= ~mask
+        self.write_byte(location, byte)
 
     def read_short(self, location):
         return struct.unpack_from('<H', self.data, location)[0]
