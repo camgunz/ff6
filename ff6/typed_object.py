@@ -494,8 +494,11 @@ class TypedObject:
         return tuple()
 
     def __repr__(self):
-        field_names = [f.name for x in self._fields]
-        return '%s(%s)' % ( self.TypeName, ', '.join([
+        return '%s(%s)' % (self.TypeName, self.name)
+        field_names = [field.name for field in self._fields]
+        print(field_names)
+        print(dir(self))
+        return '%s(%s)' % (self.TypeName, ', '.join([
             '='.join((name, repr(getattr(self, name))))
             for name in field_names
         ]))
