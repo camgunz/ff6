@@ -1,58 +1,36 @@
+from ff6 import offsets
+
 from ff6.rom import ROM
-from ff6.items import (InventoryItemNameStructArray,
-                       InventoryItemDataStructArray)
-from ff6.monsters import MonsterNameStructArray, MonsterDataStructArray
+from ff6.items import *
+from ff6.monsters import *
+
+class InventoryItems(StructArrayAggregate):
+
+    ElementName = 'InventoryItem'
+    StructArraysAndLocations = (
+        (InventoryItemNameStructArray, offsets.InventoryItemNames),
+        (InventoryItemDataStructArray, offsets.InventoryItemData),
+    )
+
+class Monsters(StructArrayAggregate):
+
+    ElementName = 'Monster'
+    StructArraysAndLocations = (
+        (MonsterNameStructArray, offsets.MonsterNames),
+        (MonsterDataStructArray, offsets.MonsterData)
+    )
 
 class FF6ROM(ROM):
 
-    InventoryItemNameOffset = 0x0012B500
-    InventoryItemDataOffset = 0x00185200
-    MonsterNameOffset       = 0x000FC250
-    MonsterDataOffset       = 0x000F0200
+    Mappings = (
+        ('inventory_items', InventoryItems),
+        ('monsters', Monsters)
+    )
 
-    def __init__(self, data):
-        super().__init__(data)
-        self.inventory_item_names = []
-        self.inventory_item_data = []
-        self.monster_names = []
-        self.monster_data = []
+    def serialize(self):
+        for name, aggregate in self.Mappings:
+            aggregate.serialize(self, getattr(self, name))
 
-    def save(self):
-        InventoryItemNameStructArray.serialize(
-            self,
-            self.InventoryItemNameOffset,
-            self.inventory_item_names
-        )
-        InventoryItemDataStructArray.serialize(
-            self,
-            self.InventoryItemDataOffset,
-            self.inventory_item_data
-        )
-        MonsterNameStructArray.serialize(
-            self,
-            self.MonsterNameOffset,
-            self.monster_names
-        )
-        MonsterDataStructArray.serialize(
-            self,
-            self.MonsterDataOffset,
-            self.monster_data
-        )
-
-    def load(self):
-        self.inventory_item_names = InventoryItemNameStructArray.deserialize(
-            self,
-            self.InventoryItemNameOffset
-        )
-        self.inventory_item_data = InventoryItemDataStructArray.deserialize(
-            self,
-            self.InventoryItemDataOffset
-        )
-        self.monster_names = MonsterNameStructArray.deserialize(
-            self,
-            self.MonsterNameOffset
-        )
-        self.monster_data = MonsterDataStructArray.deserialize(
-            self,
-            self.MonsterDataOffset
-        )
+    def deserialize(self):
+        for name, aggregate in self.Mappings:
+            setattr(self, name, aggregate.deserialize(self))

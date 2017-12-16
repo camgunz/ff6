@@ -325,8 +325,8 @@ class BattleStrField(AbstractField):
         self.size = size
 
     def _serialize(self, bin_obj, location, value):
-        self.bin_obj.write_dte_battle_string(location + self.offset, self.size,
-                                             value)
+        bin_obj.write_dte_battle_string(location + self.offset, self.size,
+                                        value)
 
     def _deserialize(self, bin_obj, location):
         return bin_obj.read_dte_battle_string(location + self.offset,
@@ -435,3 +435,50 @@ class VariantStruct:
         values = variant.deserialize(bin_obj, location)
         values[cls.VariantField.name] = variant_value
         return values
+
+class Obj:
+
+    def __init__(self, type_name, **kwargs):
+        self._type_name = type_name
+        self._attrs = kwargs
+
+    def __getattr__(self, attr):
+        try:
+            return self._attrs[attr]
+        except KeyError:
+            raise AttributeError("Object '%s' has no attribute '%s'" % (
+                type(self).__name__, attr
+            ))
+
+    def __repr__(self):
+        return '%s(%s)' % (self._type_name, ', '.join([
+            '='.join((name, repr(value)))
+            for name, value in self._attrs.items()
+        ]))
+
+class StructArrayAggregate:
+
+    ElementName = 'Obj'
+    StructArraysAndLocations = tuple()
+
+    @classmethod
+    def serialize(cls, bin_obj, elements):
+        for struct_array, location in cls.StructArraysAndLocations:
+            struct_array.serialize(bin_obj, location, [{
+                field.name: getattr(element, field.name)
+                for field in struct_array.Struct.Fields
+            } for element in elements])
+
+    @classmethod
+    def deserialize(cls, bin_obj):
+        elements = []
+        arrays = [
+            struct_array.deserialize(bin_obj, location)
+            for struct_array, location in cls.StructArraysAndLocations
+        ]
+        for dicts in zip(*arrays):
+            attrs = {}
+            for d in dicts:
+                attrs.update(d)
+            elements.append(Obj(cls.ElementName, **attrs))
+        return elements

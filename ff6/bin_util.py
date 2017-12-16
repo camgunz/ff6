@@ -63,8 +63,11 @@ class BinaryObject:
     def write_timestamp(self, location, timestamp):
         return write_timestamp(self.data, location, timestamp)
 
-    def read_bytes(self, location, size):
-        return read_bytes(self.data, location, size)
+    def read_bytes(self, location, count):
+        return read_bytes(self.data, location, count)
+
+    def write_bytes(self, location, value):
+        write_bytes(self.data, location, value)
 
     def read_string(self, location, size):
         return read_string(self.data, location, size)
@@ -182,8 +185,11 @@ def write_timestamp(data, location, timestamp):
     low = timestamp.seconds
     struct.pack_into('3B', data, location, (high, mid, low))
 
-def read_bytes(data, location, size):
-    return struct.unpack_from('%ds' % (size), data, location)[0]
+def read_bytes(data, location, count):
+    return struct.unpack_from('%ds' % (count), data, location)[0]
+
+def write_bytes(data, location, value):
+    struct.pack_into('%ds' % (len(value)), data, location, value)
 
 def read_string(data, location, size):
     return read_bytes(data, location, size).decode('ascii')

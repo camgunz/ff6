@@ -16,9 +16,13 @@
 - Save game editor (huge, really need this)
 - ASM hack the item stats loading
 
-## Improvements
+## Engineering
 
-DTE strings should probably be handled in Fields, not in ROM.
+The infrastructure for reading binary data is solid, but there needs to be
+something that's an actual Python object.  The main things are:
+
+- Coalesce multiple structs into a single object
+- The object's fields need to automatically serialize and deserialize
 
 ## To Consider
 

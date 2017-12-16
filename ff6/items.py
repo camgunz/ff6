@@ -58,7 +58,7 @@ class EquipmentItemStruct(UsableNonItemStruct):
         U8Field('spell_learned', 4),
         FlagsField('field_effect', FieldEffect, 5),
         FlagsField('protected_conditions1', Condition1, 6),
-        FlagsField('protected_conditiosn2', Condition2, 7),
+        FlagsField('protected_conditions2', Condition2, 7),
         FlagsField('caused_conditions', Condition3, 8),
         FlagsField('status_effects1', StatusEffect1, 9),
         FlagsField('battle_effects1', BattleEffect1, 10),

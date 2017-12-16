@@ -94,7 +94,10 @@ class SaveGame(BinaryObject):
         self.steps = 0
         self.characters = []
 
-    def load(self):
+    def serialize(self):
+        pass
+
+    def deserialize(self):
         self.items = self._load_items()
         self.gold = self.read_24(self.GoldOffset)
         self.game_time = self.read_timestamp(self.GameTimeOffset)
@@ -103,9 +106,6 @@ class SaveGame(BinaryObject):
             self,
             self.CharacterOffset
         )
-
-    def save(self):
-        pass
 
     @property
     def data_offset(self):
@@ -124,4 +124,4 @@ class SaveGame(BinaryObject):
             self.data,
             self.InventoryItemCountOffset
         )
-        return list(zip([self._rom.items[id] for id in ids], counts))
+        return list(zip([self._rom.inventory_items[id] for id in ids], counts))

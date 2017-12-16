@@ -57,3 +57,4 @@ class MonsterDataStructArray(StructArray):
     Name = 'MonsterDataStructArray'
     Count = 381
     Struct = MonsterDataStruct
+
