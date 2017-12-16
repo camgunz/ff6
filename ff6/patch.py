@@ -1,7 +1,13 @@
 import os
+import enum
 import struct
 
 # import ff6.lib
+
+class PatchCommands(enum.IntEnum):
+    Patch = 1
+    Truncate = 2
+    RLE = 3
 
 class Patch:
 
@@ -89,19 +95,19 @@ class Patch:
             offset += 3
             if loc == Patch.EOF_BYTES:
                 if len(self.data) - offset == 3:
-                    truncate = struct.unpack_from(
+                    size = struct.unpack_from(
                         '3B',
                         self.data,
                         offset=offset
                     )
                     offset += 3
-                    truncate = (
-                        (truncate[0] << 16) +
-                        (truncate[1] << 8) +
-                        (truncate)
+                    size = (
+                        (size[0] << 16) +
+                        (size[1] << 8) +
+                        (size)
                     )
-                    yield ('truncate', (truncate,))
-                    self.data = self.data[:truncate]
+                    yield (PatchCommands.Truncate, (size,))
+                    self.data = self.data[:size]
                 break
             loc = ((loc[0] << 16) + (loc[1] << 8)  + (loc[2]))
             patch_size = struct.unpack_from('!H', self.data, offset=offset)
@@ -114,7 +120,7 @@ class Patch:
                 fill_byte = struct.unpack_from('c', self.data, offset=offset)
                 offset += 1
                 fill_byte = fill_byte[0]
-                yield ('rle', (loc, run_size, fill_byte))
+                yield (PatchCommands.RLE, (loc, run_size, fill_byte))
             else:
                 replacement_data = struct.unpack_from(
                     '{}s'.format(patch_size),
@@ -123,7 +129,10 @@ class Patch:
                 )
                 offset += patch_size
                 replacement_data = replacement_data[0]
-                yield ('patch', (loc, patch_size, replacement_data))
+                yield (
+                    PatchCommands.Patch,
+                    (loc, patch_size, replacement_data)
+                )
 
     # def save(self):
     #     config = lib.get_config()

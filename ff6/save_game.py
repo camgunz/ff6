@@ -1,4 +1,4 @@
-import struct
+from ff6 import offsets
 
 from ff6.data import *
 from ff6.struct import *
@@ -47,35 +47,63 @@ class CharacterStructArray(StructArray):
     Count  = 16
     Struct = CharacterStruct
 
-class SaveGame(BinaryObject):
+class InventoryItemIDStruct(Struct):
+
+    Name = 'InventoryItemIDStruct'
+    Size = 1
+    Fields = (
+        U8Field('id', 0),
+    )
+
+class InventoryItemCountStruct(Struct):
+
+    name = 'InventoryItemCountStruct'
+    Size = 1
+    Fields = (
+        U8Field('count', 0),
+    )
+
+class InventoryItemIDStructArray(StructArray):
+
+    Name = 'InventoryItemIDStructArray'
+    Count = 256
+    Struct = InventoryItemIDStruct
+
+class InventoryItemCountStructArray(StructArray):
+
+    Name = 'InventoryItemCountStructArray'
+    Count = 256
+    Struct = InventoryItemCountStruct
+
+class SaveGame(BinaryModelObject):
+
+    Mappings = (
+        BinaryMapping(
+            StructArrayField(
+                'inventory_item_slots',
+                InventoryItemIDStructArray,
+                0
+            ),
+            offsets.SaveGameInventoryItemIDs
+        ),
+        BinaryMapping(
+            StructArrayField(
+                'inventory_item_slots',
+                InventoryItemCountStructArray,
+                0
+            ),
+            offsets.SaveGameInventoryItemCounts
+        ),
+        BinaryMapping(U24Field('gold', 0), offsets.SaveGameGold),
+        BinaryMapping(TimestampField('game_time', 0), offsets.SaveGameTime),
+        BinaryMapping(U24Field('steps', 0), offsets.SaveGameSteps),
+        BinaryMapping(
+            StructArrayField('characters', CharacterStructArray, 0),
+            offsets.SaveGameCharacters
+        )
+    )
 
     MaxSize = 0xA00
-
-    CharacterOffset = 0x0
-    PartyInfoOffset = 0x250
-    GoldOffset = 0x260
-    GameTimeOffset = 0x263
-    StepsOffset = 0x266
-    InventoryItemIDOffset = 0x269
-    InventoryItemCountOffset = 0x369
-    EsperOffset = 0x469
-    ActiveGroup = 0x46D # ???
-    MagicOffset = 0x46E
-    BushidoOffset = 0x6F7
-    BushidoNameOffset = 0x6F8
-    BlitzOffset = 0x728
-    LoreOffset = 0x729
-    RageOffset = 0x72C
-    DanceOffset = 0x74C
-    SaveCountOffset = 0x7C7
-    AirshipSettingsOffset = 0x8B7
-    ShopActiveMembersOffset = 0x8DC
-    AirshipActiveMembersOffset = 0x8DE
-    MapLocationOffset = 0x960
-    AirshipLocationOffset = 0x962
-    WorldInfoOffset = 0x964
-    PartyOffset = 0xA56
-
     MagicCount = 54
     BushidoCount = 8
     BushidoNameSize = 6
@@ -88,40 +116,8 @@ class SaveGame(BinaryObject):
         super().__init__(data)
         self.slot = slot
         self._rom = rom
-        self.items = []
-        self.gold = 0
-        self.game_time = 0
-        self.steps = 0
-        self.characters = []
-
-    def serialize(self):
-        pass
-
-    def deserialize(self):
-        self.items = self._load_items()
-        self.gold = self.read_24(self.GoldOffset)
-        self.game_time = self.read_timestamp(self.GameTimeOffset)
-        self.steps = self.read_24(self.StepsOffset)
-        self.characters = CharacterStructArray.deserialize(
-            self,
-            self.CharacterOffset
-        )
-
-    @property
-    def data_offset(self):
-        return self.slot * self.MaxSize
 
     @classmethod
     def from_file(cls, slot, rom, file_name):
         with open(file_name, 'rb') as fobj:
             return cls(slot, rom, fobj.read())
-
-    def _load_items(self):
-        fmt = '%dB' % (self.InventoryItemCount)
-        ids = struct.unpack_from(fmt, self.data, self.InventoryItemIDOffset)
-        counts = struct.unpack_from(
-            fmt,
-            self.data,
-            self.InventoryItemCountOffset
-        )
-        return list(zip([self._rom.inventory_items[id] for id in ids], counts))

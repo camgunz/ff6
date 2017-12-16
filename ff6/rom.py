@@ -1,7 +1,8 @@
+from ff6.patch import Patch, PatchCommands
+from ff6.struct import BinaryModelObject
 from ff6.bin_util import *
-from ff6.patch import Patch
 
-class ROM(BinaryObject):
+class ROM(BinaryModelObject):
 
     def __init__(self, data):
         super().__init__(data)
@@ -26,17 +27,17 @@ class ROM(BinaryObject):
         if patch.header:
             self.ensure_has_header()
         for command, args in patch:
-            if command == 'patch':
+            if command == PatchCommands.Patch:
                 loc, patch_size, replacement_data = args
                 self.data[loc:loc+patch_size] = replacement_data
-            elif command == 'rle':
+            elif command == PatchCommands.Truncate:
+                size = args[0]
+                self.data = self.data[:size]
+            elif command == PatchCommands.RLE:
                 loc, run_size, fill_byte = args
                 self.data[loc:loc+run_size] = fill_byte * run_size
-            elif command == 'truncate':
-                truncate = args[0]
-                self.data = self.data[:truncate]
             else:
-                raise Exception('Unknown patch command "{}"'.format(command))
+                raise Exception('Unknown patch command: %s' % (command))
         if patch.header:
             self.ensure_has_no_header()
 
@@ -57,4 +58,3 @@ class ROM(BinaryObject):
     def save_to_file(self, file_name):
         with open(file_name, 'wb') as fobj:
             fobj.write(self.data)
-

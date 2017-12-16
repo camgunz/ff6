@@ -2,35 +2,34 @@ from ff6 import offsets
 
 from ff6.rom import ROM
 from ff6.items import *
+from ff6.struct import *
 from ff6.monsters import *
 
-class InventoryItems(StructArrayAggregate):
-
-    ElementName = 'InventoryItem'
-    StructArraysAndLocations = (
-        (InventoryItemNameStructArray, offsets.InventoryItemNames),
-        (InventoryItemDataStructArray, offsets.InventoryItemData),
-    )
-
-class Monsters(StructArrayAggregate):
-
-    ElementName = 'Monster'
-    StructArraysAndLocations = (
-        (MonsterNameStructArray, offsets.MonsterNames),
-        (MonsterDataStructArray, offsets.MonsterData)
-    )
-
-class FF6ROM(ROM):
+class FF6ROM(ROM, BinaryModel):
 
     Mappings = (
-        ('inventory_items', InventoryItems),
-        ('monsters', Monsters)
+        BinaryMapping(
+            StructArrayField(
+                'inventory_items',
+                InventoryItemNameStructArray,
+                0
+            ),
+            offsets.InventoryItemNames
+        ),
+        BinaryMapping(
+            StructArrayField(
+                'inventory_items',
+                InventoryItemDataStructArray,
+                0
+            ),
+            offsets.InventoryItemData
+        ),
+        BinaryMapping(
+            StructArrayField('monsters', MonsterNameStructArray, 0),
+            offsets.MonsterNames
+        ),
+        BinaryMapping(
+            StructArrayField('monsters', MonsterDataStructArray, 0),
+            offsets.MonsterData
+        )
     )
-
-    def serialize(self):
-        for name, aggregate in self.Mappings:
-            aggregate.serialize(self, getattr(self, name))
-
-    def deserialize(self):
-        for name, aggregate in self.Mappings:
-            setattr(self, name, aggregate.deserialize(self))

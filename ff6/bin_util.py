@@ -31,7 +31,7 @@ class BinaryObject:
         return read_high_signed_bits(self.data, location, bit_width)
 
     def write_high_bits(self, location, bit_width, high_bits):
-        write_high_bits(self.dat, location, bit_width, high_bits)
+        write_high_bits(self.data, location, bit_width, high_bits)
 
     def read_bit(self, location, bit_index):
         return read_bit(self.data, location, bit_index)

@@ -1,8 +1,12 @@
 # To Do
 
-- Add support:
-  - monster sketch/control
-  - monster steal/drop
+- ROM:
+  - monsters:
+    - sketch
+    - control
+    - rage
+    - steal
+    - drop
   - battle dialogue
   - morph packages
   - HP/MP gain
@@ -10,19 +14,30 @@
   - character starting stats
   - shops
   - spells
+  - bushido
+  - blitz
+  - Terra/Celes learned magic
+  - Checksum
+- Save game:
+  - Magic
   - Bushido
   - Blitz
-  - Terra/Celes learned magic
-- Save game editor (huge, really need this)
+  - Lores
+  - Espers
+  - Rages
+  - Current party
+  - Checksum
 - ASM hack the item stats loading
 
 ## Engineering
 
-The infrastructure for reading binary data is solid, but there needs to be
-something that's an actual Python object.  The main things are:
-
-- Coalesce multiple structs into a single object
-- The object's fields need to automatically serialize and deserialize
+- Work on serialization
+- Is it even worth having `Struct`, `StructArray` and `VariantStruct` separate
+  from `StructField` and `StructArrayField`?  Feels like a lot of indirection
+  for nothing because you never use them by themselves.
+- Now that things are deserializing, they should be related to the ROM.  So
+  instead of Terra's weapon being `1`, it should be `rom.items[1] ('Dirk')`
+  - Feels like... `ROMMapper` and `get/set` functions
 
 ## To Consider
 
