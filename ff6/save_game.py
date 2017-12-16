@@ -12,94 +12,71 @@ from ff6.bin_util import *
 ---------------------------------------------
 """
 
-class CharacterStruct(Struct):
-
-    Name   = 'CharacterStruct'
-    Size   = 37
-    Fields = (
-        EnumField('actor', Actor, 0),
-        EnumField('character', Character, 1),
-        BattleStrField('name', 6, 2),
-        U8Field('level', 8),
-        U16Field('current_hp', 9),
-        U16Field('max_hp', 11),
-        U16Field('current_mp', 13),
-        U16Field('max_mp', 15),
-        U24Field('experience', 17),
-        FlagsField('status', SaveCharacterStatus, 20),
-        FlagsField('battle_commands', BattleCommands, 22),
-        U8Field('vigor', 26),
-        U8Field('speed', 27),
-        U8Field('stamina', 28),
-        U8Field('magic_power', 29),
-        U8Field('esper', 30),
-        U8Field('sword', 31),
-        U8Field('shield', 32),
-        U8Field('helmet', 33),
-        U8Field('armor', 34),
-        U8Field('relic1', 35),
-        U8Field('relic2', 36),
-    )
-
-class CharacterStructArray(StructArray):
-
-    Name   = 'CharacterStructArray'
-    Count  = 16
-    Struct = CharacterStruct
-
-class InventoryItemIDStruct(Struct):
-
-    Name = 'InventoryItemIDStruct'
-    Size = 1
-    Fields = (
-        U8Field('id', 0),
-    )
-
-class InventoryItemCountStruct(Struct):
-
-    name = 'InventoryItemCountStruct'
-    Size = 1
-    Fields = (
-        U8Field('count', 0),
-    )
-
-class InventoryItemIDStructArray(StructArray):
-
-    Name = 'InventoryItemIDStructArray'
-    Count = 256
-    Struct = InventoryItemIDStruct
-
-class InventoryItemCountStructArray(StructArray):
-
-    Name = 'InventoryItemCountStructArray'
-    Count = 256
-    Struct = InventoryItemCountStruct
-
 class SaveGame(BinaryModelObject):
 
-    Mappings = (
-        BinaryMapping(
-            StructArrayField(
-                'inventory_item_slots',
-                InventoryItemIDStructArray,
-                0
-            ),
-            offsets.SaveGameInventoryItemIDs
+    Fields = (
+        ArrayField(
+            name='inventory_item_slots',
+            offset=offsets.SaveGameInventoryItemIDs,
+            count=256,
+            element_size=1,
+            element_field=StructField(
+                name='inventory_item_slot',
+                offset=0,
+                fields=(
+                    U8Field('id', 0),
+                )
+            )
         ),
-        BinaryMapping(
-            StructArrayField(
-                'inventory_item_slots',
-                InventoryItemCountStructArray,
-                0
-            ),
-            offsets.SaveGameInventoryItemCounts
+        ArrayField(
+            name='inventory_item_slots',
+            offset=offsets.SaveGameInventoryItemCounts,
+            count=256,
+            element_size=1,
+            element_field=StructField(
+                name='inventory_item_slot',
+                offset=0,
+                fields=(
+                    U8Field('count', 0),
+                )
+            )
         ),
-        BinaryMapping(U24Field('gold', 0), offsets.SaveGameGold),
-        BinaryMapping(TimestampField('game_time', 0), offsets.SaveGameTime),
-        BinaryMapping(U24Field('steps', 0), offsets.SaveGameSteps),
-        BinaryMapping(
-            StructArrayField('characters', CharacterStructArray, 0),
-            offsets.SaveGameCharacters
+        U24Field('gold', offsets.SaveGameGold),
+        TimestampField('game_time', offsets.SaveGameTime),
+        U24Field('steps', offsets.SaveGameSteps),
+        ArrayField(
+            name='characters',
+            offset=offsets.SaveGameCharacters,
+            count=16,
+            element_size=37,
+            element_field=StructField(
+                name='character',
+                offset=0,
+                fields=(
+                    EnumField('actor', Actor, 0),
+                    EnumField('character', Character, 1),
+                    BattleStrField('name', 6, 2),
+                    U8Field('level', 8),
+                    U16Field('current_hp', 9),
+                    U16Field('max_hp', 11),
+                    U16Field('current_mp', 13),
+                    U16Field('max_mp', 15),
+                    U24Field('experience', 17),
+                    FlagsField('status', SaveCharacterStatus, 20),
+                    FlagsField('battle_commands', BattleCommands, 22),
+                    U8Field('vigor', 26),
+                    U8Field('speed', 27),
+                    U8Field('stamina', 28),
+                    U8Field('magic_power', 29),
+                    U8Field('esper', 30),
+                    U8Field('sword', 31),
+                    U8Field('shield', 32),
+                    U8Field('helmet', 33),
+                    U8Field('armor', 34),
+                    U8Field('relic1', 35),
+                    U8Field('relic2', 36),
+                )
+            )
         )
     )
 

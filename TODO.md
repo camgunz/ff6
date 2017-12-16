@@ -34,9 +34,6 @@
 
 ## Engineering
 
-- Is it even worth having `Struct`, `StructArray` and `VariantStruct` separate
-  from `StructField` and `StructArrayField`?  Feels like a lot of indirection
-  for nothing because you never use them by themselves.
 - Now that things are deserializing, they should be related to the ROM.  So
   instead of Terra's weapon being `1`, it should be `rom.items[1] ('Dirk')`
   - Feels like... `ROMMapper` and `get/set` functions

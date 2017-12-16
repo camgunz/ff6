@@ -29,6 +29,9 @@ class AbstractField:
         self.serializer = serializer
         self.deserializer = deserializer
 
+    def __repr__(self):
+        return '%s(%s, %s)' % (type(self).__name__, self.name, hex(self.offset))
+
     def check_serialized_value(self, value):
         return True
 
@@ -36,22 +39,22 @@ class AbstractField:
         return True
 
     @abstractmethod
-    def _serialize(self, bin_obj, location, value):
+    def _serialize(self, bin_obj, offset, value):
         raise NotImplementedError()
 
     @abstractmethod
-    def _deserialize(self, bin_obj, location):
+    def _deserialize(self, bin_obj, offset):
         raise NotImplementedError()
 
-    def serialize(self, bin_obj, location, value):
+    def serialize(self, bin_obj, offset, value):
         if not self.check_serialized_value(value):
             raise InvalidFieldValueError(self.name, value)
         if self.serializer:
             value = self.serializer(value)
-        self._serialize(bin_obj, location, value)
+        self._serialize(bin_obj, offset, value)
 
-    def deserialize(self, bin_obj, location):
-        value = self._deserialize(bin_obj, location)
+    def deserialize(self, bin_obj, offset):
+        value = self._deserialize(bin_obj, offset)
         if not self.check_deserialized_value(value):
             raise InvalidFieldValueError(self.name, value)
         if self.deserializer:
@@ -108,12 +111,12 @@ class EnumField(AbstractScalarField):
             byte_length += 1
         return byte_length
 
-    def _serialize(self, bin_obj, location, value):
+    def _serialize(self, bin_obj, offset, value):
         bytes = value.to_bytes(self.byte_length, 'little')
-        bin_obj.write_bytes(location + self.offset, bytes)
+        bin_obj.write_bytes(offset + self.offset, bytes)
 
-    def _deserialize(self, bin_obj, location):
-        start = location + self.offset
+    def _deserialize(self, bin_obj, offset):
+        start = offset + self.offset
         end = start + self.byte_length
         bytes = bin_obj.data[start:end]
         return self.enum.from_bytes(bytes, 'little')
@@ -123,20 +126,20 @@ class ShortEnumFieldMixin:
     ByteSide = ByteSide.Low
     BitSize  = 0
 
-    def _serialize(self, bin_obj, location, value):
+    def _serialize(self, bin_obj, offset, value):
         value = value.value
         if self.ByteSide == ByteSide.High:
             func = bin_obj.write_high_bits
         else:
             func = bin_obj.write_low_bits
-        func(location + self.offset, self.BitSize, value)
+        func(offset + self.offset, self.BitSize, value)
 
-    def _deserialize(self, bin_obj, location):
+    def _deserialize(self, bin_obj, offset):
         if self.ByteSide == ByteSide.High:
             func = bin_obj.read_high_bits
         else:
             func = bin_obj.read_low_bits
-        return self.enum(func(location + self.offset, self.BitSize))
+        return self.enum(func(offset + self.offset, self.BitSize))
 
 class Enum6LowField(ShortEnumFieldMixin, EnumField):
 
@@ -187,110 +190,110 @@ class U3HighField(NumberRangeCheckMixin, AbstractScalarField):
     MinValue = 0
     MaxValue = 7
 
-    def _serialize(self, bin_obj, location, value):
-        bin_obj.write_high_bits(location + self.offset, 3, value)
+    def _serialize(self, bin_obj, offset, value):
+        bin_obj.write_high_bits(offset + self.offset, 3, value)
 
-    def _deserialize(self, bin_obj, location):
-        return bin_obj.read_high_bits(location + self.offset, 3)
+    def _deserialize(self, bin_obj, offset):
+        return bin_obj.read_high_bits(offset + self.offset, 3)
 
 class U3LowField(NumberRangeCheckMixin, AbstractScalarField):
 
     MinValue = 0
     MaxValue = 7
 
-    def _serialize(self, bin_obj, location, value):
-        bin_obj.write_low_bits(location + self.offset, 3, value)
+    def _serialize(self, bin_obj, offset, value):
+        bin_obj.write_low_bits(offset + self.offset, 3, value)
 
-    def _deserialize(self, bin_obj, location):
-        return bin_obj.read_low_bits(location + self.offset, 3)
+    def _deserialize(self, bin_obj, offset):
+        return bin_obj.read_low_bits(offset + self.offset, 3)
 
 class S4HighField(NumberRangeCheckMixin, AbstractScalarField):
 
     MinValue = -8
     MaxValue = 7
 
-    def _serialize(self, bin_obj, location, value):
-        bin_obj.write_high_bits(location + self.offset, 4, value)
+    def _serialize(self, bin_obj, offset, value):
+        bin_obj.write_high_bits(offset + self.offset, 4, value)
 
-    def _deserialize(self, bin_obj, location):
-        return bin_obj.read_high_signed_bits(location + self.offset, 4)
+    def _deserialize(self, bin_obj, offset):
+        return bin_obj.read_high_signed_bits(offset + self.offset, 4)
 
 class S4LowField(NumberRangeCheckMixin, AbstractScalarField):
 
     MinValue = -8
     MaxValue = 7
 
-    def _serialize(self, bin_obj, location, value):
-        bin_obj.write_low_bits(location + self.offset, 4, value)
+    def _serialize(self, bin_obj, offset, value):
+        bin_obj.write_low_bits(offset + self.offset, 4, value)
 
-    def _deserialize(self, bin_obj, location):
-        return bin_obj.read_low_signed_bits(location + self.offset, 4)
+    def _deserialize(self, bin_obj, offset):
+        return bin_obj.read_low_signed_bits(offset + self.offset, 4)
 
 class U4HighField(NumberRangeCheckMixin, AbstractScalarField):
 
     MinValue = 0
     MaxValue = 15
 
-    def _serialize(self, bin_obj, location, value):
-        bin_obj.write_high_bits(location + self.offset, 4, value)
+    def _serialize(self, bin_obj, offset, value):
+        bin_obj.write_high_bits(offset + self.offset, 4, value)
 
-    def _deserialize(self, bin_obj, location):
-        return bin_obj.read_high_bits(location + self.offset, 4)
+    def _deserialize(self, bin_obj, offset):
+        return bin_obj.read_high_bits(offset + self.offset, 4)
 
 class U4LowField(NumberRangeCheckMixin, AbstractScalarField):
 
     MinValue = 0
     MaxValue = 15
 
-    def _serialize(self, bin_obj, location, value):
-        bin_obj.write_low_bits(location + self.offset, 4, value)
+    def _serialize(self, bin_obj, offset, value):
+        bin_obj.write_low_bits(offset + self.offset, 4, value)
 
-    def _deserialize(self, bin_obj, location):
-        return bin_obj.read_low_bits(location + self.offset, 4)
+    def _deserialize(self, bin_obj, offset):
+        return bin_obj.read_low_bits(offset + self.offset, 4)
 
 class U5HighField(NumberRangeCheckMixin, AbstractScalarField):
 
     MinValue = 0
     MaxValue = 31
 
-    def _serialize(self, bin_obj, location, value):
-        bin_obj.write_low_bits(location + self.offset, 5, value)
+    def _serialize(self, bin_obj, offset, value):
+        bin_obj.write_low_bits(offset + self.offset, 5, value)
 
-    def _deserialize(self, bin_obj, location):
-        return bin_obj.read_low_bits(location + self.offset, 5)
+    def _deserialize(self, bin_obj, offset):
+        return bin_obj.read_low_bits(offset + self.offset, 5)
 
 class U5LowField(NumberRangeCheckMixin, AbstractScalarField):
 
     MinValue = 0
     MaxValue = 31
 
-    def _serialize(self, bin_obj, location, value):
-        bin_obj.write_low_bits(location + self.offset, 5, value)
+    def _serialize(self, bin_obj, offset, value):
+        bin_obj.write_low_bits(offset + self.offset, 5, value)
 
-    def _deserialize(self, bin_obj, location):
-        return bin_obj.read_low_bits(location + self.offset, 5)
+    def _deserialize(self, bin_obj, offset):
+        return bin_obj.read_low_bits(offset + self.offset, 5)
 
 class U6LowField(NumberRangeCheckMixin, AbstractScalarField):
 
     MinValue = 0
     MaxValue = 63
 
-    def _serialize(self, bin_obj, location, value):
-        bin_obj.write_low_bits(location + self.offset, 6, value)
+    def _serialize(self, bin_obj, offset, value):
+        bin_obj.write_low_bits(offset + self.offset, 6, value)
 
-    def _deserialize(self, bin_obj, location):
-        return bin_obj.read_low_bits(location + self.offset, 6)
+    def _deserialize(self, bin_obj, offset):
+        return bin_obj.read_low_bits(offset + self.offset, 6)
 
 class U8Field(NumberRangeCheckMixin, AbstractScalarField):
 
     MinValue = 0
     MaxValue = 255
 
-    def _serialize(self, bin_obj, location, value):
-        bin_obj.write_byte(location + self.offset, value)
+    def _serialize(self, bin_obj, offset, value):
+        bin_obj.write_byte(offset + self.offset, value)
 
-    def _deserialize(self, bin_obj, location):
-        value = bin_obj.read_byte(location + self.offset)
+    def _deserialize(self, bin_obj, offset):
+        value = bin_obj.read_byte(offset + self.offset)
         return value
 
 class U16Field(NumberRangeCheckMixin, AbstractScalarField):
@@ -298,52 +301,52 @@ class U16Field(NumberRangeCheckMixin, AbstractScalarField):
     MinValue = 0
     MaxValue = 65535
 
-    def _serialize(self, bin_obj, location, value):
-        bin_obj.write_short(location + self.offset, value)
+    def _serialize(self, bin_obj, offset, value):
+        bin_obj.write_short(offset + self.offset, value)
 
-    def _deserialize(self, bin_obj, location):
-        return bin_obj.read_short(location + self.offset)
+    def _deserialize(self, bin_obj, offset):
+        return bin_obj.read_short(offset + self.offset)
 
 class U24Field(NumberRangeCheckMixin, AbstractScalarField):
 
     MinValue = 0
     MaxValue = 16777215
 
-    def _serialize(self, bin_obj, location, value):
-        bin_obj.write_24(location + self.offset, value)
+    def _serialize(self, bin_obj, offset, value):
+        bin_obj.write_24(offset + self.offset, value)
 
-    def _deserialize(self, bin_obj, location):
-        return bin_obj.read_24(location + self.offset)
+    def _deserialize(self, bin_obj, offset):
+        return bin_obj.read_24(offset + self.offset)
 
 class TimestampField(AbstractScalarField):
 
-    def _serialize(self, bin_obj, location, timestamp):
-        bin_obj.write_timestamp(location + self.offset, timestamp)
+    def _serialize(self, bin_obj, offset, timestamp):
+        bin_obj.write_timestamp(offset + self.offset, timestamp)
 
-    def _deserialize(self, bin_obj, location):
-        return bin_obj.read_timestamp(location + self.offset)
+    def _deserialize(self, bin_obj, offset):
+        return bin_obj.read_timestamp(offset + self.offset)
 
 class U32Field(NumberRangeCheckMixin, AbstractScalarField):
 
     MinValue = 0
     MaxValue = 4294967295
 
-    def _serialize(self, bin_obj, location, value):
-        bin_obj.write_int(location + self.offset, value)
+    def _serialize(self, bin_obj, offset, value):
+        bin_obj.write_int(offset + self.offset, value)
 
-    def _deserialize(self, bin_obj, location):
-        return bin_obj.read_int(location + self.offset)
+    def _deserialize(self, bin_obj, offset):
+        return bin_obj.read_int(offset + self.offset)
 
 class ByteField(NumberRangeCheckMixin, AbstractScalarField):
 
     MinValue = 0
     MaxValue = 255
 
-    def _serialize(self, bin_obj, location, value):
-        bin_obj.write_byte(location + self.offset, value)
+    def _serialize(self, bin_obj, offset, value):
+        bin_obj.write_byte(offset + self.offset, value)
 
-    def _deserialize(self, bin_obj, location):
-        return bin_obj.read_byte(location + self.offset)
+    def _deserialize(self, bin_obj, offset):
+        return bin_obj.read_byte(offset + self.offset)
 
 class BattleStrField(AbstractScalarField):
 
@@ -351,24 +354,15 @@ class BattleStrField(AbstractScalarField):
         super().__init__(name, offset, serializer, deserializer)
         self.size = size
 
-    def _serialize(self, bin_obj, location, value):
-        bin_obj.write_dte_battle_string(location + self.offset, self.size,
+    def _serialize(self, bin_obj, offset, value):
+        bin_obj.write_dte_battle_string(offset + self.offset, self.size,
                                         value)
 
-    def _deserialize(self, bin_obj, location):
-        return bin_obj.read_dte_battle_string(location + self.offset,
+    def _deserialize(self, bin_obj, offset):
+        return bin_obj.read_dte_battle_string(offset + self.offset,
                                               self.size)
 
 class BitField(AbstractScalarField):
-
-    __slots__ = (
-        'obj',
-        'name',
-        'bit_index',
-        'offset',
-        'transform_incoming_binary_value',
-        'transform_outgoing_binary_value',
-    )
 
     def __init__(self, name, index, offset, serializer=None,
                  deserializer=None):
@@ -381,151 +375,116 @@ class BitField(AbstractScalarField):
     def check_deserialized_value(self, value):
         return isinstance(value, bool)
 
-    @property
-    def _binary_value(self):
-        value = self.value
-        if value is True:
-            return 1 << self.bit_index
-        if value is False:
-            return 0
+    def _serialize(self, bin_obj, offset, value):
+        bin_obj.write_bit(offset + self.offset, self.index, value)
 
-    @_binary_value.setter
-    def _binary_value(self, new_value):
-        if new_value == 1:
-            self.value = True
-        if new_value == 0:
-            self.value = False
-
-    def _serialize(self, bin_obj, location, value):
-        bin_obj.write_bit(location + self.offset, self.index, value)
-
-    def _deserialize(self, bin_obj, location):
-        return bin_obj.read_bit(location + self.offset, self.index)
+    def _deserialize(self, bin_obj, offset):
+        return bin_obj.read_bit(offset + self.offset, self.index)
 
 class StructField(AbstractStructField):
 
-    def __init__(self, name, struct, offset, serializer=None,
+    def __init__(self, name, fields, offset, serializer=None,
                  deserializer=None):
         super().__init__(name, offset, serializer, deserializer)
-        self.struct = struct
+        self.fields = fields
 
-    def _serialize(self, bin_obj, location, values):
-        self.struct.serialize(bin_obj, location, values)
+    def __repr__(self):
+        return '%s(%s, %s, %s)' % (
+            type(self).__name__,
+            self.name,
+            hex(self.offset),
+            ', '.join([repr(field) for field in self.fields])
+       )
 
-    def _deserialize(self, bin_obj, location):
-        return self.struct.deserialize(bin_obj, location)
+    def _serialize(self, bin_obj, offset, values):
+        for field in self.fields:
+            field.serialize(bin_obj, offset + self.offset, values[field.name])
 
-class StructArrayField(AbstractArrayField):
-
-    def __init__(self, name, struct_array, offset, serializer=None,
-                 deserializer=None):
-        super().__init__(name, offset, serializer, deserializer)
-        self.struct_array = struct_array
-
-    def _serialize(self, bin_obj, location, elements):
-        self.struct_array.serialize(bin_obj, location, elements)
-
-    def _deserialize(self, bin_obj, location):
-        return self.struct_array.deserialize(bin_obj, location)
-
-class Struct:
-
-    Name   = 'Struct'
-    Fields = tuple()
-    Size   = 0
-
-    @classmethod
-    def serialize(cls, bin_obj, location, values):
-        for field in cls.Fields:
-            field.serialize(bin_obj, location, values[field.name])
-
-    @classmethod
-    def deserialize(cls, bin_obj, location):
+    def _deserialize(self, bin_obj, offset):
         return {
-            field.name: field.deserialize(bin_obj, location)
-            for field in cls.Fields
+            field.name: field.deserialize(bin_obj, offset + self.offset)
+            for field in self.fields
         }
 
-class StructArray:
+class ArrayField(AbstractArrayField):
 
-    Name = 'StructArray'
-    Struct = Struct
-    Count = 0
+    def __init__(self, name, count, element_field, element_size, offset,
+                 serializer=None,
+                 deserializer=None):
+        super().__init__(name, offset, serializer, deserializer)
+        self.count = count
+        self.element_field = element_field
+        self.element_size = element_size
 
-    @classmethod
-    def serialize(cls, bin_obj, location, elements):
-        assert len(elements) == cls.Count
+    def __repr__(self):
+        return '%s(%s, %s, %r)' % (
+            type(self).__name__,
+            self.name,
+            hex(self.offset),
+            self.element_field
+        )
+
+    def _serialize(self, bin_obj, offset, elements):
+        assert len(elements) == self.count
         for n, element in enumerate(elements):
-            cls.Struct.serialize(
+            self.element_field.serialize(
                 bin_obj,
-                location + (n * cls.Struct.Size),
+                offset + self.offset + (n * self.element_size),
                 element
             )
 
-    @classmethod
-    def deserialize(cls, bin_obj, location):
+    def _deserialize(self, bin_obj, offset):
         return [
-            cls.Struct.deserialize(bin_obj, location + (n * cls.Struct.Size))
-            for n in range(cls.Count)
+            self.element_field.deserialize(
+                bin_obj,
+                offset + self.offset + (n * self.element_size)
+            )
+            for n in range(self.count)
         ]
 
-class VariantStruct:
+class VariantField(AbstractStructField):
 
-    Name = 'VariantStruct'
-    VariantField = None
-    Variants = {}
-    Size = 0
-
-    @classmethod
-    def serialize(cls, bin_obj, location, values):
-        variant_value = values[cls.VariantField.name]
-        variant = cls.Variants[variant_value]
-        cls.VariantField.serialize(bin_obj, location, variant_value)
-        variant.serialize(bin_obj, location, values)
-
-    @classmethod
-    def deserialize(cls, bin_obj, location):
-        variant_value = cls.VariantField.deserialize(bin_obj, location)
-        variant = cls.Variants[variant_value]
-        values = variant.deserialize(bin_obj, location)
-        values[cls.VariantField.name] = variant_value
-        return values
-
-class BinaryMapping:
-
-    def __init__(self, field, location):
+    def __init__(self, name, field, variants, offset, serializer=None,
+                 deserializer=None):
+        super().__init__(name, offset, serializer, deserializer)
         self.field = field
-        self.location = location
+        self.variants = variants
 
-    def serialize(self, bin_obj, value):
-        self.field.serialize(bin_obj, self.location, value)
+    def _serialize(self, bin_obj, offset, values):
+        location = offset + self.offset
+        variant_value = values[self.field.name]
+        self.field.serialize(bin_obj, location, variant_value)
+        self.variants[variant_value].serialize(bin_obj, location, values)
 
-    def deserialize(self, bin_obj):
-        return self.field.deserialize(bin_obj, self.location)
+    def _deserialize(self, bin_obj, offset):
+        location = offset + self.offset
+        variant_value = self.field.deserialize(bin_obj, location)
+        values = self.variants[variant_value].deserialize(bin_obj, location)
+        values[self.field.name] = variant_value
+        return values
 
 class BinaryModel:
 
-    ElementName = 'BinaryModel'
-    Mappings = tuple()
+    Fields = tuple()
 
     def serialize(self, instance, bin_obj):
-        for mapping in self.Mappings:
-            mapping.serialize(bin_obj, getattr(instance, mapping.field.name))
+        for field in self.Fields:
+            field.serialize(bin_obj, 0, getattr(instance, field.name))
 
     def deserialize(self, instance, bin_obj):
-        for mapping in self.Mappings:
-            existing_value = getattr(instance, mapping.field.name, None)
-            new_value = mapping.deserialize(bin_obj)
+        for field in self.Fields:
+            existing_value = getattr(instance, field.name, None)
+            new_value = field.deserialize(bin_obj, 0)
             if existing_value is None:
                 existing_value = new_value
-            elif mapping.field.FieldType == FieldType.Scalar:
+            elif field.FieldType == FieldType.Scalar:
                 existing_value = new_value
-            elif mapping.field.FieldType == FieldType.Struct:
+            elif field.FieldType == FieldType.Struct:
                 existing_value.update(new_value)
-            elif mapping.field.FieldType == FieldType.Array:
+            elif field.FieldType == FieldType.Array:
                 for existing, new in zip(existing_value, new_value):
                     existing.update(new)
-            setattr(instance, mapping.field.name, existing_value)
+            setattr(instance, field.name, existing_value)
 
 class BinaryModelObject(BinaryObject, BinaryModel):
 
