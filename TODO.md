@@ -17,21 +17,23 @@
   - bushido
   - blitz
   - Terra/Celes learned magic
-  - Checksum
+  - magic
+  - checksum
 - Save game:
-  - Magic
-  - Bushido
-  - Blitz
-  - Lores
-  - Espers
-  - Rages
-  - Current party
-  - Checksum
-- ASM hack the item stats loading
+  - magic
+  - bushido
+  - blitz
+  - lores
+  - espers
+  - rages
+  - current party
+  - checksum
+- Item stats:
+  - Change the data format for items
+  - ASM hack the item stats loading
 
 ## Engineering
 
-- Work on serialization
 - Is it even worth having `Struct`, `StructArray` and `VariantStruct` separate
   from `StructField` and `StructArrayField`?  Feels like a lot of indirection
   for nothing because you never use them by themselves.

@@ -1,10 +1,7 @@
 from ff6.data import *
 from ff6.struct import *
 
-NameOffset           = 0x000FC250
-DataOffset           = 0x000F0200
-DropsAndStealsOffset = 0x000F3200
-Blanks               = (366, 367, 368, 370, 371, 372, 375, 376, 378, 379, 380)
+_BLANKS = (366, 367, 368, 370, 371, 372, 375, 376, 378, 379, 380)
 
 class MonsterNameStruct(Struct):
 
@@ -57,4 +54,3 @@ class MonsterDataStructArray(StructArray):
     Name = 'MonsterDataStructArray'
     Count = 381
     Struct = MonsterDataStruct
-

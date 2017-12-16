@@ -436,7 +436,6 @@ class Struct:
 
     @classmethod
     def serialize(cls, bin_obj, location, values):
-        # assert set(values.keys()) == set([field.name for field in cls.Fields])
         for field in cls.Fields:
             field.serialize(bin_obj, location, values[field.name])
 
@@ -457,8 +456,11 @@ class StructArray:
     def serialize(cls, bin_obj, location, elements):
         assert len(elements) == cls.Count
         for n, element in enumerate(elements):
-            location += (n * cls.Struct.Size)
-            cls.Struct.serialize(bin_obj, location, element)
+            cls.Struct.serialize(
+                bin_obj,
+                location + (n * cls.Struct.Size),
+                element
+            )
 
     @classmethod
     def deserialize(cls, bin_obj, location):
