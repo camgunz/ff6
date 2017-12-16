@@ -57,8 +57,8 @@ class AbstractField:
         self.transform_outgoing_binary_value = transform_outgoing_binary_value
 
     @property
-    def rom(self):
-        return self.obj.rom
+    def bin_obj(self):
+        return self.obj.bin_obj
 
     @property
     def is_set(self):
@@ -206,10 +206,10 @@ class BitField(AbstractField):
             self.value = False
 
     def load(self):
-        self._binary_value = self.rom.read_bit(self.offset, self.bit_index)
+        self._binary_value = self.bin_obj.read_bit(self.offset, self.bit_index)
 
     def save(self):
-        self.rom.write_bit(self.offset, self.bit_index, self.value)
+        self.bin_obj.write_bit(self.offset, self.bit_index, self.value)
 
 class NumberRangeCheckMixin:
 
@@ -225,10 +225,10 @@ class U3HighField(NumberRangeCheckMixin, AbstractField):
     MaxValue = 7
 
     def load(self):
-        self.binary_value = self.rom.read_high_bits(self.offset, 3)
+        self.binary_value = self.bin_obj.read_high_bits(self.offset, 3)
 
     def save(self):
-        self.rom.write_high_bits(self.offset, 3, self.binary_value)
+        self.bin_obj.write_high_bits(self.offset, 3, self.binary_value)
 
 class U3LowField(NumberRangeCheckMixin, AbstractField):
 
@@ -236,10 +236,10 @@ class U3LowField(NumberRangeCheckMixin, AbstractField):
     MaxValue = 7
 
     def load(self):
-        self.binary_value = self.rom.read_low_bits(self.offset, 3)
+        self.binary_value = self.bin_obj.read_low_bits(self.offset, 3)
 
     def save(self):
-        self.rom.write_low_bits(self.offset, 3, self.binary_value)
+        self.bin_obj.write_low_bits(self.offset, 3, self.binary_value)
 
 class S4HighField(NumberRangeCheckMixin, AbstractField):
 
@@ -247,10 +247,10 @@ class S4HighField(NumberRangeCheckMixin, AbstractField):
     MaxValue = 7
 
     def load(self):
-        self.binary_value = self.rom.read_high_signed_bits(self.offset, 4)
+        self.binary_value = self.bin_obj.read_high_signed_bits(self.offset, 4)
 
     def save(self):
-        self.rom.write_high_bits(self.offset, 4, self.binary_value)
+        self.bin_obj.write_high_bits(self.offset, 4, self.binary_value)
 
 class S4LowField(NumberRangeCheckMixin, AbstractField):
 
@@ -258,10 +258,10 @@ class S4LowField(NumberRangeCheckMixin, AbstractField):
     MaxValue = 7
 
     def load(self):
-        self.binary_value = self.rom.read_low_signed_bits(self.offset, 4)
+        self.binary_value = self.bin_obj.read_low_signed_bits(self.offset, 4)
 
     def save(self):
-        self.rom.write_low_bits(self.offset, 4, self.binary_value)
+        self.bin_obj.write_low_bits(self.offset, 4, self.binary_value)
 
 class U4HighField(NumberRangeCheckMixin, AbstractField):
 
@@ -269,10 +269,10 @@ class U4HighField(NumberRangeCheckMixin, AbstractField):
     MaxValue = 15
 
     def load(self):
-        self.binary_value = self.rom.read_high_bits(self.offset, 4)
+        self.binary_value = self.bin_obj.read_high_bits(self.offset, 4)
 
     def save(self):
-        self.rom.write_high_bits(self.offset, 4, self.binary_value)
+        self.bin_obj.write_high_bits(self.offset, 4, self.binary_value)
 
 class U4LowField(NumberRangeCheckMixin, AbstractField):
 
@@ -280,10 +280,10 @@ class U4LowField(NumberRangeCheckMixin, AbstractField):
     MaxValue = 15
 
     def load(self):
-        self.binary_value = self.rom.read_low_bits(self.offset, 4)
+        self.binary_value = self.bin_obj.read_low_bits(self.offset, 4)
 
     def save(self):
-        self.rom.write_low_bits(self.offset, 4, self.binary_value)
+        self.bin_obj.write_low_bits(self.offset, 4, self.binary_value)
 
 class U5HighField(NumberRangeCheckMixin, AbstractField):
 
@@ -291,10 +291,10 @@ class U5HighField(NumberRangeCheckMixin, AbstractField):
     MaxValue = 31
 
     def load(self):
-        self.binary_value = self.rom.read_low_bits(self.offset, 4)
+        self.binary_value = self.bin_obj.read_low_bits(self.offset, 4)
 
     def save(self):
-        self.rom.write_low_bits(self.offset, 4, self.binary_value)
+        self.bin_obj.write_low_bits(self.offset, 4, self.binary_value)
 
 class U5LowField(NumberRangeCheckMixin, AbstractField):
 
@@ -302,10 +302,10 @@ class U5LowField(NumberRangeCheckMixin, AbstractField):
     MaxValue = 31
 
     def load(self):
-        self.binary_value = self.rom.read_low_bits(self.offset, 5)
+        self.binary_value = self.bin_obj.read_low_bits(self.offset, 5)
 
     def save(self):
-        self.rom.write_low_bits(self.offset, 5, self.binary_value)
+        self.bin_obj.write_low_bits(self.offset, 5, self.binary_value)
 
 class U6LowField(NumberRangeCheckMixin, AbstractField):
 
@@ -313,10 +313,10 @@ class U6LowField(NumberRangeCheckMixin, AbstractField):
     MaxValue = 63
 
     def load(self):
-        self.binary_value = self.rom.read_low_bits(self.offset, 6)
+        self.binary_value = self.bin_obj.read_low_bits(self.offset, 6)
 
     def save(self):
-        self.rom.write_low_bits(self.offset, 6, self.binary_value)
+        self.bin_obj.write_low_bits(self.offset, 6, self.binary_value)
 
 class U8Field(NumberRangeCheckMixin, AbstractField):
 
@@ -324,10 +324,10 @@ class U8Field(NumberRangeCheckMixin, AbstractField):
     MaxValue = 255
 
     def load(self):
-        self.binary_value = self.rom.read_byte(self.offset)
+        self.binary_value = self.bin_obj.read_byte(self.offset)
 
     def save(self):
-        self.rom.write_byte(self.offset, self.binary_value)
+        self.bin_obj.write_byte(self.offset, self.binary_value)
 
 class U16Field(NumberRangeCheckMixin, AbstractField):
 
@@ -335,10 +335,32 @@ class U16Field(NumberRangeCheckMixin, AbstractField):
     MaxValue = 65535
 
     def load(self):
-        self.binary_value = self.rom.read_short(self.offset)
+        self.binary_value = self.bin_obj.read_short(self.offset)
 
     def save(self):
-        self.rom.write_short(self.offset, self.binary_value)
+        self.bin_obj.write_short(self.offset, self.binary_value)
+
+class U24Field(NumberRangeCheckMixin, AbstractField):
+
+    MinValue = 0
+    MaxValue = 16777215
+
+    def load(self):
+        self.binary_value = self.bin_obj.read_24(self.offset)
+
+    def save(self):
+        self.bin_obj.write_24(self.offset, self.binary_value)
+
+class U32Field(NumberRangeCheckMixin, AbstractField):
+
+    MinValue = 0
+    MaxValue = 4294967295
+
+    def load(self):
+        self.binary_value = self.bin_obj.read_int(self.offset)
+
+    def save(self):
+        self.bin_obj.write_int(self.offset, self.binary_value)
 
 class BattleStrField(AbstractField):
 
@@ -364,12 +386,12 @@ class BattleStrField(AbstractField):
         self.size = size
 
     def load(self):
-        self.binary_value = self.rom.read_dte_battle_string(self.offset,
-                                                            self.size)
+        self.binary_value = self.bin_obj.read_dte_battle_string(self.offset,
+                                                                self.size)
 
     def save(self):
-        self.rom.write_dte_battle_string(self.offset, self.size,
-                                         self.binary_value)
+        self.bin_obj.write_dte_battle_string(self.offset, self.size,
+                                             self.binary_value)
 
 class Enum3HighField(BaseEnumField, U3HighField):
     pass
@@ -485,6 +507,9 @@ class Flags8Field(BaseFlagsField, U8Field):
 class Flags16Field(BaseFlagsField, U16Field):
     pass
 
+class Flags32Field(BaseFlagsField, U32Field):
+    pass
+
 class TypedObject:
 
     def __init__(self):
@@ -513,8 +538,8 @@ class TypedObject:
 
 class FF6Object(TypedObject):
 
-    def __init__(self, rom, number):
-        self.rom = rom
+    def __init__(self, bin_obj, number):
+        self.bin_obj = bin_obj
         self.number = number
         super().__init__()
 
@@ -527,12 +552,12 @@ class TypedObjectContainer:
     ObjectType = object
     Name = 'TypedObjectContainer'
 
-    def __init__(self, rom):
-        self._rom = rom
+    def __init__(self, bin_obj):
+        self._bin_obj = bin_obj
         self._objects = []
 
-    def _get_object_from_rom(self, rom, n):
-        return self.ObjectType(rom, n)
+    def _get_object_from_bin_obj(self, bin_obj, n):
+        return self.ObjectType(bin_obj, n)
 
     def __getitem__(self, item):
         if isinstance(item, int):
@@ -555,7 +580,7 @@ class TypedObjectContainer:
         for n in range(self.ObjectCount):
             if n in self.Blanks:
                 continue
-            obj = self._get_object_from_rom(self._rom, n)
+            obj = self._get_object_from_bin_obj(self._bin_obj, n)
             obj.load()
             self._objects.append(obj)
 

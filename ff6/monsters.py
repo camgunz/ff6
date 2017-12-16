@@ -1,69 +1,59 @@
 from ff6.data import *
-# from ff6.type_checks import *
-from ff6.typed_object import *
+from ff6.struct import *
 
-class Monster(FF6Object):
+NameOffset           = 0x000FC250
+DataOffset           = 0x000F0200
+DropsAndStealsOffset = 0x000F3200
+Blanks               = (366, 367, 368, 370, 371, 372, 375, 376, 378, 379, 380)
 
-    NameSize             = 10
-    NameOffset           = 0x000FC250
-    DataSize             = 32
-    DataOffset           = 0x000F0200
-    DropsAndStealsOffset = 0x000F3200
-    TypeName             = 'Monster'
+class MonsterNameStruct(Struct):
 
-    def _build_fields(self):
-        return super()._build_fields() + (
-            BattleStrField(self, 'name', self.NameSize, self.name_offset + 0),
-            U8Field(self, 'speed', self.data_offset + 0),
-            U8Field(self, 'strength', self.data_offset + 1),
-            U8Field(self, 'hit_rate', self.data_offset + 2),
-            U8Field(self, 'evade', self.data_offset + 3),
-            U8Field(self, 'magic_block', self.data_offset + 4),
-            U8Field(self, 'defense', self.data_offset + 5),
-            U8Field(self, 'magic_defense', self.data_offset + 6),
-            U8Field(self, 'magic_power', self.data_offset + 7),
-            U16Field(self, 'hp', self.data_offset + 8),
-            U16Field(self, 'mp', self.data_offset + 10),
-            U16Field(self, 'xp', self.data_offset + 12),
-            U16Field(self, 'gp', self.data_offset + 14),
-            U8Field(self, 'level', self.data_offset + 16),
-            Enum3HighField(self, 'morph_chance', MetamorphChance,
-                           self.data_offset + 17),
-            U8Field(self, 'morph_package', self.data_offset + 17),
-            Flags8Field(self, MonsterFlag1, self.data_offset + 18),
-            Flags8Field(self, MonsterFlag2, self.data_offset + 19),
-            Flags8Field(self, MonsterFlag3, self.data_offset + 30),
-            Flags8Field(self, Element, self.data_offset + 23,
-                        prefix='absorbed_'),
-            Flags8Field(self, Element, self.data_offset + 24,
-                        prefix='nullified_'),
-            Flags8Field(self, Element, self.data_offset + 25,
-                        prefix='weak_to_'),
-            Enum8Field(self, 'attack_type', MonsterAttackType,
-                       self.data_offset + 26),
-            Flags8Field(self, Condition1, self.data_offset + 27,
-                        prefix='immune_to_'),
-            Flags8Field(self, Condition2, self.data_offset + 28,
-                        prefix='immune_to_'),
-            Flags8Field(self, Condition3, self.data_offset + 29,
-                        prefix='immune_to_'),
-            Enum6LowField(self, 'special_attack_effect',
-                          MonsterSpecialAttackEffect, self.data_offset + 31),
-            BitField(self, 'special_attack_causes_no_damage', 7,
-                     self.data_offset + 31),
-        )
+    Name   = 'MonsterNameStruct'
+    Size   = 10
+    Fields = (
+        BattleStrField('name', Size, 0),
+    )
 
-    @property
-    def name_offset(self):
-        return self.NameOffset + (self.NameSize * self.number)
+class MonsterDataStruct(Struct):
 
-    @property
-    def data_offset(self):
-        return self.DataOffset + (self.DataSize * self.number)
+    Name = 'MonsterDataStruct'
+    Size = 32
+    Fields = (
+        U8Field('speed', 0),
+        U8Field('strength', 1),
+        U8Field('hit_rate', 2),
+        U8Field('evade', 3),
+        U8Field('magic_block', 4),
+        U8Field('defense', 5),
+        U8Field('magic_defense', 6),
+        U8Field('magic_power', 7),
+        U16Field('hp', 8),
+        U16Field('mp', 10),
+        U16Field('xp', 12),
+        U16Field('gp', 14),
+        U8Field('level', 16),
+        Enum3HighField('morph_chance', MetamorphChance, 17),
+        U5LowField('morph_package', 17),
+        FlagsField('flag1', MonsterFlag1, 18),
+        FlagsField('flag2', MonsterFlag2, 19),
+        FlagsField('absorbed_elements', Element, 23),
+        FlagsField('nullified_elements', Element, 24),
+        FlagsField('weak_elements', Element, 25),
+        EnumField('attack_type', MonsterAttackType, 26),
+        FlagsField('immune_conditions', MonsterConditionImmunity, 27),
+        FlagsField('flag3', MonsterFlag3, 30),
+        Enum6LowField('special_attack_effect', MonsterSpecialAttackEffect, 31),
+        BitField('special_attack_causes_no_damage', 7, 31),
+    )
 
-class Monsters(TypedObjectContainer):
+class MonsterNameStructArray(StructArray):
 
-    ObjectCount = 381
-    Blanks = (366, 367, 368, 370, 371, 372, 375, 376, 378, 379, 380)
-    ObjectType = Monster
-    Name = 'Monsters'
+    Name = 'MonsterNameStructArray'
+    Count = 381
+    Struct = MonsterNameStruct
+
+class MonsterDataStructArray(StructArray):
+
+    Name = 'MonsterDataStructArray'
+    Count = 381
+    Struct = MonsterDataStruct

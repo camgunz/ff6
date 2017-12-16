@@ -1,179 +1,141 @@
 from ff6.data import *
-from ff6.typed_object import *
+from ff6.struct import *
 
-class InventoryItem(FF6Object):
+NameSize   = 13
+DataSize   = 30
 
-    NameSize   = 13
-    NameOffset = 0x0012B500
-    DataSize   = 30
-    DataOffset = 0x00185200
+class InventoryItemNameStruct(Struct):
 
-    def load(self):
-        super().load()
-        if self.type != self.ItemType:
-            raise ValueError('%s: Expected type %s; got %s' % (
-                self.name,
-                self.ItemType,
-                self.type
-            ))
+    Name = 'InventoryItemNameStruct'
+    Size = 13
+    Fields = (
+        EnumField('icon_type', EquipmentIconType, 0),
+        BattleStrField('name', Size - 1, 1)
+    )
 
-    @property
-    def name_offset(self):
-        return self.NameOffset + (self.NameSize * self.number)
+class InventoryItemStruct(Struct):
 
-    @property
-    def data_offset(self):
-        return self.DataOffset + (self.DataSize * self.number)
+    Name = 'InventoryItemStruct'
+    Size = 30
+    Fields = (
+        Flags4HighField('usability', InventoryItemUsability, 0),
+        FlagsField('targeting', Targeting, 14),
+        U16Field('price', 28),
+    )
 
-    def _build_fields(self):
-        return super()._build_fields() + (
-            Enum8Field(self, 'icon_type', EquipmentIconType, self.name_offset),
-            BattleStrField(self, 'name', self.NameSize - 1,
-                           self.name_offset + 1),
-            Enum3LowField(self, 'type', InventoryItemType,
-                          self.data_offset + 0),
-            Flags5HighField(self, InventoryItemUsability, self.data_offset + 0),
-            Flags8Field(self, Targeting, self.data_offset + 14, prefix='targets_'),
-            U16Field(self, 'price', self.data_offset + 28),
-        )
+class ItemStruct(InventoryItemStruct):
 
-    def __str__(self):
-        return '<%s (%d): %s>' % (self.type.name, self.number, self.name)
+    Name = 'ItemStruct'
+    Fields = InventoryItemStruct.Fields + (
+        Enum3LowField('type', InventoryItemType, 0),
+        FlagsField('properties', ItemProperty, 19),
+        U8Field('effect_strength', 20),
+        FlagsField('caused_conditions', ItemCondition, 21),
+        EnumField('special_action', ItemSpecialAction, 27),
+    )
 
-class Equipment(InventoryItem):
+class UsableNonItemStruct(InventoryItemStruct):
 
-    def _build_fields(self):
-        return super()._build_fields() + (
-            Flags16Field(self, EquipInfo, self.data_offset + 1,
-                         suffix='_equips'),
-            U8Field(self, 'spell_learn_rate', self.data_offset + 3),
-            U8Field(self, 'spell_learned', self.data_offset + 4),
-            Flags8Field(self, FieldEffect, self.data_offset + 5),
-            Flags8Field(self, Condition1, self.data_offset + 6,
-                       prefix='protects_against_'),
-            Flags8Field(self, Condition2, self.data_offset + 7,
-                       prefix='protects_against_'),
-            Flags8Field(self, Condition3, self.data_offset + 8,
-                       prefix='causes_'),
-            Flags8Field(self, StatusEffect1, self.data_offset + 9),
-            Flags8Field(self, BattleEffect1, self.data_offset + 10),
-            Flags8Field(self, StatusEffect2, self.data_offset + 11),
-            Flags8Field(self, BattleEffect2, self.data_offset + 12),
-            Flags8Field(self, BattleEffect3, self.data_offset + 13),
-            Flags8Field(self, Element, self.data_offset + 15,
-                       suffix='_elemental'),
-            S4HighField(self, 'vigor', self.data_offset + 16),
-            S4LowField(self, 'speed', self.data_offset + 16),
-            S4HighField(self, 'stamina', self.data_offset + 17),
-            S4LowField(self, 'magic_power', self.data_offset + 17),
-            U8Field(self, 'attack_when_used', self.data_offset + 18),
-            Enum4LowField(self, 'evade_animation', EvadeAnimation,
-                          self.data_offset + 27),
-        )
+    Name = 'UsableNonItemStruct'
+    Fields = InventoryItemStruct.Fields + (
+        U8Field('attack_when_used', 18),
+    )
 
-class DefensiveEquipment(Equipment):
+class ToolStruct(UsableNonItemStruct):
 
-    def _build_fields(self):
-        return super()._build_fields() + (
-            U8Field(self, 'physical_defense', self.data_offset + 20),
-            U8Field(self, 'magic_defense', self.data_offset + 21),
-            Flags8Field(self, Element, self.data_offset + 22,
-                        prefix='absorbs_'),
-            Flags8Field(self, Element, self.data_offset + 23,
-                       prefix='nullifies_'),
-            Flags8Field(self, Element, self.data_offset + 24,
-                       prefix='weak_to_'),
-            Flags8Field(self, Condition2, self.data_offset + 25,
-                       prefix='causes_'),
-            U4HighField(self, 'evade', self.data_offset + 26),
-            U4LowField(self, 'magic_block', self.data_offset + 26),
-        )
+    Name = 'ToolStruct'
+    Fields = UsableNonItemStruct.Fields + (
+        U8Field('attack_strength', 20),
+        U8Field('hit_rate', 21),
+    )
 
-class Tool(InventoryItem):
+class EquipmentItemStruct(UsableNonItemStruct):
 
-    ItemType = InventoryItemType.Tool
-    TypeName = ItemType.name
+    Name = 'EquipmentItemStruct'
+    Fields = UsableNonItemStruct.Fields + (
+        FlagsField('equippable_by', EquipInfo, 1),
+        U8Field('spell_learn_rate', 3),
+        U8Field('spell_learned', 4),
+        FlagsField('field_effect', FieldEffect, 5),
+        FlagsField('protected_conditions1', Condition1, 6),
+        FlagsField('protected_conditiosn2', Condition2, 7),
+        FlagsField('caused_conditions', Condition3, 8),
+        FlagsField('status_effects1', StatusEffect1, 9),
+        FlagsField('battle_effects1', BattleEffect1, 10),
+        FlagsField('status_effects2', StatusEffect2, 11),
+        FlagsField('battle_effects2', BattleEffect2, 12),
+        FlagsField('battle_effects3', BattleEffect3, 13),
+        FlagsField('element', Element, 15),
+        S4HighField('vigor', 16),
+        S4LowField('speed', 16),
+        S4HighField('stamina', 17),
+        S4LowField('magic_power', 17),
+        Enum4LowField('evade_animation', EvadeAnimation, 27),
+    )
 
-    def _build_fields(self):
-        return super()._build_fields() + (
-            U8Field(self, 'attack_when_used', self.data_offset + 18),
-            U8Field(self, 'attack_strength', self.data_offset + 20),
-            U8Field(self, 'hit_rate', self.data_offset + 21),
-        )
+class WeaponStruct(EquipmentItemStruct):
 
-class Weapon(Equipment):
+    Name = 'WeaponStruct'
+    Fields = EquipmentItemStruct.Fields + (
+        FlagsField('properties', WeaponProperty, 19),
+        U8Field('battle_power', 20),
+        U8Field('hit_rate', 21),
+        Enum4HighField('special_attack', WeaponSpecialAttack, 27),
+    )
 
-    ItemType = InventoryItemType.Weapon
-    TypeName = ItemType.name
+class DefensiveEquipmentItemStruct(EquipmentItemStruct):
 
-    def _build_fields(self):
-        return super()._build_fields() + (
-            Flags8Field(self, WeaponProperty, self.data_offset + 19),
-            U8Field(self, 'battle_power', self.data_offset + 20),
-            U8Field(self, 'hit_rate', self.data_offset + 21),
-            Enum4HighField(self, 'special_attack', WeaponSpecialAttack,
-                           self.data_offset + 27),
-        )
+    Name = 'DefensiveEquipmentItemStruct'
+    Fields = EquipmentItemStruct.Fields + (
+        U8Field('physical_defense', 20),
+        U8Field('magic_defense', 21),
+        FlagsField('absorbed_elements', Element, 22),
+        FlagsField('nullified_elements', Element, 23),
+        FlagsField('weak_elements', Element, 24),
+        FlagsField('caused_conditions2', Condition2, 25),
+        U4HighField('evade', 26),
+        U4LowField('magic_block', 26),
+    )
 
-class Armor(DefensiveEquipment):
-    ItemType = InventoryItemType.Armor
-    TypeName = ItemType.name
+class ArmorStruct(DefensiveEquipmentItemStruct):
 
-class Shield(DefensiveEquipment):
-    ItemType = InventoryItemType.Shield
-    TypeName = ItemType.name
+    Name = 'ArmorStruct'
 
-class Hat(DefensiveEquipment):
-    ItemType = InventoryItemType.Hat
-    TypeName = ItemType.name
+class ShieldStruct(DefensiveEquipmentItemStruct):
 
-class Relic(DefensiveEquipment):
-    ItemType = InventoryItemType.Relic
-    TypeName = ItemType.name
+    Name = 'ShieldStruct'
 
-class Item(InventoryItem):
+class HatStruct(DefensiveEquipmentItemStruct):
 
-    ItemType = InventoryItemType.Item
-    TypeName = ItemType.name
+    Name = 'HatStruct'
 
-    def _build_fields(self):
-        return super()._build_fields() + (
-            Flags8Field(self, ItemProperty, self.data_offset + 19),
-            U8Field(self, 'effect_strength', self.data_offset + 20),
-            Flags8Field(self, Condition1, self.data_offset + 21,
-                       prefix='causes_'),
-            Flags8Field(self, Condition2, self.data_offset + 22,
-                       prefix='causes_'),
-            Flags8Field(self, Condition3, self.data_offset + 23,
-                       prefix='causes_'),
-            Flags8Field(self, Condition4, self.data_offset + 24,
-                       prefix='causes_'),
-            Enum8Field(self, 'special_action', ItemSpecialAction,
-                       self.data_offset + 27)
-        )
+class RelicStruct(DefensiveEquipmentItemStruct):
 
-class Items(TypedObjectContainer):
+    Name = 'RelicStruct'
 
-    ObjectCount = 256
-    Blanks = tuple()
-    ObjectType = Item
-    Name = 'Items'
+class InventoryItemVariantStruct(VariantStruct):
 
-    def _get_object_from_rom(self, rom, n):
-        item_location = self.ObjectType.DataOffset + (n * self.ObjectType.DataSize)
-        item_type = rom.read_byte(item_location) & 0x0F
-        if item_type == InventoryItemType.Tool.value:
-            return Tool(rom, n)
-        if item_type == InventoryItemType.Weapon.value:
-            return Weapon(rom, n)
-        if item_type == InventoryItemType.Armor.value:
-            return Armor(rom, n)
-        if item_type == InventoryItemType.Shield.value:
-            return Shield(rom, n)
-        if item_type == InventoryItemType.Hat.value:
-            return Hat(rom, n)
-        if item_type == InventoryItemType.Relic.value:
-            return Relic(rom, n)
-        if item_type == InventoryItemType.Item.value:
-            return Item(rom, n)
-        raise ValueError('Unknown item type in ROM (got %s)' % (type))
+    Name = 'InventoryItemVariantStruct'
+    Size = 30
+    VariantField = Enum4LowField('type', InventoryItemType, 0)
+    Variants = {
+        InventoryItemType.Tool: ToolStruct,
+        InventoryItemType.Weapon: WeaponStruct,
+        InventoryItemType.Armor: ArmorStruct,
+        InventoryItemType.Shield: ShieldStruct,
+        InventoryItemType.Hat: HatStruct,
+        InventoryItemType.Relic: RelicStruct,
+        InventoryItemType.Item: ItemStruct,
+    }
+
+class InventoryItemNameStructArray(StructArray):
+
+    Name = 'InventoryItemNameStructArray'
+    Count = 256
+    Struct = InventoryItemNameStruct
+
+class InventoryItemDataStructArray(StructArray):
+
+    Name = 'InventoryItemDataStructArray'
+    Count = 256
+    Struct = InventoryItemVariantStruct

@@ -1,6 +1,225 @@
 from io import StringIO
 from enum import IntEnum, IntFlag
 
+class Actor(IntEnum):
+    Terra       =  0
+    Locke       =  1
+    Cyan        =  2
+    Shadow      =  3
+    Edgar       =  4
+    Sabin       =  5
+    Celes       =  6
+    Strago      =  7
+    Relm        =  8
+    Setzer      =  9
+    Mog         = 10
+    Gau         = 11
+    Gogo        = 12
+    Umaro       = 13
+    Banon       = 14
+    Leo         = 15
+    Ghost1      = 16
+    Ghost2      = 17
+    Kupek       = 18
+    Kupop       = 19
+    Kumama      = 20
+    Kuku1       = 21
+    Kutan       = 22
+    Kupan       = 23
+    Kushu       = 24
+    Kurin       = 25
+    Kuku2       = 26
+    Kamog       = 27
+    FakeMog     = 28
+    Unknown1    = 29
+    Maduin      = 30
+    Unknown2    = 31
+    Wedge       = 32
+    Vicks       = 33
+    Undefined1  = 34
+    Undefined2  = 35
+    Undefined3  = 36
+    Undefined4  = 37
+    Undefined5  = 38
+    Undefined6  = 39
+    Undefined7  = 40
+    Kefka1      = 41
+    Kefka2      = 42
+    Kefka3      = 43
+    Kefka4      = 44
+    Kefka5      = 45
+    Kefka6      = 46
+    Kefka7      = 47
+    Tork        = 48
+    Jade        = 49
+    Custer      = 50
+    Fabian      = 51
+    Drake       = 52
+    Sara        = 53
+    Case        = 54
+    Siele       = 55
+    Ray         = 56
+    Reiker      = 57
+    Lance       = 58
+    Bob         = 59
+    Pepper      = 60
+    Tau         = 61
+    Victor      = 62
+    Ho          = 63
+    Undefined8  = 64
+    Undefined9  = 115
+    Undefined10 = 255
+
+class Character(IntEnum):
+    Terra            =  0
+    Locke            =  1
+    Cyan             =  2
+    Shadow           =  3
+    Edgar            =  4
+    Sabin            =  5
+    Celes            =  6
+    Strago           =  7
+    Relm             =  8
+    Setzer           =  9
+    Moogle           = 10
+    Gau              = 11
+    Gogo             = 12
+    Umaro            = 13
+    ImperialSoldier1 = 14
+    Imp              = 15
+    Leo              = 16
+    Banon            = 17
+    TerraEsper       = 18
+    Merchant         = 19
+    Ghost            = 20
+    Kefka            = 21
+    Gesthal          = 22
+    Elder            = 23
+    ImperialSoldier2 = 24
+    Interceptor      = 25
+    CelesOpera       = 26
+    Scholar          = 27
+    Draco            = 28
+    Arvis            = 29
+    Returner         = 30
+    Ultros           = 31
+    GauClean         = 32
+    Unknown1         = 33
+    Counselor        = 34
+    Clide            = 35
+    OldLady          = 36
+    Lady             = 37
+    Boy              = 38
+    Unknown2         = 39
+    Unknown3         = 40
+    Unknown4         = 41
+    Unknown5         = 42
+    Unknown6         = 43
+    Unknown7         = 44
+    Unknown8         = 45
+    Unknown9         = 46
+    Unknown10        = 47
+    Unknown11        = 48
+    Unknown12        = 49
+    Unknown13        = 50
+    Unknown14        = 51
+    Unknown15        = 52
+    Unknown16        = 53
+    Unknown17        = 212
+    Unknown18        = 255
+
+class SaveCharacterStatus(IntFlag):
+    Dark      = 1 << 0
+    Zombie    = 1 << 1
+    Poison    = 1 << 2
+    Magitek   = 1 << 3
+    Invisible = 1 << 4
+    Imp       = 1 << 5
+    Stone     = 1 << 6
+    Death     = 1 << 7
+    Unknown1  = 1 << 8
+    Unknown2  = 1 << 9
+    Unknown3  = 1 << 10
+    Unknown4  = 1 << 11
+    Unknown5  = 1 << 12
+    Unknown6  = 1 << 13
+    Unknown7  = 1 << 14
+    Float     = 1 << 15
+
+class BattleCommands(IntFlag):
+    Throw   = 1 << 0
+    GPRain  = 1 << 1
+    Tools   = 1 << 2
+    Leap    = 1 << 3
+    Morph   = 1 << 4
+    Blitz   = 1 << 5
+    Capture = 1 << 6
+    Bushido = 1 << 7
+
+    Fight   = 1 << 8  # L T
+    Magic   = 1 << 9  # T
+    Steal   = 1 << 10 # L
+    Runic   = 1 << 11
+    Lore    = 1 << 12
+    Sketch  = 1 << 13
+    Control = 1 << 14
+    Slot    = 1 << 15
+
+    Rage    = 1 << 16
+    Empty1  = 1 << 17 # L T
+    Mimic   = 1 << 18
+    Dance   = 1 << 19
+    Row     = 1 << 20
+    Def     = 1 << 21
+    Jump    = 1 << 22
+    XMagic  = 1 << 23
+
+    Item    = 1 << 24 # L T
+    Summon  = 1 << 25
+    Health  = 1 << 26
+    Shock   = 1 << 27
+    Possess = 1 << 28
+    Magitek = 1 << 29
+    Empty2  = 1 << 30
+    Dummy   = 1 << 31
+
+class OldBattleCommands(IntFlag):
+    Fight   = 1 << 0
+    Item    = 1 << 1
+    Magic   = 1 << 2
+    empty   = 1 << 3
+    Morph   = 1 << 4
+    Steal   = 1 << 5
+    Capture = 1 << 6
+    Bushido = 1 << 7
+
+    Throw   = 1 << 8  # L T
+    Tools   = 1 << 9  # T
+    Blitz   = 1 << 10 # L
+    Runic   = 1 << 11
+    Lore    = 1 << 12
+    Sketch  = 1 << 13
+    Control = 1 << 14
+    Slot    = 1 << 15
+
+    Rage    = 1 << 16
+    Leap    = 1 << 17 # L T
+    Mimic   = 1 << 18
+    Dance   = 1 << 19
+    Row     = 1 << 20
+    Def     = 1 << 21
+    Jump    = 1 << 22
+    XMagic  = 1 << 23
+
+    GPRain  = 1 << 24 # L T
+    Summon  = 1 << 25
+    Health  = 1 << 26
+    Shock   = 1 << 27
+    Possess = 1 << 28
+    Magitek = 1 << 29
+    Empty   = 1 << 30
+    Dummy   = 1 << 31
+
 class EquipInfo(IntFlag):
     Terra  = 1 << 0
     Locke  = 1 << 1
@@ -141,6 +360,32 @@ class StatusEffect2(IntFlag):
     SetsMPConsumptionToOne = 1 << 6
     RaisesVigor            = 1 << 7
 
+class MonsterConditionImmunity(IntFlag):
+    DanceOrFloat = 1 << 0
+    Regen        = 1 << 1
+    Slow         = 1 << 2
+    Haste        = 1 << 3
+    Stop         = 1 << 4
+    Shell        = 1 << 5
+    Safe         = 1 << 6
+    Reflect      = 1 << 7
+    Condemned    = 1 << 8
+    Kneeling     = 1 << 9
+    Blink        = 1 << 10
+    Silence      = 1 << 11
+    Berserk      = 1 << 12
+    Confusion    = 1 << 13
+    HPDrain      = 1 << 14
+    Sleep        = 1 << 15
+    Dark         = 1 << 16
+    Zombie       = 1 << 17
+    Poison       = 1 << 18
+    Magitek      = 1 << 19
+    Vanish       = 1 << 20
+    Imp          = 1 << 21
+    Petrify      = 1 << 22
+    Death        = 1 << 23
+
 class Condition1(IntFlag):
     Dark    = 1 << 0
     Zombie  = 1 << 1
@@ -180,6 +425,40 @@ class Condition4(IntFlag):
     Removed               = 1 << 5
     DefendedByInterceptor = 1 << 6
     Float                 = 1 << 7
+
+class ItemCondition(IntFlag):
+    Dark                  = 1 << 0
+    Zombie                = 1 << 1
+    Poison                = 1 << 2
+    Magitek               = 1 << 3
+    Vanish                = 1 << 4
+    Imp                   = 1 << 5
+    Petrify               = 1 << 6
+    Death                 = 1 << 7
+    Condemned             = 1 << 8
+    Kneeling              = 1 << 9
+    Blink                 = 1 << 10
+    Silence               = 1 << 11
+    Berserk               = 1 << 12
+    Confusion             = 1 << 13
+    HPDrain               = 1 << 14
+    Sleep                 = 1 << 15
+    DanceOrFloat          = 1 << 16
+    Regen                 = 1 << 17
+    Slow                  = 1 << 18
+    Haste                 = 1 << 19
+    Stop                  = 1 << 20
+    Shell                 = 1 << 21
+    Safe                  = 1 << 22
+    Reflect               = 1 << 23
+    Rage                  = 1 << 24
+    Frozen                = 1 << 25
+    ProtectionFromDeath   = 1 << 26
+    Morph                 = 1 << 27
+    Casting               = 1 << 28
+    Removed               = 1 << 29
+    DefendedByInterceptor = 1 << 30
+    Float                 = 1 << 31
 
 class BattleEffect1(IntFlag):
     IncreasesPreemptiveAttackRate = 1 << 0
@@ -242,20 +521,20 @@ class MonsterFlag1(IntFlag):
     Undead            = 1 << 7
 
 class MonsterFlag2(IntFlag):
-    HarderToRunFrom = 1 << 0
-    AttacksFirst    = 1 << 1
-    BlocksSuplex    = 1 << 2
-    BlocksRun       = 1 << 3
-    BlocksScan      = 1 << 4
-    BlocksSketch    = 1 << 5
-    SpecialEvent    = 1 << 6
-    BlocksControl   = 1 << 7
+    HarderToRunFrom   = 1 << 0
+    AttacksFirst      = 1 << 1
+    BlocksSuplex      = 1 << 2
+    BlocksRun         = 1 << 3
+    BlocksScan        = 1 << 4
+    BlocksSketch      = 1 << 5
+    SpecialEvent      = 1 << 6
+    BlocksControl     = 1 << 7
 
 class MonsterFlag3(IntFlag):
-    CoversAllies    = 1 << 0
-    UsesRunic       = 1 << 1
-    StartsWithLife3 = 1 << 2
-    StartsWithFloat = 1 << 7
+    CoversAllies      = 1 << 0
+    UsesRunic         = 1 << 1
+    StartsWithLife3   = 1 << 2
+    StartsWithFloat   = 1 << 7
 
 class MonsterAttackType(IntEnum):
     MultipleSpikedStars                     = 0
