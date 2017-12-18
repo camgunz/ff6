@@ -371,22 +371,22 @@ class WeaponSpecialAttack(IntEnum):
     RandomlyBreaks                    = 14
 
 class EvadeAnimation(IntEnum):
-    Nothing1                 = 0
-    Nothing2                 = 1
-    Nothing3                 = 2
-    Nothing4                 = 3
-    Knife1                   = 4
-    Sword1                   = 5
-    BucklerPhysical          = 6
-    RedCape1                 = 7
-    Nothing5                 = 8
-    Nothing6                 = 9
-    BucklerMagical           = 10
-    Nothing7                 = 11
-    Knife2                   = 12
-    Sword2                   = 13
-    BuckerPhysicalAndMagical = 14
-    RedCape2                 = 15
+    Nothing1                  = 0
+    Nothing2                  = 1
+    Nothing3                  = 2
+    Nothing4                  = 3
+    Knife1                    = 4
+    Sword1                    = 5
+    BucklerPhysical           = 6
+    RedCape1                  = 7
+    Nothing5                  = 8
+    Nothing6                  = 9
+    BucklerMagical            = 10
+    Nothing7                  = 11
+    Knife2                    = 12
+    Sword2                    = 13
+    BucklerPhysicalAndMagical = 14
+    RedCape2                  = 15
 
 class FieldEffect(IntFlag):
     ReducesEnemyAttacks  = 1 << 0
