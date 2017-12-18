@@ -372,6 +372,8 @@ class StrField(AbstractScalarField):
     def _deserialize(self, bin_obj, offset):
         if self.size:
             value = bin_obj.read_bytes(offset + self.offset, self.size)
+            if self.padding_byte:
+                value = value.rstrip(self.padding_byte)
         elif self.terminator:
             value = bin_obj.read_bytes_until(
                 offset + self.offset,

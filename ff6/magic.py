@@ -91,6 +91,7 @@ BlackMagic = (
                 StrField(
                     name='name',
                     size=sizes.MagicName,
+                    padding_byte=b'\xff',
                     offset=1,
                     translation=(TO_DTE_BATTLE, DTE_BATTLE)
                 ),
@@ -144,6 +145,7 @@ GreyMagic = (
                 StrField(
                     name='name',
                     size=sizes.MagicName,
+                    padding_byte=b'\xff',
                     offset=1,
                     translation=(TO_DTE_BATTLE, DTE_BATTLE)
                 ),
@@ -197,6 +199,7 @@ WhiteMagic = (
                 StrField(
                     name='name',
                     size=sizes.MagicName,
+                    padding_byte=b'\xff',
                     offset=1,
                     translation=(TO_DTE_BATTLE, DTE_BATTLE)
                 ),

@@ -182,7 +182,7 @@ class MagicExtraEffect(IntEnum):
     Nothing1                                          = 0
     Steal                                             = 1
     KillRandomly                                      = 3
-    UseRandomGraphicc                                 = 9
+    UseRandomGraphic                                  = 9
     ShowEnemyStats                                    = 16
     CreateEarthWall                                   = 17
     MorphTarget                                       = 18

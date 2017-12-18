@@ -14,5 +14,6 @@ class FF6ROM(ROM, BinaryModel):
         BlitzNames +
         BushidoNames +
         BlackMagic +
-        GreyMagic
+        GreyMagic +
+        WhiteMagic
     )

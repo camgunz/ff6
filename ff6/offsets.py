@@ -58,7 +58,7 @@ GreyMagicData = 0x46E10
 GreyMagicNames = 0x26F80F
 GreyMagicDescriptionPointers = 0x18D1B0
 
-WhiteMagicData =  0x46E36
+WhiteMagicData =  0x46F36
 WhiteMagicNames = 0x26F8A2
 WhiteMagicDescriptionPointers = 0x18D1DA
 
