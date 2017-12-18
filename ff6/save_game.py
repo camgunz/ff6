@@ -1,8 +1,8 @@
-from ff6 import offsets
+from ff6 import offsets, sizes
 
+from ff6.dte import DTE_BATTLE, TO_DTE_BATTLE
 from ff6.data import *
 from ff6.struct import *
-from ff6.bin_util import *
 
 """
 ---------------------------------------------
@@ -55,7 +55,12 @@ class SaveGame(BinaryModelObject):
                 fields=(
                     EnumField('actor', Actor, 0),
                     EnumField('character', Character, 1),
-                    BattleStrField('name', 6, 2),
+                    StrField(
+                        name='name',
+                        size=6,
+                        translation=(DTE_BATTLE, TO_DTE_BATTLE),
+                        offset=2
+                    ),
                     U8Field('level', 8),
                     U16Field('current_hp', 9),
                     U16Field('max_hp', 11),
@@ -63,7 +68,10 @@ class SaveGame(BinaryModelObject):
                     U16Field('max_mp', 15),
                     U24Field('experience', 17),
                     FlagsField('status', SaveCharacterStatus, 20),
-                    FlagsField('battle_commands', BattleCommands, 22),
+                    EnumField('battle_command1', BattleCommands, 22),
+                    EnumField('battle_command2', BattleCommands, 23),
+                    EnumField('battle_command3', BattleCommands, 24),
+                    EnumField('battle_command4', BattleCommands, 25),
                     U8Field('vigor', 26),
                     U8Field('speed', 27),
                     U8Field('stamina', 28),

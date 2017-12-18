@@ -1,5 +1,6 @@
 from ff6 import offsets, sizes
 
+from ff6.dte import DTE_BATTLE, TO_DTE_BATTLE
 from ff6.data import *
 from ff6.struct import *
 
@@ -9,20 +10,25 @@ Monsters = (
     ArrayField(
         name='monsters',
         offset=offsets.MonsterNames,
-        count=381,
+        count=384,
         element_size=sizes.MonsterName,
         element_field=StructField(
             name='monster',
             offset=0,
             fields=(
-                BattleStrField('name', sizes.MonsterName, 0),
+                StrField(
+                    name='name',
+                    size=sizes.MonsterName,
+                    offset=0,
+                    translation=(TO_DTE_BATTLE, DTE_BATTLE)
+                ),
             )
         )
     ),
     ArrayField(
         name='monsters',
         offset=offsets.MonsterData,
-        count=381,
+        count=384,
         element_size=32,
         element_field=StructField(
             name='monster',

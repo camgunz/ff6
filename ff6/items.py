@@ -1,5 +1,6 @@
 from ff6 import offsets, sizes
 
+from ff6.dte import DTE_BATTLE, TO_DTE_BATTLE
 from ff6.data import *
 from ff6.struct import *
 
@@ -13,7 +14,7 @@ ItemFields = InventoryItemFields + (
     Enum3LowField('type', InventoryItemType, 0),
     FlagsField('properties', ItemProperty, 19),
     U8Field('effect_strength', 20),
-    FlagsField('caused_conditions', ItemCondition, 21),
+    FlagsField('caused_conditions', Condition, 21),
     EnumField('special_action', ItemSpecialAction, 27),
 )
 
@@ -69,14 +70,19 @@ InventoryItems = (
     ArrayField(
         name='inventory_items',
         count=256,
-        element_size=13,
+        element_size=sizes.InventoryItemName + 1,
         offset=offsets.InventoryItemNames,
         element_field=StructField(
             name='inventory_item',
             offset=0,
             fields=(
                 EnumField('icon_type', EquipmentIconType, 0),
-                BattleStrField('name', sizes.InventoryItemName, 1)
+                StrField(
+                    name='name',
+                    size=sizes.InventoryItemName,
+                    offset=1,
+                    translation=(TO_DTE_BATTLE, DTE_BATTLE)
+                ),
             )
         )
     ),

@@ -240,6 +240,7 @@ DTE[0xFE] = 'ge'
 DTE[0xFF] = 'e...'
 
 DTE_BATTLE[0x00] = ''
+DTE_BATTLE[0x01] = "`"
 DTE_BATTLE[0x80] = 'A'
 DTE_BATTLE[0x81] = 'B'
 DTE_BATTLE[0x82] = 'C'
@@ -304,13 +305,13 @@ DTE_BATTLE[0xBC] = '8'
 DTE_BATTLE[0xBD] = '9'
 DTE_BATTLE[0xBE] = '!'
 DTE_BATTLE[0xBF] = '?'
-DTE_BATTLE[0xC0] = 'ú'
+DTE_BATTLE[0xC0] = '/'
 DTE_BATTLE[0xC1] = ':'
 DTE_BATTLE[0xC2] = '"'
 DTE_BATTLE[0xC3] = "'"
 DTE_BATTLE[0xC4] = '-'
 DTE_BATTLE[0xC5] = '.'
-DTE_BATTLE[0xC7] = 'ú'
+DTE_BATTLE[0xC7] = '_'
 DTE_BATTLE[0xC8] = ';'
 DTE_BATTLE[0xC9] = '#'
 DTE_BATTLE[0xCA] = '+'
@@ -318,15 +319,16 @@ DTE_BATTLE[0xCB] = '('
 DTE_BATTLE[0xCC] = ')'
 DTE_BATTLE[0xCD] = '%'
 DTE_BATTLE[0xCE] = '~'
-DTE_BATTLE[0xCF] = 'ú'
-DTE_BATTLE[0xD0] = 'ú'
-DTE_BATTLE[0xD1] = 'ú'
+DTE_BATTLE[0xCF] = '_'
+DTE_BATTLE[0xD0] = '_'
+DTE_BATTLE[0xD1] = '_'
 DTE_BATTLE[0xD2] = '='
+DTE_BATTLE[0xD3] = '/'
 DTE_BATTLE[0xFE] = ' '
-DTE_BATTLE[0xFF] = ''
+DTE_BATTLE[0xFF] = ' '
 
-FROM_DTE = {DTE[n]: n for n in range(len(DTE)) if DTE[n] is not None}
-FROM_DTE_BATTLE = {
+TO_DTE = {DTE[n]: n for n in range(len(DTE)) if DTE[n] is not None}
+TO_DTE_BATTLE = {
     DTE_BATTLE[n]:
     n for n in range(len(DTE_BATTLE)) if DTE_BATTLE[n] is not None
 }

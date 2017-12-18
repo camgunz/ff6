@@ -146,79 +146,132 @@ class SaveCharacterStatus(IntFlag):
     Unknown7  = 1 << 14
     Float     = 1 << 15
 
-class BattleCommands(IntFlag):
-    Throw   = 1 << 0
-    GPRain  = 1 << 1
-    Tools   = 1 << 2
-    Leap    = 1 << 3
-    Morph   = 1 << 4
-    Blitz   = 1 << 5
-    Capture = 1 << 6
-    Bushido = 1 << 7
+class BattleCommands(IntEnum):
+    Fight   = 0
+    Item    = 1
+    Magic   = 2
+    empty   = 3
+    Morph   = 4
+    Steal   = 5
+    Capture = 6
+    Bushido = 7
+    Throw   = 8
+    Tools   = 9
+    Blitz   = 10
+    Runic   = 11
+    Lore    = 12
+    Sketch  = 13
+    Control = 14
+    Slot    = 15
+    Rage    = 16
+    Leap    = 17
+    Mimic   = 18
+    Dance   = 19
+    Row     = 20
+    Def     = 21
+    Jump    = 22
+    XMagic  = 23
+    GPRain  = 24
+    Summon  = 25
+    Health  = 26
+    Shock   = 27
+    Possess = 28
+    Magitek = 29
 
-    Fight   = 1 << 8  # L T
-    Magic   = 1 << 9  # T
-    Steal   = 1 << 10 # L
-    Runic   = 1 << 11
-    Lore    = 1 << 12
-    Sketch  = 1 << 13
-    Control = 1 << 14
-    Slot    = 1 << 15
+class MagicExtraEffect(IntEnum):
+    Nothing1                                          = 0
+    Steal                                             = 1
+    KillRandomly                                      = 3
+    UseRandomGraphicc                                 = 9
+    ShowEnemyStats                                    = 16
+    CreateEarthWall                                   = 17
+    MorphTarget                                       = 18
+    JumpCaster                                        = 19
+    DistributeCasterHPAndMP                           = 21
+    RemoveCasterAndCureAllies                         = 22
+    Tapir                                             = 23
+    WarpOutOfBattle                                   = 24
+    SacrificeCasterForHPDamage                        = 25
+    DoOneThousandDamage                               = 26
+    BaseEffectOnCasterHP                              = 27
+    AffectOnlyReflectedTargets                        = 28
+    AffectOnlyTargetsWhereLastGPDigitIsLevelFactor    = 29
+    BaseEffectOnSteps                                 = 30
+    HalveTargetLevel                                  = 31
+    SacrificeCasterForAllyCure                        = 32
+    ExchangeStatusEffects                             = 33
+    IncreaseDamageIfTargetLevelEqualsCasterLevel      = 34
+    CancelEnemyDesperationAttack                      = 35
+    Crusader                                          = 36
+    CannotAffectFloatingTargets                       = 37
+    ChangeAbsorbedElement                             = 38
+    RunAway                                           = 39
+    MindBlast                                         = 40
+    FreezeTarget                                      = 41
+    MultiplyEffectByLowestAllyLevel                   = 42
+    SwitchTargetRow                                   = 43
+    CastEightTimes                                    = 44
+    MakeTargetInterceptPhysicalAttacksTargetingCaster = 45
+    SeizeTargetAndDrainHP                             = 46
+    Targeting                                         = 47
+    HalveDamageIfMultipleEnemiesRemain                = 48
+    NullifyRandomElement                              = 49
+    CastFourTimes                                     = 50
+    Bababreath                                        = 51
+    CharmTarget                                       = 52
+    Doom                                              = 53
+    Empowerer                                         = 54
+    ZombieCountdown                                   = 55
+    RemoveTargetFromBattle                            = 56
+    RemoveTargetFromBattleAndWarpToTriangleIsland     = 57
+    PossessTarget                                     = 58
+    ActivateRandomStatus                              = 59
+    Retort                                            = 60
+    BaseEffectOnMissingHP                             = 61
+    UncurableHPDrain                                  = 62
+    Stunner                                           = 63
+    DropHPToOne                                       = 64
+    GiveTargetTwoTurns                                = 67
+    ReturnTarget                                      = 68
+    Clear                                             = 69
+    SuperBall                                         = 74
+    KillCasterAndTarget                               = 80
+    StealTargetGP                                     = 82
+    Control                                           = 83
+    Leap                                              = 84
+    GiveTargetRandomWeakness                          = 86
+    TargetDiesIfItActs                                = 87
+    Nothing2                                          = 255
 
-    Rage    = 1 << 16
-    Empty1  = 1 << 17 # L T
-    Mimic   = 1 << 18
-    Dance   = 1 << 19
-    Row     = 1 << 20
-    Def     = 1 << 21
-    Jump    = 1 << 22
-    XMagic  = 1 << 23
+class MagicProperty(IntFlag):
+    CausesPhysicalDamage             = 1 << 0
+    MissesIfTargetProtectedFromDeath = 1 << 1
+    TargetsOnlyDeadAllies            = 1 << 2
+    InvertsDamageOnUndead            = 1 << 3
+    TargetIsRandomized               = 1 << 4
+    IgnoresTargetDefense             = 1 << 5
+    FullDamageWithMultipleTargets    = 1 << 6
+    AbortIfAllyTargeted              = 1 << 7
+    UsableOutsideBattle              = 1 << 8
+    NotReflectable                   = 1 << 9
+    LearnableAsLore                  = 1 << 10
+    VulnerableToRunic                = 1 << 11
+    WarpOrQuick                      = 1 << 12
+    RetargetsIfTargetInvalid         = 1 << 13
+    KillsCaster                      = 1 << 14
+    AffectsMP                        = 1 << 15
+    Heals                            = 1 << 16
+    Redirects                        = 1 << 17
+    LiftsStatus                      = 1 << 18
+    TogglesStatus                    = 1 << 19
+    BasesDefenseOnStamina            = 1 << 20
+    CannotBeDodged                   = 1 << 21
+    HitCountBasedOnHitRate           = 1 << 22
+    ProportionalDamage               = 1 << 23
 
-    Item    = 1 << 24 # L T
-    Summon  = 1 << 25
-    Health  = 1 << 26
-    Shock   = 1 << 27
-    Possess = 1 << 28
-    Magitek = 1 << 29
-    Empty2  = 1 << 30
-    Dummy   = 1 << 31
-
-class OldBattleCommands(IntFlag):
-    Fight   = 1 << 0
-    Item    = 1 << 1
-    Magic   = 1 << 2
-    empty   = 1 << 3
-    Morph   = 1 << 4
-    Steal   = 1 << 5
-    Capture = 1 << 6
-    Bushido = 1 << 7
-
-    Throw   = 1 << 8  # L T
-    Tools   = 1 << 9  # T
-    Blitz   = 1 << 10 # L
-    Runic   = 1 << 11
-    Lore    = 1 << 12
-    Sketch  = 1 << 13
-    Control = 1 << 14
-    Slot    = 1 << 15
-
-    Rage    = 1 << 16
-    Leap    = 1 << 17 # L T
-    Mimic   = 1 << 18
-    Dance   = 1 << 19
-    Row     = 1 << 20
-    Def     = 1 << 21
-    Jump    = 1 << 22
-    XMagic  = 1 << 23
-
-    GPRain  = 1 << 24 # L T
-    Summon  = 1 << 25
-    Health  = 1 << 26
-    Shock   = 1 << 27
-    Possess = 1 << 28
-    Magitek = 1 << 29
-    Empty   = 1 << 30
-    Dummy   = 1 << 31
+class MagicPropertyExtra(IntFlag):
+    MissesIfTargetProtectedFromAilments = 1 << 0
+    DisplaysMessageOnHit                = 1 << 1
 
 class EquipInfo(IntFlag):
     Terra  = 1 << 0
@@ -426,7 +479,7 @@ class Condition4(IntFlag):
     DefendedByInterceptor = 1 << 6
     Float                 = 1 << 7
 
-class ItemCondition(IntFlag):
+class Condition(IntFlag):
     Dark                  = 1 << 0
     Zombie                = 1 << 1
     Poison                = 1 << 2

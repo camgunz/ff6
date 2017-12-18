@@ -66,17 +66,11 @@ class BinaryObject:
     def read_bytes(self, location, count):
         return read_bytes(self.data, location, count)
 
+    def read_bytes_until(self, location, terminator):
+        return read_bytes_until(self.data, location, terminator)
+
     def write_bytes(self, location, value):
         write_bytes(self.data, location, value)
-
-    def read_string(self, location, size):
-        return read_string(self.data, location, size)
-
-    def read_dte_battle_string(self, location, size):
-        return read_dte_battle_string(self.data, location, size)
-
-    def write_dte_battle_string(self, location, size, string):
-        write_dte_battle_string(self.data, location, size, string)
 
 def _signed(num, bit_width):
     mask1 = (1 << bit_width) - 1
@@ -188,19 +182,12 @@ def write_timestamp(data, location, timestamp):
 def read_bytes(data, location, count):
     return struct.unpack_from('%ds' % (count), data, location)[0]
 
+def read_bytes_until(data, location, terminator):
+    terminator = ord(terminator)
+    for n, byte in enumerate(data[location:]):
+        if byte == terminator:
+            return data[location:location+n]
+    raise Exception('Terminator "%s" not found' % (terminator))
+
 def write_bytes(data, location, value):
     struct.pack_into('%ds' % (len(value)), data, location, value)
-
-def read_string(data, location, size):
-    return read_bytes(data, location, size).decode('ascii')
-
-def read_dte_battle_string(data, location, size):
-    dte_battle_indices = read_bytes(data, location, size)
-    return ''.join([
-        DTE_BATTLE[index] or '' for index in dte_battle_indices
-    ])
-
-def write_dte_battle_string(data, location, size, string):
-    dbstr = bytes([FROM_DTE_BATTLE[c] for c in string])
-    dbstr = dbstr + (b'\xff' * (size - len(dbstr)))
-    struct.pack_into('%ds' % (size), data, location, dbstr)

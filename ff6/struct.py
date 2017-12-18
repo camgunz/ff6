@@ -23,11 +23,9 @@ class ByteSide(IntEnum):
 
 class AbstractField:
 
-    def __init__(self, name, offset, serializer=None, deserializer=None):
+    def __init__(self, name, offset):
         self.name = name
         self.offset = offset
-        self.serializer = serializer
-        self.deserializer = deserializer
 
     def __repr__(self):
         return '%s(%s, %s)' % (type(self).__name__, self.name, hex(self.offset))
@@ -49,16 +47,12 @@ class AbstractField:
     def serialize(self, bin_obj, offset, value):
         if not self.check_serialized_value(value):
             raise InvalidFieldValueError(self.name, value)
-        if self.serializer:
-            value = self.serializer(value)
         self._serialize(bin_obj, offset, value)
 
     def deserialize(self, bin_obj, offset):
         value = self._deserialize(bin_obj, offset)
         if not self.check_deserialized_value(value):
             raise InvalidFieldValueError(self.name, value)
-        if self.deserializer:
-            return self.deserializer(value)
         return value
 
 class AbstractScalarField(AbstractField):
@@ -86,8 +80,8 @@ class NumberRangeCheckMixin:
 
 class EnumField(AbstractScalarField):
 
-    def __init__(self, name, enum, offset, serializer=None, deserializer=None):
-        super().__init__(name, offset, serializer, deserializer)
+    def __init__(self, name, enum, offset):
+        super().__init__(name, offset)
         self.enum = enum
 
     def check_serialized_value(self, value):
@@ -305,7 +299,8 @@ class U16Field(NumberRangeCheckMixin, AbstractScalarField):
         bin_obj.write_short(offset + self.offset, value)
 
     def _deserialize(self, bin_obj, offset):
-        return bin_obj.read_short(offset + self.offset)
+        value = bin_obj.read_short(offset + self.offset)
+        return value
 
 class U24Field(NumberRangeCheckMixin, AbstractScalarField):
 
@@ -348,25 +343,69 @@ class ByteField(NumberRangeCheckMixin, AbstractScalarField):
     def _deserialize(self, bin_obj, offset):
         return bin_obj.read_byte(offset + self.offset)
 
-class BattleStrField(AbstractScalarField):
+class StrField(AbstractScalarField):
 
-    def __init__(self, name, size, offset, serializer=None, deserializer=None):
-        super().__init__(name, offset, serializer, deserializer)
+    def __init__(self, name, offset, size=None, terminator=None,
+                 translation=None, padding_byte=None):
+        assert not (size is None and terminator is None)
+        assert (size is None or terminator is None)
+        assert not (size is None and padding_byte is not None)
+        super().__init__(name, offset)
         self.size = size
+        self.terminator = terminator
+        if translation:
+            self.translation_to, self.translation_from = translation
+        else:
+            self.translation_to, self.translation_from = (None, None)
+        self.padding_byte = padding_byte
 
     def _serialize(self, bin_obj, offset, value):
-        bin_obj.write_dte_battle_string(offset + self.offset, self.size,
-                                        value)
+        value = value.encode('ascii')
+        if self.translation_to:
+            value = bytes([self.translation_to[chr(c)] for c in value])
+        if self.padding_byte:
+            value = value + (b'\xff' * (self.size - len(value)))
+        if self.terminator:
+            value = value + self.terminator
+        bin_obj.write_bytes(offset + self.offset, value)
 
     def _deserialize(self, bin_obj, offset):
-        return bin_obj.read_dte_battle_string(offset + self.offset,
-                                              self.size)
+        if self.size:
+            value = bin_obj.read_bytes(offset + self.offset, self.size)
+        elif self.terminator:
+            value = bin_obj.read_bytes_until(
+                offset + self.offset,
+                self.terminator
+            )
+        if self.translation_from:
+            return ''.join([self.translation_from[index] for index in value])
+        return value.decode('ascii')
+
+###
+# For maximum utility there needs to be something like PointerArrayField,
+# but this will do for now.
+###
+class PointerField(AbstractScalarField):
+
+    def __init__(self, name, pointer_field, target_field, offset, base=0):
+        super().__init__(name, offset)
+        self.pointer_field = pointer_field
+        self.target_field = target_field
+        self.base = base
+
+    def _serialize(self, bin_obj, offset, value):
+        address = self.pointer_field.deserialize(bin_obj, offset + self.offset)
+        self.target_field.serialize(bin_obj, address + self.base, value)
+
+    def _deserialize(self, bin_obj, offset):
+        address = self.pointer_field.deserialize(bin_obj, offset + self.offset)
+        address += self.base
+        return self.target_field.deserialize(bin_obj, address)
 
 class BitField(AbstractScalarField):
 
-    def __init__(self, name, index, offset, serializer=None,
-                 deserializer=None):
-        super().__init__(name, offset, serializer, deserializer)
+    def __init__(self, name, index, offset):
+        super().__init__(name, offset)
         self.index = index
 
     def check_serialized_value(self, value):
@@ -383,9 +422,8 @@ class BitField(AbstractScalarField):
 
 class StructField(AbstractStructField):
 
-    def __init__(self, name, fields, offset, serializer=None,
-                 deserializer=None):
-        super().__init__(name, offset, serializer, deserializer)
+    def __init__(self, name, fields, offset):
+        super().__init__(name, offset)
         self.fields = fields
 
     def __repr__(self):
@@ -408,10 +446,8 @@ class StructField(AbstractStructField):
 
 class ArrayField(AbstractArrayField):
 
-    def __init__(self, name, count, element_field, element_size, offset,
-                 serializer=None,
-                 deserializer=None):
-        super().__init__(name, offset, serializer, deserializer)
+    def __init__(self, name, count, element_field, element_size, offset):
+        super().__init__(name, offset)
         self.count = count
         self.element_field = element_field
         self.element_size = element_size
@@ -444,9 +480,8 @@ class ArrayField(AbstractArrayField):
 
 class VariantField(AbstractStructField):
 
-    def __init__(self, name, field, variants, offset, serializer=None,
-                 deserializer=None):
-        super().__init__(name, offset, serializer, deserializer)
+    def __init__(self, name, field, variants, offset):
+        super().__init__(name, offset)
         self.field = field
         self.variants = variants
 
