@@ -58,7 +58,8 @@ class SaveGame(BinaryModelObject):
                     StrField(
                         name='name',
                         size=6,
-                        translation=(DTE_BATTLE, TO_DTE_BATTLE),
+                        padding_byte=b'\xff',
+                        translation=(TO_DTE_BATTLE, DTE_BATTLE),
                         offset=2
                     ),
                     U8Field('level', 8),

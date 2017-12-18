@@ -67,4 +67,4 @@ CharacterStartData = 0x2D7EA0
 ExperienceData = 0x2D8420
 
 HPGainData = 0x26F6A0
-MPGainDAta = 0x26F702
+MPGainData = 0x26F702

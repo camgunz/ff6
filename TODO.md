@@ -17,7 +17,6 @@
   - bushido
   - blitz
   - Terra/Celes learned magic
-  - magic
   - checksum
 - Save game:
   - magic
