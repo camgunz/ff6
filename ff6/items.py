@@ -45,6 +45,12 @@ EquipmentItemFields = UsableNonItemFields + (
     S4LowField('speed', 16),
     S4HighField('stamina', 17),
     S4LowField('magic_power', 17),
+    U4LowField(
+        name='evade',
+        offset=26,
+        transform_out=lambda x: x // 10,
+        transform_in=lambda x: x * 10
+    ),
     Enum4LowField('evade_animation', EvadeAnimation, 27),
 )
 
@@ -62,8 +68,7 @@ DefensiveEquipmentFields = EquipmentItemFields + (
     FlagsField('nullified_elements', Element, 23),
     FlagsField('weak_elements', Element, 24),
     FlagsField('caused_conditions2', Condition2, 25),
-    U4HighField('evade', 26),
-    U4LowField('magic_block', 26),
+    U4HighField('magic_block', 26),
 )
 
 InventoryItems = (
@@ -80,6 +85,7 @@ InventoryItems = (
                 StrField(
                     name='name',
                     size=sizes.InventoryItemName,
+                    padding_byte=b'\xff',
                     offset=1,
                     translation=(TO_DTE_BATTLE, DTE_BATTLE)
                 ),

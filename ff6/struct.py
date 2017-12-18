@@ -23,9 +23,11 @@ class ByteSide(IntEnum):
 
 class AbstractField:
 
-    def __init__(self, name, offset):
+    def __init__(self, name, offset, transform_out=None, transform_in=None):
         self.name = name
         self.offset = offset
+        self.transform_out = transform_out
+        self.transform_in = transform_in
 
     def __repr__(self):
         return '%s(%s, %s)' % (type(self).__name__, self.name, hex(self.offset))
@@ -47,12 +49,16 @@ class AbstractField:
     def serialize(self, bin_obj, offset, value):
         if not self.check_serialized_value(value):
             raise InvalidFieldValueError(self.name, value)
+        if self.transform_out:
+            value = self.transform_out(value)
         self._serialize(bin_obj, offset, value)
 
     def deserialize(self, bin_obj, offset):
         value = self._deserialize(bin_obj, offset)
         if not self.check_deserialized_value(value):
             raise InvalidFieldValueError(self.name, value)
+        if self.transform_in:
+            value = self.transform_in(value)
         return value
 
 class AbstractScalarField(AbstractField):
@@ -80,8 +86,9 @@ class NumberRangeCheckMixin:
 
 class EnumField(AbstractScalarField):
 
-    def __init__(self, name, enum, offset):
-        super().__init__(name, offset)
+    def __init__(self, name, enum, offset, transform_out=None,
+                 transform_in=None):
+        super().__init__(name, offset, transform_out, transform_in)
         self.enum = enum
 
     def check_serialized_value(self, value):
@@ -346,11 +353,12 @@ class ByteField(NumberRangeCheckMixin, AbstractScalarField):
 class StrField(AbstractScalarField):
 
     def __init__(self, name, offset, size=None, terminator=None,
-                 translation=None, padding_byte=None):
+                 translation=None, padding_byte=None, transform_out=None,
+                 transform_in=None):
         assert not (size is None and terminator is None)
         assert (size is None or terminator is None)
         assert not (size is None and padding_byte is not None)
-        super().__init__(name, offset)
+        super().__init__(name, offset, transform_out, transform_in)
         self.size = size
         self.terminator = terminator
         if translation:
@@ -389,8 +397,9 @@ class StrField(AbstractScalarField):
 ###
 class PointerField(AbstractScalarField):
 
-    def __init__(self, name, pointer_field, target_field, offset, base=0):
-        super().__init__(name, offset)
+    def __init__(self, name, pointer_field, target_field, offset, base=0,
+                 transform_out=None, transform_in=None):
+        super().__init__(name, offset, transform_out, transform_in)
         self.pointer_field = pointer_field
         self.target_field = target_field
         self.base = base
@@ -406,8 +415,9 @@ class PointerField(AbstractScalarField):
 
 class BitField(AbstractScalarField):
 
-    def __init__(self, name, index, offset):
-        super().__init__(name, offset)
+    def __init__(self, name, index, offset, transform_out=None,
+                 transform_in=None):
+        super().__init__(name, offset, transform_out, transform_in)
         self.index = index
 
     def check_serialized_value(self, value):
@@ -424,8 +434,9 @@ class BitField(AbstractScalarField):
 
 class StructField(AbstractStructField):
 
-    def __init__(self, name, fields, offset):
-        super().__init__(name, offset)
+    def __init__(self, name, fields, offset, transform_out=None,
+                 transform_in=None):
+        super().__init__(name, offset, transform_out, transform_in)
         self.fields = fields
 
     def __repr__(self):
@@ -448,8 +459,9 @@ class StructField(AbstractStructField):
 
 class ArrayField(AbstractArrayField):
 
-    def __init__(self, name, count, element_field, element_size, offset):
-        super().__init__(name, offset)
+    def __init__(self, name, count, element_field, element_size, offset,
+                 transform_out=None, transform_in=None):
+        super().__init__(name, offset, transform_out, transform_in)
         self.count = count
         self.element_field = element_field
         self.element_size = element_size
@@ -482,8 +494,9 @@ class ArrayField(AbstractArrayField):
 
 class VariantField(AbstractStructField):
 
-    def __init__(self, name, field, variants, offset):
-        super().__init__(name, offset)
+    def __init__(self, name, field, variants, offset, transform_out=None,
+                 transform_in=None):
+        super().__init__(name, offset, transform_out, transform_in)
         self.field = field
         self.variants = variants
 

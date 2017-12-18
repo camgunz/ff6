@@ -64,7 +64,6 @@ WhiteMagicDescriptionPointers = 0x18D1DA
 
 CharacterStartData = 0x2D7EA0
 
-ExperienceData = 0x2D8420
-
 HPGainData = 0x26F6A0
 MPGainData = 0x26F702
+XPRequiredData = 0x2D8420
