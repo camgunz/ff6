@@ -62,5 +62,21 @@ Monsters = (
                 BitField('special_attack_causes_no_damage', 7, 31),
             )
         )
+    ),
+    ArrayField(
+        name='monsters',
+        offset=offsets.MonsterDropsAndSteals,
+        count=384,
+        element_size=4,
+        element_field=StructField(
+            name='monster',
+            offset=0,
+            fields=(
+                U8Field('drop1', 0),
+                U8Field('drop2', 1),
+                U8Field('steal1', 2),
+                U8Field('steal2', 3),
+            )
+        )
     )
 )

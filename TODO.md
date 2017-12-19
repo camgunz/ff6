@@ -1,20 +1,22 @@
 # To Do
 
 - ROM:
+  - Bushido
+  - Blitz
+  - Lores
+  - level skills:
+    - Magic
+    - Blitz
+    - Bushido
   - monsters:
-    - sketch
-    - control
-    - rage
-    - steal
-    - drop
-  - battle dialogue
+    - Sketch/Control
+    - Steal/Drop
+    - Rage
   - morph packages
+  - battle dialogue
   - character starting equipment
   - character starting stats
   - shops
-  - bushido
-  - blitz
-  - Terra/Celes learned magic
   - checksum
 - Save game:
   - magic
@@ -33,7 +35,7 @@
 
 - Now that things are deserializing, they should be related to the ROM.  So
   instead of Terra's weapon being `1`, it should be `rom.items[1] ('Dirk')`
-  - Feels like... `ROMMapper` and `get/set` functions
+  - I think this is a job for `transform_out`/`transform_in`
 
 ## To Consider
 
