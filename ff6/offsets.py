@@ -67,3 +67,7 @@ CharacterStartData = 0x2D7EA0
 HPGainData = 0x26F6A0
 MPGainData = 0x26F702
 XPRequiredData = 0x2D8420
+
+LoreNames = 0x26FBFD
+
+MagitekAttacks = 0x26FBAD

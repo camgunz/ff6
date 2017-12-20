@@ -78,5 +78,49 @@ Monsters = (
                 U8Field('steal2', 3),
             )
         )
+    ),
+    ArrayField(
+        name='monsters',
+        offset=offsets.SketchData,
+        count=384,
+        element_size=2,
+        element_field=StructField(
+            name='monster',
+            offset=0,
+            fields=(
+                U8Field('sketch1', 0),
+                U8Field('sketch2', 1),
+            )
+        )
+    ),
+    ArrayField(
+        name='monsters',
+        offset=offsets.ControlData,
+        count=384,
+        element_size=4,
+        element_field=StructField(
+            name='monster',
+            offset=0,
+            fields=(
+                U8Field('control1', 0),
+                U8Field('control2', 1),
+                U8Field('control3', 2),
+                U8Field('control4', 3),
+            )
+        )
+    ),
+    ArrayField(
+        name='monsters',
+        offset=offsets.RageData,
+        count=384,
+        element_size=2,
+        element_field=StructField(
+            name='monster',
+            offset=0,
+            fields=(
+                U8Field('rage1', 0),
+                U8Field('rage2', 1),
+            )
+        )
     )
 )

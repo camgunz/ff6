@@ -4,8 +4,10 @@ import pprint
 
 from ff6.data import *
 from ff6.ff6rom import FF6ROM
+from ff6.save_game import SaveGame
 
 ROM_FILENAME = 'ff6.rom'
+SAVE_FILENAME = 'ff6.srm'
 
 def get_rom(rom_filename):
     rom = FF6ROM.from_file(rom_filename)
@@ -17,46 +19,93 @@ def test_monsters(rom_filename):
     for n, monster in enumerate(rom.monsters):
         print(n, pprint.pformat(monster))
 
-def print_condition2(rom):
-    print('name         , condemned, kneeling, blink, silence, berserk, confusion, hp_drain, sleep')
-    for item in rom.items:
-        if item.type not in (InventoryItemType.Armor, InventoryItemType.Shield,
-                             InventoryItemType.Hat, InventoryItemType.Relic):
-            continue
-        print('%13s: %9s, %8s, %5s, %7s, %7s, %9s, %8s, %5s' % (
-            item.name,
-            str(item.causes_condemned),
-            str(item.causes_kneeling),
-            str(item.causes_blink),
-            str(item.causes_silence),
-            str(item.causes_berserk),
-            str(item.causes_confusion),
-            str(item.causes_hp_drain),
-            str(item.causes_sleep)
-        ))
+def test_items(rom_filename):
+    rom = get_rom(rom_filename)
+    for n, item in enumerate(rom.inventory_items):
+        print(n, pprint.pformat(item))
 
-def print_attack_when_used(rom):
-    for item in rom.items:
-        if item.type == InventoryItemType.Item:
-            continue
-        print('%13s: %s' % (item.name, item.attack_when_used))
+def test_blitzes(rom_filename):
+    rom = get_rom(rom_filename)
+    for n, blitz in enumerate(rom.blitzes):
+        print(n, blitz)
 
-def print_targeting(rom):
-    print('         name, single, allies/enemies, everyone, all allies/enemies, only default, multiple, default enemy, random')
-    for item in rom.items:
-        print('%13s: %6s, %14s, %8s, %18s, %12s, %8s, %13s, %6s' % (
-            item.name,
-            item.targets_single_ally_or_enemy,
-            item.targets_allies_or_enemies_only,
-            item.targets_all_allies_and_enemies,
-            item.targets_all_allies_or_all_enemies,
-            item.targets_only_default_selection,
-            item.targets_multiple,
-            item.targets_enemies_by_default,
-            item.targets_random
-        ))
+def test_bushido_names(rom_filename):
+    rom = get_rom(rom_filename)
+    for n, bushido_name in enumerate(rom.bushido_names):
+        print(n, bushido_name)
+
+def test_black_magic(rom_filename):
+    rom = get_rom(rom_filename)
+    for n, black_magic in enumerate(rom.black_magic):
+        print(n, pprint.pformat(black_magic))
+
+def test_grey_magic(rom_filename):
+    rom = get_rom(rom_filename)
+    for n, grey_magic in enumerate(rom.grey_magic):
+        print(n, pprint.pformat(grey_magic))
+
+def test_white_magic(rom_filename):
+    rom = get_rom(rom_filename)
+    for n, white_magic in enumerate(rom.white_magic):
+        print(n, pprint.pformat(white_magic))
+
+def test_hp_per_level(rom_filename):
+    rom = get_rom(rom_filename)
+    print(rom.hp_per_level)
+
+def test_mp_per_level(rom_filename):
+    rom = get_rom(rom_filename)
+    print(rom.mp_per_level)
+
+def test_xp_per_level(rom_filename):
+    rom = get_rom(rom_filename)
+    print(rom.xp_per_level)
+
+def test_morph_packages(rom_filename):
+    rom = get_rom(rom_filename)
+    for n, morph_package in enumerate(rom.morph_packages):
+        print(n, pprint.pformat(morph_package))
+
+def test_character_starts(rom_filename):
+    rom = get_rom(rom_filename)
+    for n, character_start in enumerate(rom.character_starts):
+        print(n, pprint.pformat(character_start))
+
+def compare_roms(rom_filename):
+    rom1 = get_rom(rom_filename)
+    rom2 = get_rom(rom_filename)
+    rom2.serialize()
+    assert rom1 == rom2
+    print('ROMs equal')
+
+def read_save(rom_filename, save_filename):
+    rom = FF6ROM.from_file(rom_filename)
+    rom.deserialize()
+    save = SaveGame.from_file(0, rom, save_filename)
+    save.deserialize()
+    print(save.gold)
+    print(save.game_time)
+    print(save.steps)
+    for character in save.characters:
+        print('%r' % (character))
+    for slot in save.inventory_item_slots:
+        if slot['id'] != 255 or slot['count'] != 0:
+            print(slot)
 
 def main():
-    test_monsters(ROM_FILENAME)
+    # read_save(ROM_FILENAME, SAVE_FILENAME)
+    # test_monsters(ROM_FILENAME)
+    # test_items(ROM_FILENAME)
+    # # compare_roms(ROM_FILENAME)
+    # test_blitzes(ROM_FILENAME)
+    # test_bushido_names(ROM_FILENAME)
+    # test_black_magic(ROM_FILENAME)
+    # test_grey_magic(ROM_FILENAME)
+    # test_white_magic(ROM_FILENAME)
+    # test_hp_per_level(ROM_FILENAME)
+    # test_mp_per_level(ROM_FILENAME)
+    # test_xp_per_level(ROM_FILENAME)
+    # test_morph_packages(ROM_FILENAME)
+    test_character_starts(ROM_FILENAME)
 
 main()

@@ -146,11 +146,11 @@ class SaveCharacterStatus(IntFlag):
     Unknown7  = 1 << 14
     Float     = 1 << 15
 
-class BattleCommands(IntEnum):
+class BattleCommand(IntEnum):
     Fight   = 0
     Item    = 1
     Magic   = 2
-    empty   = 3
+    Empty1  = 3
     Morph   = 4
     Steal   = 5
     Capture = 6
@@ -177,6 +177,7 @@ class BattleCommands(IntEnum):
     Shock   = 27
     Possess = 28
     Magitek = 29
+    Empty2  = 255
 
 class MagicExtraEffect(IntEnum):
     Nothing1                                          = 0

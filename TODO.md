@@ -1,22 +1,39 @@
 # To Do
 
 - ROM:
-  - Bushido
-  - Blitz
+  - Bushido Descriptions (0x0FFF00)
+    - Pointers (0x1001AE, 8 items)
+  - Blitzes
+    - Specifications (0x035E1C, 14 elements, 2 bytes: char, rotation)
+    - Descriptions (0x047C40, 8 elements, 12 bytes)
+  - Dances
+    - Names (0x27019D, 8 items, 12 bytes each)
+  - Slot
+    - Attacks (0x26FB71, 6 items, 10 bytes each)
   - Lores
+    - Names (0x26FBFD, 24 items, 10 bytes each)
+    - Descriptions (0x2D79A0, variable strings)
+      - Pointers (0x2D7C70, 24 elements)
+  - Espers
+    - Descriptions (0x0F3B40, variable strings)
+    - Data (0x187000, 27 elements, 11 bytes)
+    - Short bonus descriptions (0x1000AE, 17 elements, 9 chars each)
+    - Names (0x26F8E1, 27 items, 8 bytes each)
+    - Attacks (0x27008F, 27 items, 10 bytes each)
+    - Long bonus descriptions (0x2E0000, variable strings)
+      - Pointers (0x2E01CF, 17 elements -- I think)
+  - Skean attack names
+  - Magitek
+    - Attacks (0x26FBAD, 8 items, 10 bytes each)
   - level skills:
     - Magic
     - Blitz
     - Bushido
-  - monsters:
-    - Sketch/Control
-    - Steal/Drop
-    - Rage
-  - morph packages
   - battle dialogue
-  - character starting equipment
-  - character starting stats
-  - shops
+  - Shops
+  - Monster attacks
+  - Desperation attacks
+  - Miscellaneous attacks (Lagomorph, Interceptor, etc.)
   - checksum
 - Save game:
   - magic
@@ -35,7 +52,9 @@
 
 - Now that things are deserializing, they should be related to the ROM.  So
   instead of Terra's weapon being `1`, it should be `rom.items[1] ('Dirk')`
-  - I think this is a job for `transform_out`/`transform_in`
+  - I think we can't use `transform_out`/`transform_in` because you want these
+    to be dynamic.  What we really need is some way to say "these fields are
+    pointers".
 
 ## To Consider
 

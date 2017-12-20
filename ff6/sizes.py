@@ -10,3 +10,7 @@ BushidoName = 12
 MagicName = 6
 
 CharacterName = 6
+
+MorphPackage = 4
+
+CharacterStart = 22
