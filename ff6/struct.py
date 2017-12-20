@@ -294,8 +294,7 @@ class U8Field(NumberRangeCheckMixin, AbstractScalarField):
         bin_obj.write_byte(offset + self.offset, value)
 
     def _deserialize(self, bin_obj, offset):
-        value = bin_obj.read_byte(offset + self.offset)
-        return value
+        return bin_obj.read_byte(offset + self.offset)
 
 class U16Field(NumberRangeCheckMixin, AbstractScalarField):
 
@@ -306,8 +305,7 @@ class U16Field(NumberRangeCheckMixin, AbstractScalarField):
         bin_obj.write_short(offset + self.offset, value)
 
     def _deserialize(self, bin_obj, offset):
-        value = bin_obj.read_short(offset + self.offset)
-        return value
+        return bin_obj.read_short(offset + self.offset)
 
 class U24Field(NumberRangeCheckMixin, AbstractScalarField):
 
