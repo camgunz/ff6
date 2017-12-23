@@ -94,7 +94,7 @@ def read_save(rom_filename, save_filename):
 
 def main():
     # read_save(ROM_FILENAME, SAVE_FILENAME)
-    # test_monsters(ROM_FILENAME)
+    test_monsters(ROM_FILENAME)
     # test_items(ROM_FILENAME)
     # # compare_roms(ROM_FILENAME)
     # test_blitzes(ROM_FILENAME)
@@ -106,6 +106,6 @@ def main():
     # test_mp_per_level(ROM_FILENAME)
     # test_xp_per_level(ROM_FILENAME)
     # test_morph_packages(ROM_FILENAME)
-    test_character_starts(ROM_FILENAME)
+    # test_character_starts(ROM_FILENAME)
 
 main()

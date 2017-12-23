@@ -1,7 +1,10 @@
 from abc import abstractmethod
 from enum import IntEnum
+from types import MethodType
 
 from ff6.bin_util import BinaryObject
+from ff6.obj import ObjClass
+from ff6.util import snake_to_camel
 
 def _value_in_range(name, val, min_val, max_val):
     val = int(val)
@@ -436,6 +439,10 @@ class StructField(AbstractStructField):
                  transform_in=None):
         super().__init__(name, offset, transform_out, transform_in)
         self.fields = fields
+        self.Obj = ObjClass(
+            snake_to_camel(self.name),
+            [field.name for field in self.fields]
+        )
 
     def __repr__(self):
         return '%s(%s, %s, %s)' % (
@@ -450,10 +457,10 @@ class StructField(AbstractStructField):
             field.serialize(bin_obj, offset + self.offset, values[field.name])
 
     def _deserialize(self, bin_obj, offset):
-        return {
+        return self.Obj(**{
             field.name: field.deserialize(bin_obj, offset + self.offset)
             for field in self.fields
-        }
+        })
 
 class ArrayField(AbstractArrayField):
 
@@ -498,30 +505,92 @@ class VariantField(AbstractStructField):
         self.field = field
         self.variants = variants
 
-    def _serialize(self, bin_obj, offset, values):
+    def _serialize(self, bin_obj, offset, value):
         location = offset + self.offset
-        variant_value = values[self.field.name]
+        variant_value = getattr(value, self.field.name)
         self.field.serialize(bin_obj, location, variant_value)
-        self.variants[variant_value].serialize(bin_obj, location, values)
+        self.variants[variant_value].serialize(bin_obj, location, value)
 
     def _deserialize(self, bin_obj, offset):
         location = offset + self.offset
         variant_value = self.field.deserialize(bin_obj, location)
-        values = self.variants[variant_value].deserialize(bin_obj, location)
-        values[self.field.name] = variant_value
-        return values
+        value = self.variants[variant_value].deserialize(bin_obj, location)
+        setattr(value, self.field.name, variant_value)
+        return value
+
+class ArrayMapper:
+
+    def __init__(self, attr_name, mapper):
+        self.attr_name = attr_name
+        self.mapper = mapper
+
+    def map(self, bin_obj):
+        attr = getattr(bin_obj, self.attr_name)
+        for element in attr:
+            self.mapper.map(bin_obj, element)
+
+    def unmap(self, bin_obj):
+        attr = getattr(bin_obj, self.attr_name)
+        for element in attr:
+            self.mapper.unmap(bin_obj, element)
+
+class IndexMapper:
+
+    def __init__(self, index_field_name, array_field_name):
+        self.index_field_name = index_field_name
+        self.array_field_name = array_field_name
+
+    def map(self, bin_obj, field_name):
+        obj = getattr(bin_obj, field_name)
+        if isinstance(obj, list):
+            cls = type(obj[0])
+        else:
+            cls = type(obj)
+        array_field_name = self.array_field_name
+        index_field_name = self.index_field_name
+        def getter(self):
+            array = getattr(bin_obj, array_field_name)
+            index = getattr(self, '_' + index_field_name)
+            return array[index]
+        def setter(self, value):
+            array = getattr(bin_obj, array_field_name)
+            index = array.index(getattr(obj, index_field_name))
+            setattr(self, '_' + index_field_name, index)
+        prop = property(
+            fget=getter,
+            fset=lambda self, value: setattr(obj, index_field_name, value)
+        )
+        if isinstance(obj, list):
+            for element in obj:
+                original_value = getattr(element, self.index_field_name)
+                setattr(element, '_' + self.index_field_name, original_value)
+        else:
+            original_value = getattr(obj, self.index_field_name)
+            setattr(obj, '_' + self.index_field_name, original_value)
+        setattr(cls, self.index_field_name, prop)
+
+    def unmap(self, bin_obj, field_name):
+        obj = getattr(bin_obj, field_name)
+        array = getattr(bin_obj, self.array_field_name)
+        index = array.index(getattr(obj, self.index_field_name))
+        setattr(obj, self.index_field_name, array[index])
 
 class BinaryModel:
 
     Fields = tuple()
+    Mappers = []
+
+    def __init__(self):
+        self._deserialized_fields = {}
 
     def serialize(self, instance, bin_obj):
         for field in self.Fields:
-            field.serialize(bin_obj, 0, getattr(instance, field.name))
+            value = instance._deserialized_fields[field.name]
+            field.serialize(bin_obj, 0, value)
 
     def deserialize(self, instance, bin_obj):
         for field in self.Fields:
-            existing_value = getattr(instance, field.name, None)
+            existing_value = instance._deserialized_fields.get(field.name)
             new_value = field.deserialize(bin_obj, 0)
             if existing_value is None:
                 existing_value = new_value
@@ -532,9 +601,18 @@ class BinaryModel:
             elif field.FieldType == FieldType.Array:
                 for existing, new in zip(existing_value, new_value):
                     existing.update(new)
-            setattr(instance, field.name, existing_value)
+            instance._deserialized_fields[field.name] = existing_value
+        for field_name, value in self._deserialized_fields.items():
+            setattr(instance, field_name, value)
+        for field_name, mappers in self.Mappers.items():
+            for mapper in mappers:
+                mapper.map(bin_obj, field_name)
 
 class BinaryModelObject(BinaryObject, BinaryModel):
+
+    def __init__(self, data):
+        BinaryObject.__init__(self, data)
+        BinaryModel.__init__(self)
 
     def serialize(self):
         super().serialize(self, self)
