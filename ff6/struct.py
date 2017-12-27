@@ -439,10 +439,10 @@ class StructField(AbstractStructField):
                  transform_in=None):
         super().__init__(name, offset, transform_out, transform_in)
         self.fields = fields
-        self.Obj = ObjClass(
-            snake_to_camel(self.name),
-            [field.name for field in self.fields]
-        )
+        # self.Obj = ObjClass(
+        #     snake_to_camel(self.name),
+        #     [field.name for field in self.fields]
+        # )
 
     def __repr__(self):
         return '%s(%s, %s, %s)' % (
@@ -457,10 +457,10 @@ class StructField(AbstractStructField):
             field.serialize(bin_obj, offset + self.offset, values[field.name])
 
     def _deserialize(self, bin_obj, offset):
-        return self.Obj(**{
+        return {
             field.name: field.deserialize(bin_obj, offset + self.offset)
             for field in self.fields
-        })
+        }
 
 class ArrayField(AbstractArrayField):
 
@@ -507,7 +507,7 @@ class VariantField(AbstractStructField):
 
     def _serialize(self, bin_obj, offset, value):
         location = offset + self.offset
-        variant_value = getattr(value, self.field.name)
+        variant_value = value[self.field.name]
         self.field.serialize(bin_obj, location, variant_value)
         self.variants[variant_value].serialize(bin_obj, location, value)
 
@@ -515,7 +515,7 @@ class VariantField(AbstractStructField):
         location = offset + self.offset
         variant_value = self.field.deserialize(bin_obj, location)
         value = self.variants[variant_value].deserialize(bin_obj, location)
-        setattr(value, self.field.name, variant_value)
+        value[self.field.name] = variant_value
         return value
 
 class ArrayMapper:
@@ -575,6 +575,14 @@ class IndexMapper:
         index = array.index(getattr(obj, self.index_field_name))
         setattr(obj, self.index_field_name, array[index])
 
+def seq_equal(seq1, seq2):
+    if not len(seq1) == len(seq2):
+        return False
+    for a, b in zip(seq1, seq2):
+        if a != b:
+            return False
+    return True
+
 class BinaryModel:
 
     Fields = tuple()
@@ -582,6 +590,21 @@ class BinaryModel:
 
     def __init__(self):
         self._deserialized_fields = {}
+
+    @staticmethod
+    def _map_fields(path, instance, deserialized_fields):
+        for field_name, value in deserialized_fields.items():
+            if isinstance(value, dict):
+                # Build a struct to use as an instance
+                # Pass that instance and the deserialized fields to map_fields
+                #   again
+                struct = Struct(name=field_name, path=path)
+            elif isinstance(value, list):
+                setattr(instance, Array(name=field_name))
+            elif path is None:
+                raise Exception('[TODO] Top-level scalars are unsupported')
+            else:
+                setattr(instance, field_name, value)
 
     def serialize(self, instance, bin_obj):
         for field in self.Fields:
@@ -602,11 +625,24 @@ class BinaryModel:
                 for existing, new in zip(existing_value, new_value):
                     existing.update(new)
             instance._deserialized_fields[field.name] = existing_value
+        BinaryModel._map_fields([], self, self._deserialized_fields)
         for field_name, value in self._deserialized_fields.items():
+            if isinstance(value, list):
+                setattr(instance, field_name, Array(field_name, (field_name,)))
+            elif isinstance(value, dict):
+                setattr(instance, field_name, Struct(field_name, (field_name,)))
+            else:
+                raise Exception('[TODO] Top-level scalars are unsupported')
             setattr(instance, field_name, value)
-        for field_name, mappers in self.Mappers.items():
-            for mapper in mappers:
-                mapper.map(bin_obj, field_name)
+        # for field in self.Structure:
+        #     setattr(
+        #         self,
+        #         field.name,
+        #         field.map(self._deserialized_fields)
+        #     )
+        # for field_name, mappers in self.Mappers.items():
+        #     for mapper in mappers:
+        #         mapper.map(bin_obj, field_name)
 
 class BinaryModelObject(BinaryObject, BinaryModel):
 

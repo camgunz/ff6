@@ -70,6 +70,60 @@ MagicStructField = StructField(
     )
 )
 
+Magic = (
+    ArrayField(
+        name='magic',
+        offset=offsets.MagicData,
+        count=24,
+        element_size=14,
+        element_field=MagicStructField,
+    ),
+    ArrayField(
+        name='magic',
+        offset=offsets.MagicNames,
+        count=24,
+        element_size=sizes.MagicName + 1,
+        element_field=StructField(
+            name='magic',
+            offset=0,
+            fields=(
+                U8Field('magic_ball', 0),
+                StrField(
+                    name='name',
+                    size=sizes.MagicName,
+                    padding_byte=b'\xff',
+                    offset=1,
+                    translation=(TO_DTE_BATTLE, DTE_BATTLE)
+                ),
+            )
+        )
+    ),
+    ArrayField(
+        name='magic',
+        offset=offsets.MagicDescriptionPointers,
+        count=24,
+        element_size=2,
+        element_field=StructField(
+            name='magic',
+            offset=0,
+            fields=(
+                PointerField(
+                    name='description',
+                    offset=0,
+                    base=offsets.MagicDescriptions,
+                    pointer_field=U16Field(name='pointer', offset=0),
+                    target_field=StrField(
+                        name='description',
+                        terminator=b'\x00',
+                        offset=0,
+                        translation=(TO_DTE_BATTLE, DTE_BATTLE)
+                    ),
+                ),
+            )
+        )
+    )
+)
+
 BlackMagic = (
     ArrayField(
         name='black_magic',

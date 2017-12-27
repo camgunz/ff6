@@ -50,6 +50,10 @@ ColosseumData = 0x1FB800
 
 MagicDescriptions = 0x18CBA0
 
+MagicData = 0x46CC0
+MagicNames = 0x26F767
+MagicDescriptionPointers = 0x18D180
+
 BlackMagicData = 0x46CC0
 BlackMagicNames = 0x26F767
 BlackMagicDescriptionPointers = 0x18D180
