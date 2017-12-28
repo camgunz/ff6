@@ -92,9 +92,16 @@ def read_save(rom_filename, save_filename):
         if slot['id'] != 255 or slot['count'] != 0:
             print(slot)
 
+def test_mapping(rom_filename):
+    rom = get_rom(rom_filename)
+    pprint.pprint(rom.character_starts[0])
+    # for x in rom._mapped_fields:
+    #     pprint.pprint(x)
+    # pprint.pprint(rom._mapped_fields)
+
 def main():
     # read_save(ROM_FILENAME, SAVE_FILENAME)
-    test_monsters(ROM_FILENAME)
+    # test_monsters(ROM_FILENAME)
     # test_items(ROM_FILENAME)
     # # compare_roms(ROM_FILENAME)
     # test_blitzes(ROM_FILENAME)
@@ -107,5 +114,6 @@ def main():
     # test_xp_per_level(ROM_FILENAME)
     # test_morph_packages(ROM_FILENAME)
     # test_character_starts(ROM_FILENAME)
+    test_mapping(ROM_FILENAME)
 
 main()

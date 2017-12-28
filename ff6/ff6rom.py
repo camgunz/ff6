@@ -39,7 +39,7 @@ class FF6ROM(ROM):
             ('inventory_items', Item, 'spell_learned'),
             Index(('inventory_items',))
         ),
-        (('character_starts', Item, 'weapon'), Index(('inventory_items',)))
+        (('character_starts', Item, 'weapon'), Index(('inventory_items',))),
         (('character_starts', Item, 'weapon'), Index(('inventory_items',))),
         (('character_starts', Item, 'shield'), Index(('inventory_items',))),
         (('character_starts', Item, 'hat'), Index(('inventory_items',))),

@@ -2,6 +2,7 @@ from ff6 import offsets, sizes
 
 from ff6.dte import DTE_BATTLE, TO_DTE_BATTLE
 from ff6.data import *
+from ff6.model import BinaryModelObject
 from ff6.struct import *
 
 """

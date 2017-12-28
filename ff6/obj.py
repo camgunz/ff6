@@ -1,17 +1,29 @@
-from types import MethodType
-
 def _build_property(name):
     real_name = '_' + name
     def getter(self):
-        return getattr(self, real_name)
+        value = getattr(self, real_name)
+        if name in self.__overrides:
+            value = self.__overrides[name].get(self.__bin_obj, value)
+        return value
     def setter(self, value):
+        if name in self.__overrides:
+            value = self.__overrides[name].set(self.__bin_obj, value)
         setattr(self, real_name, value)
     return property(getter, setter)
 
 def ObjClass(type_name, field_names):
     d = {name: _build_property(name) for name in field_names}
 
-    def __init__(self, **kwargs):
+    def __init__(self, path, bin_obj, **kwargs):
+        self.__path = path
+        self.__bin_obj = bin_obj
+        self.__fields = self.__bin_obj._deserialized_fields
+        self.__section = self.__fields
+        self.__overrides = {}
+        for member in path:
+            if isinstance(member, type):
+                break
+            self.__section = self.__section[member]
         self.__attr_names = sorted(kwargs.keys())
         for name, value in kwargs.items():
             setattr(self, '_' + name, value)
@@ -20,17 +32,27 @@ def ObjClass(type_name, field_names):
         for attr_name in self.__attr_names:
             yield (attr_name, getattr(self, attr_name))
 
-    def __getitem__(self, item):
-        return getattr(self, item)
+    def __real_getattr__(self, attr):
+        return self.__section[attr]
+        # if attr in self.__overrides:
+        #     value = self.__overrides[attr].get(fields, value)
 
-    def __setitem__(self, item, value):
-        setattr(self, item, value)
+    def __real_setattr__(self, attr, value):
+        # if attr in self.__overrides:
+        #     value = self.__overrides[attr].set(fields, value)
+        self.__section[attr] = value
 
     def __repr__(self):
         return '%s(%s)' % (
             type(self).__name__,
             ', '.join(['{}={}'.format(name, value) for name, value in self])
        )
+
+    def set_override(self, field_name, override):
+        self.__overrides[field_name] = override
+
+    def clear_override(self, field_name):
+        del self.__overrides[field_name]
 
     def to_dict(self):
         return {
@@ -47,9 +69,11 @@ def ObjClass(type_name, field_names):
 
     d['__init__'] = __init__
     d['__iter__'] = __iter__
-    d['__getitem__'] = __getitem__
-    d['__setitem__'] = __setitem__
+    d['__real_getattr__'] = __real_getattr__
+    d['__real_setattr__'] = __real_setattr__
     d['__repr__'] = __repr__
+    d['set_override'] = set_override
+    d['clear_override'] = clear_override
     d['to_dict'] = to_dict
     d['update'] = update
 

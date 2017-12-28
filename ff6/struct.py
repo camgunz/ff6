@@ -1,10 +1,9 @@
 from abc import abstractmethod
 from enum import IntEnum
-from types import MethodType
 
-from ff6.bin_util import BinaryObject
 from ff6.obj import ObjClass
 from ff6.util import snake_to_camel
+from ff6.bin_util import BinaryObject
 
 def _value_in_range(name, val, min_val, max_val):
     val = int(val)
@@ -591,21 +590,6 @@ class BinaryModel:
     def __init__(self):
         self._deserialized_fields = {}
 
-    @staticmethod
-    def _map_fields(path, instance, deserialized_fields):
-        for field_name, value in deserialized_fields.items():
-            if isinstance(value, dict):
-                # Build a struct to use as an instance
-                # Pass that instance and the deserialized fields to map_fields
-                #   again
-                struct = Struct(name=field_name, path=path)
-            elif isinstance(value, list):
-                setattr(instance, Array(name=field_name))
-            elif path is None:
-                raise Exception('[TODO] Top-level scalars are unsupported')
-            else:
-                setattr(instance, field_name, value)
-
     def serialize(self, instance, bin_obj):
         for field in self.Fields:
             value = instance._deserialized_fields[field.name]
@@ -625,15 +609,14 @@ class BinaryModel:
                 for existing, new in zip(existing_value, new_value):
                     existing.update(new)
             instance._deserialized_fields[field.name] = existing_value
-        BinaryModel._map_fields([], self, self._deserialized_fields)
-        for field_name, value in self._deserialized_fields.items():
-            if isinstance(value, list):
-                setattr(instance, field_name, Array(field_name, (field_name,)))
-            elif isinstance(value, dict):
-                setattr(instance, field_name, Struct(field_name, (field_name,)))
-            else:
-                raise Exception('[TODO] Top-level scalars are unsupported')
-            setattr(instance, field_name, value)
+        # for field_name, value in self._deserialized_fields.items():
+        #     if isinstance(value, list):
+        #         setattr(instance, field_name, Array(field_name, (field_name,)))
+        #     elif isinstance(value, dict):
+        #         setattr(instance, field_name, Struct(field_name, (field_name,)))
+        #     else:
+        #         raise Exception('[TODO] Top-level scalars are unsupported')
+        #     setattr(instance, field_name, value)
         # for field in self.Structure:
         #     setattr(
         #         self,
@@ -644,14 +627,3 @@ class BinaryModel:
         #     for mapper in mappers:
         #         mapper.map(bin_obj, field_name)
 
-class BinaryModelObject(BinaryObject, BinaryModel):
-
-    def __init__(self, data):
-        BinaryObject.__init__(self, data)
-        BinaryModel.__init__(self)
-
-    def serialize(self):
-        super().serialize(self, self)
-
-    def deserialize(self):
-        super().deserialize(self, self)

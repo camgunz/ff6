@@ -1,5 +1,5 @@
+from ff6.model import BinaryModelObject
 from ff6.patch import Patch, PatchCommands
-from ff6.struct import BinaryModelObject
 from ff6.bin_util import *
 
 class ROM(BinaryModelObject):
