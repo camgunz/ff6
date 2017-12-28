@@ -70,13 +70,16 @@ class Index:
     def get(self, obj, value):
         for member in self.array_field_path:
             obj = getattr(obj, member)
+        if isinstance(obj, list):
+            return obj[value]
         return getattr(obj, value)
 
-    def set(self, bin_obj, value):
-        fields = bin_obj._deserialized_fields
+    def set(self, obj, value):
         for member in self.array_field_path:
-            fields = fields[member]
-        return fields[value].value
+            obj = getattr(obj, member)
+        if isinstance(obj, list):
+            return obj[value]
+        return getattr(obj, value)
 
 class Item:
     pass

@@ -74,14 +74,14 @@ Magic = (
     ArrayField(
         name='magic',
         offset=offsets.MagicData,
-        count=24,
+        count=54,
         element_size=14,
         element_field=MagicStructField,
     ),
     ArrayField(
         name='magic',
         offset=offsets.MagicNames,
-        count=24,
+        count=54,
         element_size=sizes.MagicName + 1,
         element_field=StructField(
             name='magic',
@@ -101,172 +101,10 @@ Magic = (
     ArrayField(
         name='magic',
         offset=offsets.MagicDescriptionPointers,
-        count=24,
+        count=54,
         element_size=2,
         element_field=StructField(
             name='magic',
-            offset=0,
-            fields=(
-                PointerField(
-                    name='description',
-                    offset=0,
-                    base=offsets.MagicDescriptions,
-                    pointer_field=U16Field(name='pointer', offset=0),
-                    target_field=StrField(
-                        name='description',
-                        terminator=b'\x00',
-                        offset=0,
-                        translation=(TO_DTE_BATTLE, DTE_BATTLE)
-                    ),
-                ),
-            )
-        )
-    )
-)
-
-BlackMagic = (
-    ArrayField(
-        name='black_magic',
-        offset=offsets.BlackMagicData,
-        count=24,
-        element_size=14,
-        element_field=MagicStructField,
-    ),
-    ArrayField(
-        name='black_magic',
-        offset=offsets.BlackMagicNames,
-        count=24,
-        element_size=sizes.MagicName + 1,
-        element_field=StructField(
-            name='black_magic',
-            offset=0,
-            fields=(
-                U8Field('magic_ball', 0),
-                StrField(
-                    name='name',
-                    size=sizes.MagicName,
-                    padding_byte=b'\xff',
-                    offset=1,
-                    translation=(TO_DTE_BATTLE, DTE_BATTLE)
-                ),
-            )
-        )
-    ),
-    ArrayField(
-        name='black_magic',
-        offset=offsets.BlackMagicDescriptionPointers,
-        count=24,
-        element_size=2,
-        element_field=StructField(
-            name='black_magic',
-            offset=0,
-            fields=(
-                PointerField(
-                    name='description',
-                    offset=0,
-                    base=offsets.MagicDescriptions,
-                    pointer_field=U16Field(name='pointer', offset=0),
-                    target_field=StrField(
-                        name='description',
-                        terminator=b'\x00',
-                        offset=0,
-                        translation=(TO_DTE_BATTLE, DTE_BATTLE)
-                    ),
-                ),
-            )
-        )
-    )
-)
-
-GreyMagic = (
-    ArrayField(
-        name='grey_magic',
-        offset=offsets.GreyMagicData,
-        count=21,
-        element_size=14,
-        element_field=MagicStructField,
-    ),
-    ArrayField(
-        name='grey_magic',
-        offset=offsets.GreyMagicNames,
-        count=21,
-        element_size=sizes.MagicName + 1,
-        element_field=StructField(
-            name='grey_magic',
-            offset=0,
-            fields=(
-                U8Field('magic_ball', 0),
-                StrField(
-                    name='name',
-                    size=sizes.MagicName,
-                    padding_byte=b'\xff',
-                    offset=1,
-                    translation=(TO_DTE_BATTLE, DTE_BATTLE)
-                ),
-            )
-        )
-    ),
-    ArrayField(
-        name='grey_magic',
-        offset=offsets.GreyMagicDescriptionPointers,
-        count=21,
-        element_size=2,
-        element_field=StructField(
-            name='grey_magic',
-            offset=0,
-            fields=(
-                PointerField(
-                    name='description',
-                    offset=0,
-                    base=offsets.MagicDescriptions,
-                    pointer_field=U16Field(name='pointer', offset=0),
-                    target_field=StrField(
-                        name='description',
-                        terminator=b'\x00',
-                        offset=0,
-                        translation=(TO_DTE_BATTLE, DTE_BATTLE)
-                    ),
-                ),
-            )
-        )
-    )
-)
-
-WhiteMagic = (
-    ArrayField(
-        name='white_magic',
-        offset=offsets.WhiteMagicData,
-        count=9,
-        element_size=14,
-        element_field=MagicStructField,
-    ),
-    ArrayField(
-        name='white_magic',
-        offset=offsets.WhiteMagicNames,
-        count=9,
-        element_size=sizes.MagicName + 1,
-        element_field=StructField(
-            name='white_magic',
-            offset=0,
-            fields=(
-                U8Field('magic_ball', 0),
-                StrField(
-                    name='name',
-                    size=sizes.MagicName,
-                    padding_byte=b'\xff',
-                    offset=1,
-                    translation=(TO_DTE_BATTLE, DTE_BATTLE)
-                ),
-            )
-        )
-    ),
-    ArrayField(
-        name='white_magic',
-        offset=offsets.WhiteMagicDescriptionPointers,
-        count=9,
-        element_size=2,
-        element_field=StructField(
-            name='white_magic',
             offset=0,
             fields=(
                 PointerField(

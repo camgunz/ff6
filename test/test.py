@@ -94,10 +94,16 @@ def read_save(rom_filename, save_filename):
 
 def test_mapping(rom_filename):
     rom = get_rom(rom_filename)
-    pprint.pprint(rom.character_starts[0])
-    # for x in rom._mapped_fields:
-    #     pprint.pprint(x)
-    # pprint.pprint(rom._mapped_fields)
+    assert (rom.character_starts[0].armor.physical_defense ==
+            rom.inventory_items[132].physical_defense)
+    rom.character_starts[0].armor.physical_defense = 80
+    assert (rom.character_starts[0].armor.physical_defense ==
+            rom.inventory_items[132].physical_defense)
+    rom.inventory_items[132].physical_defense = 28
+    assert (rom.character_starts[0].armor.physical_defense ==
+            rom.inventory_items[132].physical_defense)
+    repr(rom.inventory_items)
+    assert rom.character_starts[0].armor == rom.inventory_items[132]
 
 def main():
     # read_save(ROM_FILENAME, SAVE_FILENAME)

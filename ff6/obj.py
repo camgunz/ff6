@@ -15,11 +15,11 @@ def ObjClass(type_name, field_names):
     d = {name: _build_property(name) for name in field_names}
 
     def __init__(self, path, bin_obj, **kwargs):
+        self.__overrides = {}
         self.__path = path
         self.__bin_obj = bin_obj
         self.__fields = self.__bin_obj._deserialized_fields
         self.__section = self.__fields
-        self.__overrides = {}
         for member in path:
             if isinstance(member, type):
                 break
@@ -30,17 +30,11 @@ def ObjClass(type_name, field_names):
 
     def __iter__(self):
         for attr_name in self.__attr_names:
-            yield (attr_name, getattr(self, attr_name))
-
-    def __real_getattr__(self, attr):
-        return self.__section[attr]
-        # if attr in self.__overrides:
-        #     value = self.__overrides[attr].get(fields, value)
-
-    def __real_setattr__(self, attr, value):
-        # if attr in self.__overrides:
-        #     value = self.__overrides[attr].set(fields, value)
-        self.__section[attr] = value
+            obj = getattr(self, attr_name)
+            if obj is self:
+                print('%s is self' % (attr_name))
+                continue
+            yield (attr_name, obj)
 
     def __repr__(self):
         return '%s(%s)' % (
@@ -69,8 +63,6 @@ def ObjClass(type_name, field_names):
 
     d['__init__'] = __init__
     d['__iter__'] = __iter__
-    d['__real_getattr__'] = __real_getattr__
-    d['__real_setattr__'] = __real_setattr__
     d['__repr__'] = __repr__
     d['set_override'] = set_override
     d['clear_override'] = clear_override

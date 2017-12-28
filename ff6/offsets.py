@@ -54,18 +54,6 @@ MagicData = 0x46CC0
 MagicNames = 0x26F767
 MagicDescriptionPointers = 0x18D180
 
-BlackMagicData = 0x46CC0
-BlackMagicNames = 0x26F767
-BlackMagicDescriptionPointers = 0x18D180
-
-GreyMagicData = 0x46E10
-GreyMagicNames = 0x26F80F
-GreyMagicDescriptionPointers = 0x18D1B0
-
-WhiteMagicData =  0x46F36
-WhiteMagicNames = 0x26F8A2
-WhiteMagicDescriptionPointers = 0x18D1DA
-
 CharacterStartData = 0x2D7EA0
 
 HPGainData = 0x26F6A0

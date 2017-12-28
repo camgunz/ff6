@@ -7,7 +7,6 @@ from ff6.model import *
 from ff6.blitzes import BlitzNames
 from ff6.bushido import BushidoNames
 from ff6.monsters import Monsters
-# from ff6.magic import BlackMagic, GreyMagic, WhiteMagic
 from ff6.magic import Magic
 from ff6.morph_packages import MorphPackages
 from ff6.character_starts import CharacterStarts
@@ -20,9 +19,6 @@ class FF6ROM(ROM):
         BlitzNames +
         BushidoNames +
         Magic +
-        # BlackMagic +
-        # GreyMagic +
-        # WhiteMagic +
         HPPerLevel +
         MPPerLevel +
         XPPerLevel +
@@ -37,7 +33,7 @@ class FF6ROM(ROM):
         (('monsters', Item, 'drop2'), Index(('inventory_items',))),
         (
             ('inventory_items', Item, 'spell_learned'),
-            Index(('inventory_items',))
+            Index(('magic',))
         ),
         (('character_starts', Item, 'weapon'), Index(('inventory_items',))),
         (('character_starts', Item, 'weapon'), Index(('inventory_items',))),
