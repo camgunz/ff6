@@ -31,9 +31,6 @@ def ObjClass(type_name, field_names):
     def __iter__(self):
         for attr_name in self.__attr_names:
             obj = getattr(self, attr_name)
-            if obj is self:
-                print('%s is self' % (attr_name))
-                continue
             yield (attr_name, obj)
 
     def __repr__(self):
