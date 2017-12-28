@@ -90,6 +90,8 @@ class SaveGame(BinaryModelObject):
         )
     )
 
+    Overrides = []
+
     MaxSize = 0xA00
     MagicCount = 54
     BushidoCount = 8

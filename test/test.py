@@ -34,20 +34,10 @@ def test_bushido_names(rom_filename):
     for n, bushido_name in enumerate(rom.bushido_names):
         print(n, bushido_name)
 
-def test_black_magic(rom_filename):
+def test_magic(rom_filename):
     rom = get_rom(rom_filename)
-    for n, black_magic in enumerate(rom.black_magic):
-        print(n, pprint.pformat(black_magic))
-
-def test_grey_magic(rom_filename):
-    rom = get_rom(rom_filename)
-    for n, grey_magic in enumerate(rom.grey_magic):
-        print(n, pprint.pformat(grey_magic))
-
-def test_white_magic(rom_filename):
-    rom = get_rom(rom_filename)
-    for n, white_magic in enumerate(rom.white_magic):
-        print(n, pprint.pformat(white_magic))
+    for n, magic in enumerate(rom.magic):
+        print(n, pprint.pformat(magic))
 
 def test_hp_per_level(rom_filename):
     rom = get_rom(rom_filename)
@@ -89,7 +79,7 @@ def read_save(rom_filename, save_filename):
     for character in save.characters:
         print('%r' % (character))
     for slot in save.inventory_item_slots:
-        if slot['id'] != 255 or slot['count'] != 0:
+        if slot.id != 255 or slot.count != 0:
             print(slot)
 
 def test_mapping(rom_filename):
@@ -118,9 +108,7 @@ def main():
     # # compare_roms(ROM_FILENAME)
     test_blitzes(ROM_FILENAME)
     test_bushido_names(ROM_FILENAME)
-    test_black_magic(ROM_FILENAME)
-    test_grey_magic(ROM_FILENAME)
-    test_white_magic(ROM_FILENAME)
+    test_magic(ROM_FILENAME)
     test_hp_per_level(ROM_FILENAME)
     test_mp_per_level(ROM_FILENAME)
     test_xp_per_level(ROM_FILENAME)
