@@ -105,6 +105,12 @@ def test_mapping(rom_filename):
     repr(rom.inventory_items)
     assert rom.character_starts[0].armor == rom.inventory_items[132]
 
+def test_espers(rom_filename):
+    rom = get_rom(rom_filename)
+    # print(rom.espers[26].spell1.caused_conditions)
+    for n, esper in enumerate(rom.espers):
+        print(n, pprint.pformat(esper))
+
 def main():
     # read_save(ROM_FILENAME, SAVE_FILENAME)
     # test_monsters(ROM_FILENAME)
@@ -120,6 +126,7 @@ def main():
     # test_xp_per_level(ROM_FILENAME)
     # test_morph_packages(ROM_FILENAME)
     # test_character_starts(ROM_FILENAME)
-    test_mapping(ROM_FILENAME)
+    # test_mapping(ROM_FILENAME)
+    test_espers(ROM_FILENAME)
 
 main()

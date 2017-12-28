@@ -75,7 +75,7 @@ Magic = (
         name='magic',
         offset=offsets.MagicData,
         count=54,
-        element_size=14,
+        element_size=sizes.MagicData,
         element_field=MagicStructField,
     ),
     ArrayField(

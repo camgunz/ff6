@@ -3,11 +3,12 @@ from ff6.mp import MPPerLevel
 from ff6.xp import XPPerLevel
 from ff6.rom import ROM
 from ff6.items import InventoryItems
+from ff6.magic import Magic
 from ff6.model import *
+from ff6.espers import Espers
 from ff6.blitzes import BlitzNames
 from ff6.bushido import BushidoNames
 from ff6.monsters import Monsters
-from ff6.magic import Magic
 from ff6.morph_packages import MorphPackages
 from ff6.character_starts import CharacterStarts
 
@@ -23,7 +24,8 @@ class FF6ROM(ROM):
         MPPerLevel +
         XPPerLevel +
         MorphPackages +
-        CharacterStarts
+        CharacterStarts +
+        Espers
     )
 
     Overrides = (
@@ -42,4 +44,9 @@ class FF6ROM(ROM):
         (('character_starts', Item, 'armor'), Index(('inventory_items',))),
         (('character_starts', Item, 'relic1'), Index(('inventory_items',))),
         (('character_starts', Item, 'relic2'), Index(('inventory_items',))),
+        (('espers', Item, 'spell1'), Index(('magic',), {255: None})),
+        (('espers', Item, 'spell2'), Index(('magic',), {255: None})),
+        (('espers', Item, 'spell3'), Index(('magic',), {255: None})),
+        (('espers', Item, 'spell4'), Index(('magic',), {255: None})),
+        (('espers', Item, 'spell5'), Index(('magic',), {255: None})),
     )

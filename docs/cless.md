@@ -4399,12 +4399,12 @@ Bits
 5: Unknown
 6: Never misses
 7: Unknown
-8: Does a certain % of damage in accordance to the spell's power*
+8: Does a certain % of damage in accordance to the spell's power\*
 
 2: Never misses
 8: Does a certain % of damage in accordance to the Spell's power*
 
-*It's based about the % of the value used in hex. This is used in spells like Demi and Quartr.
+\*It's based about the % of the value used in hex. This is used in spells like Demi and Quartr.
 
 (2nd half of byte 5 in magic)
 

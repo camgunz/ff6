@@ -1,6 +1,26 @@
 from io import StringIO
 from enum import IntEnum, IntFlag
 
+class EsperBonus(IntEnum):
+    HPPlus10Percent    = 0x0
+    HPPlus30Percent    = 0x1
+    HPPlus50Percent    = 0x2
+    MPPlus10Percent    = 0x3
+    MPPlus30Percent    = 0x4
+    MPPlus50Percent    = 0x5
+    HPPlus100Percent   = 0x6
+    LevelPlus30Percent = 0x7
+    LevelPlus50Percent = 0x8
+    StrengthPlusOne    = 0x9
+    StrengthPlusTwo    = 0xA
+    SpeedPlusOne       = 0xB
+    SpeedPlusTwo       = 0xC
+    StaminaPlusOne     = 0xD
+    StaminaPlusTwo     = 0xE
+    MagicPowerPlusOne  = 0xF
+    MagicPowerPlusTwo  = 0x10
+    NoBonus            = 0xFF
+
 class Actor(IntEnum):
     Terra       =  0
     Locke       =  1

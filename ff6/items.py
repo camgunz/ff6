@@ -95,7 +95,7 @@ InventoryItems = (
     ArrayField(
         name='inventory_items',
         count=256,
-        element_size=30,
+        element_size=sizes.InventoryItemData,
         offset=offsets.InventoryItemData,
         element_field=VariantField(
             name='inventory_item',

@@ -39,7 +39,9 @@ def ObjClass(type_name, field_names):
     def __repr__(self):
         return '%s(%s)' % (
             type(self).__name__,
-            ', '.join(['{}={}'.format(name, value) for name, value in self])
+            ', '.join([
+                '='.join((name, str(value))) for name, value in self
+            ])
        )
 
     def set_override(self, field_name, override):

@@ -64,10 +64,13 @@ class AbstractOverride:
 
 class Index:
 
-    def __init__(self, array_field_path):
+    def __init__(self, array_field_path, hardcoded_values=None):
         self.array_field_path = array_field_path
+        self.hardcoded_values = hardcoded_values or {}
 
     def get(self, obj, value):
+        if value in self.hardcoded_values:
+            return self.hardcoded_values[value]
         for member in self.array_field_path:
             obj = getattr(obj, member)
         if isinstance(obj, list):
@@ -75,6 +78,8 @@ class Index:
         return getattr(obj, value)
 
     def set(self, obj, value):
+        if value in self.hardcoded_values:
+            return self.hardcoded_values[value]
         for member in self.array_field_path:
             obj = getattr(obj, member)
         if isinstance(obj, list):

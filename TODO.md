@@ -1,6 +1,17 @@
 # To Do
 
 - ROM:
+  - Magitek
+    - Attacks (0x26FBAD, 8 items, 10 bytes each)
+  - Level skills:
+    - Magic
+    - Blitz
+    - Bushido
+  - Espers
+    - Descriptions (0x0F3B40, variable strings)
+    - Short bonus descriptions (0x1000AE, 17 elements, 9 chars each)
+    - Long bonus descriptions (0x2E0000, variable strings)
+      - Pointers (0x2E01CF, 17 elements -- I think)
   - Bushido Descriptions (0x0FFF00)
     - Pointers (0x1001AE, 8 items)
   - Blitzes
@@ -14,22 +25,8 @@
     - Names (0x26FBFD, 24 items, 10 bytes each)
     - Descriptions (0x2D79A0, variable strings)
       - Pointers (0x2D7C70, 24 elements)
-  - Espers
-    - Descriptions (0x0F3B40, variable strings)
-    - Data (0x187000, 27 elements, 11 bytes)
-    - Short bonus descriptions (0x1000AE, 17 elements, 9 chars each)
-    - Names (0x26F8E1, 27 items, 8 bytes each)
-    - Attacks (0x27008F, 27 items, 10 bytes each)
-    - Long bonus descriptions (0x2E0000, variable strings)
-      - Pointers (0x2E01CF, 17 elements -- I think)
   - Skean attack names
-  - Magitek
-    - Attacks (0x26FBAD, 8 items, 10 bytes each)
-  - level skills:
-    - Magic
-    - Blitz
-    - Bushido
-  - battle dialogue
+  - Battle dialogue
   - Shops
   - Monster attacks
   - Desperation attacks
@@ -47,14 +44,6 @@
 - Item stats:
   - Change the data format for items
   - ASM hack the item stats loading
-
-## Engineering
-
-- Now that things are deserializing, they should be related to the ROM.  So
-  instead of Terra's weapon being `1`, it should be `rom.items[1] ('Dirk')`
-  - I think we can't use `transform_out`/`transform_in` because you want these
-    to be dynamic.  What we really need is some way to say "these fields are
-    pointers".
 
 ## To Consider
 

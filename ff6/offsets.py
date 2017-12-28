@@ -63,3 +63,7 @@ XPRequiredData = 0x2D8420
 LoreNames = 0x26FBFD
 
 MagitekAttacks = 0x26FBAD
+
+EsperData = 0x187000
+EsperNames = 0x26F8E1
+EsperAttackNames = 0x27008F
