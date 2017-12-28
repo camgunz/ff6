@@ -67,11 +67,10 @@ class Index:
     def __init__(self, array_field_path):
         self.array_field_path = array_field_path
 
-    def get(self, bin_obj, value):
-        fields = bin_obj._deserialized_fields
+    def get(self, obj, value):
         for member in self.array_field_path:
-            fields = fields[member]
-        return fields[value]
+            obj = getattr(obj, member)
+        return getattr(obj, value)
 
     def set(self, bin_obj, value):
         fields = bin_obj._deserialized_fields
