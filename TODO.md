@@ -45,6 +45,11 @@
   - Change the data format for items
   - ASM hack the item stats loading
 
+## Engineering
+
+- Save games need a ROM to reference, which complicates the field structure a
+  little
+
 ## To Consider
 
 ### Steal x4 patch

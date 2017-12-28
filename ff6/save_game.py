@@ -92,14 +92,14 @@ class SaveGame(BinaryModelObject):
 
     Overrides = []
 
-    MaxSize = 0xA00
-    MagicCount = 54
-    BushidoCount = 8
-    BushidoNameSize = 6
-    CharacterInfoSize = 37
-    CharacterCount = 16
-    MainCharacterCount = 12
-    InventoryItemCount = 256
+    # MaxSize = 0xA00
+    # MagicCount = 54
+    # BushidoCount = 8
+    # BushidoNameSize = 6
+    # CharacterInfoSize = 37
+    # CharacterCount = 16
+    # MainCharacterCount = 12
+    # InventoryItemCount = 256
 
     def __init__(self, slot, rom, data):
         super().__init__(data)
