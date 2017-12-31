@@ -32,8 +32,14 @@ SaveGameWorldInfo = 0x964
 SaveGameParty = 0xA56
 
 BlitzNames = 0x26FA31
+BlitzEffectData = 0x471D6
+BlitzDescriptions = 0x0FFE00
+BlitzDescriptionPointers = 0x10019E
 
 BushidoNames = 0x0F3E40
+BushidoEffectData = 0x47166
+BushidoDescriptions = 0x0FFF00
+BushidoDescriptionPointers = 0x1001AE
 
 MorphPackages = 0x48140
 
@@ -48,10 +54,9 @@ RageData = 0xF4800
 
 ColosseumData = 0x1FB800
 
-MagicDescriptions = 0x18CBA0
-
-MagicData = 0x46CC0
 MagicNames = 0x26F767
+MagicData = 0x46CC0
+MagicDescriptions = 0x18CBA0
 MagicDescriptionPointers = 0x18D180
 
 CharacterStartData = 0x2D7EA0
@@ -67,3 +72,6 @@ MagitekAttacks = 0x26FBAD
 EsperData = 0x187000
 EsperNames = 0x26F8E1
 EsperAttackNames = 0x27008F
+
+TerraNaturalMagic = 0x2CE5C0
+CelesNaturalMagic = 0x2CE5E0

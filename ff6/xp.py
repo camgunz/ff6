@@ -1,11 +1,11 @@
-from ff6 import offsets
+from ff6 import counts, offsets
 
 from ff6.struct import *
 
 XPPerLevel = (
     ArrayField(
         name='xp_per_level',
-        count=98,
+        count=counts.XPLevels,
         element_size=2,
         offset=offsets.XPRequiredData,
         element_field=U16Field(

@@ -1,5 +1,5 @@
-DTE = [None] * 256
-DTE_BATTLE = [None] * 256
+DTE = ['&'] * 256
+DTE_BATTLE = ['&'] * 256
 
 DTE[0x00] = '/'
 DTE[0x01] = '*'

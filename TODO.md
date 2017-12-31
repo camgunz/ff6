@@ -8,15 +8,13 @@
     - Blitz
     - Bushido
   - Espers
+    - Effects
     - Descriptions (0x0F3B40, variable strings)
     - Short bonus descriptions (0x1000AE, 17 elements, 9 chars each)
     - Long bonus descriptions (0x2E0000, variable strings)
       - Pointers (0x2E01CF, 17 elements -- I think)
-  - Bushido Descriptions (0x0FFF00)
-    - Pointers (0x1001AE, 8 items)
   - Blitzes
     - Specifications (0x035E1C, 14 elements, 2 bytes: char, rotation)
-    - Descriptions (0x047C40, 8 elements, 12 bytes)
   - Dances
     - Names (0x27019D, 8 items, 12 bytes each)
   - Slot

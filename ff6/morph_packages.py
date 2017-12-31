@@ -1,4 +1,4 @@
-from ff6 import offsets, sizes
+from ff6 import counts, offsets, sizes
 
 from ff6.dte import DTE_BATTLE, TO_DTE_BATTLE
 from ff6.struct import *
@@ -6,7 +6,7 @@ from ff6.struct import *
 MorphPackages = (
     ArrayField(
         name='morph_packages',
-        count=26,
+        count=counts.MorphPackages,
         element_size=sizes.MorphPackage,
         offset=offsets.MorphPackages,
         element_field=StructField(

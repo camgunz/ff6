@@ -1,4 +1,4 @@
-from ff6 import offsets, sizes
+from ff6 import counts, offsets, sizes
 
 from ff6.dte import DTE_BATTLE, TO_DTE_BATTLE
 from ff6.data import *
@@ -10,7 +10,7 @@ Monsters = (
     ArrayField(
         name='monsters',
         offset=offsets.MonsterNames,
-        count=384,
+        count=counts.Monsters,
         element_size=sizes.MonsterName,
         element_field=StructField(
             name='monster',
@@ -28,7 +28,7 @@ Monsters = (
     ArrayField(
         name='monsters',
         offset=offsets.MonsterData,
-        count=384,
+        count=counts.Monsters,
         element_size=32,
         element_field=StructField(
             name='monster',
@@ -66,7 +66,7 @@ Monsters = (
     ArrayField(
         name='monsters',
         offset=offsets.MonsterDropsAndSteals,
-        count=384,
+        count=counts.Monsters,
         element_size=4,
         element_field=StructField(
             name='monster',
@@ -82,7 +82,7 @@ Monsters = (
     ArrayField(
         name='monsters',
         offset=offsets.SketchData,
-        count=384,
+        count=counts.Monsters,
         element_size=2,
         element_field=StructField(
             name='monster',
@@ -96,7 +96,7 @@ Monsters = (
     ArrayField(
         name='monsters',
         offset=offsets.ControlData,
-        count=384,
+        count=counts.Monsters,
         element_size=4,
         element_field=StructField(
             name='monster',
@@ -112,7 +112,7 @@ Monsters = (
     ArrayField(
         name='monsters',
         offset=offsets.RageData,
-        count=384,
+        count=counts.Monsters,
         element_size=2,
         element_field=StructField(
             name='monster',

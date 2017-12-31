@@ -1,4 +1,4 @@
-from ff6 import offsets, sizes
+from ff6 import counts, offsets, sizes
 
 from ff6.dte import DTE_BATTLE, TO_DTE_BATTLE
 from ff6.data import *
@@ -74,7 +74,7 @@ DefensiveEquipmentFields = EquipmentItemFields + (
 InventoryItems = (
     ArrayField(
         name='inventory_items',
-        count=256,
+        count=counts.Items,
         element_size=sizes.InventoryItemName + 1,
         offset=offsets.InventoryItemNames,
         element_field=StructField(
@@ -94,7 +94,7 @@ InventoryItems = (
     ),
     ArrayField(
         name='inventory_items',
-        count=256,
+        count=counts.Items,
         element_size=sizes.InventoryItemData,
         offset=offsets.InventoryItemData,
         element_field=VariantField(

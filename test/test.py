@@ -26,13 +26,13 @@ def test_items(rom_filename):
 
 def test_blitzes(rom_filename):
     rom = get_rom(rom_filename)
-    for n, blitz in enumerate(rom.blitzes):
-        print(n, blitz)
+    for blitz in rom.blitzes:
+        pprint.pprint(blitz.to_dict())
 
-def test_bushido_names(rom_filename):
+def test_bushidos(rom_filename):
     rom = get_rom(rom_filename)
-    for n, bushido_name in enumerate(rom.bushido_names):
-        print(n, bushido_name)
+    for n, bushido in enumerate(rom.bushidos):
+        print(n, bushido)
 
 def test_magic(rom_filename):
     rom = get_rom(rom_filename)
@@ -101,20 +101,28 @@ def test_espers(rom_filename):
     for n, esper in enumerate(rom.espers):
         print(n, pprint.pformat(esper))
 
+def test_natural_magic(rom_filename):
+    rom = get_rom(rom_filename)
+    for natural_magic in rom.terra_natural_magic:
+        pprint.pprint(natural_magic.to_dict())
+    for natural_magic in rom.celes_natural_magic:
+        pprint.pprint(natural_magic.to_dict())
+
 def main():
-    read_save(ROM_FILENAME, SAVE_FILENAME)
-    test_monsters(ROM_FILENAME)
-    test_items(ROM_FILENAME)
+    # read_save(ROM_FILENAME, SAVE_FILENAME)
+    # test_monsters(ROM_FILENAME)
+    # test_items(ROM_FILENAME)
     # # compare_roms(ROM_FILENAME)
-    test_blitzes(ROM_FILENAME)
-    test_bushido_names(ROM_FILENAME)
-    test_magic(ROM_FILENAME)
-    test_hp_per_level(ROM_FILENAME)
-    test_mp_per_level(ROM_FILENAME)
-    test_xp_per_level(ROM_FILENAME)
-    test_morph_packages(ROM_FILENAME)
-    test_character_starts(ROM_FILENAME)
-    test_mapping(ROM_FILENAME)
-    test_espers(ROM_FILENAME)
+    # test_blitzes(ROM_FILENAME)
+    # test_bushidos(ROM_FILENAME)
+    # test_magic(ROM_FILENAME)
+    # test_hp_per_level(ROM_FILENAME)
+    # test_mp_per_level(ROM_FILENAME)
+    # test_xp_per_level(ROM_FILENAME)
+    # test_morph_packages(ROM_FILENAME)
+    # test_character_starts(ROM_FILENAME)
+    # test_mapping(ROM_FILENAME)
+    # test_espers(ROM_FILENAME)
+    test_natural_magic(ROM_FILENAME)
 
 main()

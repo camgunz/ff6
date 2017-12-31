@@ -1,6 +1,11 @@
 from io import StringIO
 from enum import IntEnum, IntFlag
 
+class MagicBall(IntEnum):
+    WhiteMagic = 232
+    BlackMagic = 233
+    GreyMagic = 234
+
 class EsperBonus(IntEnum):
     HPPlus10Percent    = 0x0
     HPPlus30Percent    = 0x1

@@ -1,4 +1,4 @@
-from ff6 import offsets, sizes
+from ff6 import counts, offsets, sizes
 
 from ff6.data import *
 from ff6.struct import *
@@ -7,7 +7,7 @@ CharacterStarts = (
     ArrayField(
         name='character_starts',
         offset=offsets.CharacterStartData,
-        count=41,
+        count=counts.CharacterStarts,
         element_size=sizes.CharacterStart,
         element_field=StructField(
             name='character_start',

@@ -1,4 +1,4 @@
-from ff6 import offsets, sizes
+from ff6 import counts, offsets, sizes
 
 from ff6.dte import DTE_BATTLE, TO_DTE_BATTLE
 from ff6.data import *
@@ -19,7 +19,7 @@ class SaveGame(BinaryModelObject):
         ArrayField(
             name='inventory_item_slots',
             offset=offsets.SaveGameInventoryItemIDs,
-            count=256,
+            count=counts.Items,
             element_size=1,
             element_field=StructField(
                 name='inventory_item_slot',
@@ -32,7 +32,7 @@ class SaveGame(BinaryModelObject):
         ArrayField(
             name='inventory_item_slots',
             offset=offsets.SaveGameInventoryItemCounts,
-            count=256,
+            count=counts.Items,
             element_size=1,
             element_field=StructField(
                 name='inventory_item_slot',
@@ -48,7 +48,7 @@ class SaveGame(BinaryModelObject):
         ArrayField(
             name='characters',
             offset=offsets.SaveGameCharacters,
-            count=16,
+            count=counts.Characters,
             element_size=37,
             element_field=StructField(
                 name='character',

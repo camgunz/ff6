@@ -1,0 +1,14 @@
+Magic = 54
+Skeans = 5
+Blitzes = 8
+Bushidos = 8
+CharacterStarts = 41
+Espers = 27
+HPLevels = 98
+MPLevels = 98
+XPLevels = 98
+Items = 256
+Monsters = 384
+MorphPackages = 26
+Characters = 16
+NaturalMagic = 16

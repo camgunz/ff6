@@ -1,4 +1,4 @@
-from ff6 import offsets, sizes
+from ff6 import counts, offsets, sizes
 
 from ff6.dte import DTE_BATTLE, TO_DTE_BATTLE
 from ff6.data import *
@@ -54,40 +54,38 @@ from ff6.struct import *
   - Text on hit
 """
 
-MagicStructField = StructField(
-    name='magic',
-    offset=0,
-    fields=(
-        FlagsField('targeting', Targeting, 0),
-        FlagsField('elements', Element, 1),
-        FlagsField('properties', MagicProperty, 2),
-        U8Field('mp', 5),
-        U8Field('power', 6),
-        FlagsField('extra_properties', MagicPropertyExtra, 7),
-        U8Field('hit_rate', 8),
-        EnumField('special_effect', MagicExtraEffect, 9),
-        FlagsField('caused_conditions', Condition, 10),
-    )
-)
-
 Magic = (
     ArrayField(
         name='magic',
         offset=offsets.MagicData,
-        count=54,
+        count=counts.Magic,
         element_size=sizes.MagicData,
-        element_field=MagicStructField,
+        element_field=StructField(
+            name='magic',
+            offset=0,
+            fields=(
+                FlagsField('targeting', Targeting, 0),
+                FlagsField('elements', Element, 1),
+                FlagsField('properties', MagicProperty, 2),
+                U8Field('mp', 5),
+                U8Field('power', 6),
+                FlagsField('extra_properties', MagicPropertyExtra, 7),
+                U8Field('hit_rate', 8),
+                EnumField('special_effect', MagicExtraEffect, 9),
+                FlagsField('caused_conditions', Condition, 10),
+            )
+        )
     ),
     ArrayField(
         name='magic',
         offset=offsets.MagicNames,
-        count=54,
+        count=counts.Magic,
         element_size=sizes.MagicName + 1,
         element_field=StructField(
             name='magic',
             offset=0,
             fields=(
-                U8Field('magic_ball', 0),
+                EnumField('magic_ball', MagicBall, 0),
                 StrField(
                     name='name',
                     size=sizes.MagicName,
@@ -101,7 +99,7 @@ Magic = (
     ArrayField(
         name='magic',
         offset=offsets.MagicDescriptionPointers,
-        count=54,
+        count=counts.Magic,
         element_size=2,
         element_field=StructField(
             name='magic',
