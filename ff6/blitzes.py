@@ -7,6 +7,19 @@ from ff6.struct import *
 Blitzes = (
     ArrayField(
         name='blitzes',
+        count=counts.Blitzes,
+        element_size=1,
+        offset=offsets.BlitzLevels,
+        element_field=StructField(
+            name='blitz',
+            offset=0,
+            fields=(
+                U8Field('level', 0),
+            )
+        )
+    ),
+    ArrayField(
+        name='blitzes',
         offset=offsets.BlitzEffectData,
         count=counts.Blitzes,
         element_size=sizes.BlitzEffectData,

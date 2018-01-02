@@ -31,8 +31,8 @@ def test_blitzes(rom_filename):
 
 def test_bushidos(rom_filename):
     rom = get_rom(rom_filename)
-    for n, bushido in enumerate(rom.bushidos):
-        print(n, bushido)
+    for bushido in rom.bushidos:
+        pprint.pprint(bushido.to_dict())
 
 def test_magic(rom_filename):
     rom = get_rom(rom_filename)
@@ -108,13 +108,23 @@ def test_natural_magic(rom_filename):
     for natural_magic in rom.celes_natural_magic:
         pprint.pprint(natural_magic.to_dict())
 
+def test_bushido_levels(rom_filename):
+    rom = get_rom(rom_filename)
+    for bushido_level in rom.bushido_levels:
+        print(bushido_level)
+
+def test_blitz_levels(rom_filename):
+    rom = get_rom(rom_filename)
+    for blitz_level in rom.blitz_levels:
+        print(blitz_level)
+
 def main():
     # read_save(ROM_FILENAME, SAVE_FILENAME)
     # test_monsters(ROM_FILENAME)
     # test_items(ROM_FILENAME)
     # # compare_roms(ROM_FILENAME)
     # test_blitzes(ROM_FILENAME)
-    # test_bushidos(ROM_FILENAME)
+    test_bushidos(ROM_FILENAME)
     # test_magic(ROM_FILENAME)
     # test_hp_per_level(ROM_FILENAME)
     # test_mp_per_level(ROM_FILENAME)
@@ -123,6 +133,8 @@ def main():
     # test_character_starts(ROM_FILENAME)
     # test_mapping(ROM_FILENAME)
     # test_espers(ROM_FILENAME)
-    test_natural_magic(ROM_FILENAME)
+    # test_natural_magic(ROM_FILENAME)
+    # test_bushido_levels(ROM_FILENAME)
+    # test_blitz_levels(ROM_FILENAME)
 
 main()

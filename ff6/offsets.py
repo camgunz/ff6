@@ -75,3 +75,5 @@ EsperAttackNames = 0x27008F
 
 TerraNaturalMagic = 0x2CE5C0
 CelesNaturalMagic = 0x2CE5E0
+BushidoLevels = 0x26F690
+BlitzLevels = 0x26F698

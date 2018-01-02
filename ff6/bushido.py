@@ -7,6 +7,19 @@ from ff6.struct import *
 Bushidos = (
     ArrayField(
         name='bushidos',
+        count=counts.Bushidos,
+        element_size=1,
+        offset=offsets.BushidoLevels,
+        element_field=StructField(
+            name='bushido',
+            offset=0,
+            fields=(
+                U8Field('level', 0),
+            )
+        )
+    ),
+    ArrayField(
+        name='bushidos',
         offset=offsets.BushidoEffectData,
         count=counts.Bushidos,
         element_size=sizes.BushidoEffectData,
