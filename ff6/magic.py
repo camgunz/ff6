@@ -54,27 +54,30 @@ from ff6.struct import *
   - Text on hit
 """
 
+def get_magic_data_struct(name):
+    return StructField(
+        name=name,
+        offset=0,
+        fields=(
+            FlagsField('targeting', Targeting, 0),
+            FlagsField('elements', Element, 1),
+            FlagsField('properties', MagicProperty, 2),
+            U8Field('mp', 5),
+            U8Field('power', 6),
+            FlagsField('extra_properties', MagicPropertyExtra, 7),
+            U8Field('hit_rate', 8),
+            EnumField('special_effect', MagicExtraEffect, 9),
+            FlagsField('caused_conditions', Condition, 10),
+        )
+    )
+
 Magic = (
     ArrayField(
         name='magic',
         offset=offsets.MagicData,
         count=counts.Magic,
         element_size=sizes.MagicData,
-        element_field=StructField(
-            name='magic',
-            offset=0,
-            fields=(
-                FlagsField('targeting', Targeting, 0),
-                FlagsField('elements', Element, 1),
-                FlagsField('properties', MagicProperty, 2),
-                U8Field('mp', 5),
-                U8Field('power', 6),
-                FlagsField('extra_properties', MagicPropertyExtra, 7),
-                U8Field('hit_rate', 8),
-                EnumField('special_effect', MagicExtraEffect, 9),
-                FlagsField('caused_conditions', Condition, 10),
-            )
-        )
+        element_field=get_magic_data_struct('name'),
     ),
     ArrayField(
         name='magic',

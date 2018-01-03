@@ -3,47 +3,28 @@
 ## Data
 
 - ROM:
-  - Colosseum
   - Battle dialogue
-
-- ROM, not super important
-  - Magitek
-    - Attacks (0x26FBAD, 8 items, 10 bytes each)
-  - Espers
-    - Effects
-    - Descriptions (0x0F3B40, variable strings)
-    - Short bonus descriptions (0x1000AE, 17 elements, 9 chars each)
-    - Long bonus descriptions (0x2E0000, variable strings)
-      - Pointers (0x2E01CF, 17 elements -- I think)
-  - Blitzes
-    - Specifications (0x035E1C, 14 elements, 2 bytes: char, rotation)
-  - Dances
-    - Names (0x27019D, 8 items, 12 bytes each)
-  - Slot
-    - Attacks (0x26FB71, 6 items, 10 bytes each)
-  - Lores
-    - Names (0x26FBFD, 24 items, 10 bytes each)
-    - Descriptions (0x2D79A0, variable strings)
-      - Pointers (0x2D7C70, 24 elements)
-  - Skean attack names
-  - Monster attacks
-  - Desperation attacks
-  - Miscellaneous attacks (Lagomorph, Interceptor, etc.)
-  - checksum
+  - Esper Descriptions (0x0F3B40, variable strings)
+  - Blitz Specifications (0x035E1C, 14 elements, 2 bytes: char, rotation)
+  - Checksum
 
 - Save game:
-  - magic
-  - bushido
-  - blitz
-  - lores
-  - espers
-  - rages
-  - current party
-  - checksum
+  - Magic
+  - Bushido
+  - Blitz
+  - Lores
+  - Espers
+  - Rages
+  - Current party
+  - Checksum
 
 ## To Find
 
-- Magitek attacks
+- Magitek menu configuration
+
+## Maybe
+
+Monster AI.  I feel like this could be pretty simple, actually.
 
 ## Hacking
 
@@ -57,6 +38,80 @@
 
 - Save games need a ROM to reference, which complicates the field structure a
   little
+
+## Discussed
+
+### Magic
+
+Only some characters will be able to learn all the magic.
+
+It's likely that even very not-magical characters will be able to learn some
+specific spells, like Locke might learn Quick.
+
+Some characters will be able to learn all the magic:
+- Terra
+- Strago
+- Relm
+
+I'm not really sure if that's necessary though.  Relm's ability is only bad
+because it's setup badly, and we can fix that.  Strago's ability is also fine.
+I think it might make sense for there to be spells that definitly only Terra,
+and maybe only Celes, know.
+
+We'll gate magic with equipment.
+
+### Celes
+
+We discussed pushing Celes more into the physical realm, but came to no real
+conclusion.  I think if we do that then we nerf the spells she learns/is able
+to learn.
+
+### Relm
+
+Make her Sketch/Control possibilities better.
+
+### Shadow
+
+Make him a lot easier to kill.
+
+### Setzer
+
+Hard to say, no real conclusions.
+
+### Locke
+
+Get rid of Thief Glove.  Either you get a good hit or you steal; Capture lets
+you turn your brain off and that's not the goal.
+
+Consider making steal always work, or at least close to always work.
+
+### Edgar
+
+NoiseBlaster should be 1 enemy only.
+
+### Equipment
+
+Characters won't be able to equip anything they want.  This is mostly to gate
+magic but also to make sense (Relm can't use a huge spear, only Relm can paint
+with Brushes, etc.)
+
+### Espers
+
+Espers don't grant magic, or if they do it's pretty weak.
+
+We want to enhance the stat boosts to justify getting really strong via the use
+of Espers.  Therefore espers won't have _bad_ stat boosts.
+
+### Items
+
+Get rid of all curative items except for Dried Meat.  Also get rid of Remedy.
+Probably drop Tincture down to affordability.
+
+Get rid of superfluous items like:
+- Gauntlet
+- Genji Glove
+- Rename Card
+- Etc.
 
 ## To Consider
 

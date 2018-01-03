@@ -2,7 +2,54 @@ from ff6 import counts, offsets, sizes
 
 from ff6.dte import DTE_BATTLE, TO_DTE_BATTLE
 from ff6.data import *
+from ff6.magic import get_magic_data_struct
 from ff6.struct import *
+
+EsperLevelBonuses = (
+    ArrayField(
+        name='esper_level_bonuses',
+        count=counts.EsperLevelBonuses,
+        offset=offsets.ShortEsperLevelBonusDescriptions,
+        element_size=sizes.ShortEsperLevelBonusDescription,
+        element_field=StructField(
+            name='esper_level_bonus',
+            offset=0,
+            fields=(
+                StrField(
+                    name='short_description',
+                    offset=0,
+                    size=sizes.ShortEsperLevelBonusDescription,
+                    translation=(TO_DTE_BATTLE, DTE_BATTLE),
+                ),
+            )
+        )
+    ),
+    ArrayField(
+        name='esper_level_bonuses',
+        count=counts.EsperLevelBonuses,
+        offset=offsets.EsperLevelBonusDescriptionPointers,
+        element_size=2,
+        element_field=StructField(
+            name='esper_level_bonus',
+            offset=0,
+            fields=(
+                PointerField(
+                    name='description',
+                    offset=0,
+                    base=offsets.EsperLevelBonusDescriptions,
+                    pointer_field=U16Field(name='pointer', offset=0),
+                    target_field=StrField(
+                        name='description',
+                        terminator=b'\x00',
+                        offset=0,
+                        translation=(TO_DTE_BATTLE, DTE_BATTLE)
+                    ),
+                ),
+            )
+        )
+    ),
+
+)
 
 Espers = (
     # ArrayField(
@@ -58,6 +105,13 @@ Espers = (
                 ),
             )
         )
+    ),
+    ArrayField(
+        name='espers',
+        count=counts.Espers,
+        element_size = sizes.MagicData,
+        offset=offsets.EsperAttackData,
+        element_field=get_magic_data_struct('esper'),
     ),
     ArrayField(
         name='espers',

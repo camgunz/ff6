@@ -27,3 +27,24 @@ EsperAttackName = 10
 NaturalMagic = 2
 
 ShopData = 9
+
+SkeanAttackName = 10
+
+DanceName = 12
+DanceAttackName = 10
+
+SlotAttackName = 10
+
+MagitekAttackName = 10
+
+LoreAttackName = 10
+
+MonsterAttackName = 10
+
+DesperationAttackName = 10
+
+MiscAttackName = 10
+
+MagitekMenuSlot = 3
+
+ShortEsperLevelBonusDescription = 9

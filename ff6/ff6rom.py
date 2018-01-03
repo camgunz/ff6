@@ -6,13 +6,22 @@ from ff6.items import InventoryItems
 from ff6.magic import Magic
 from ff6.model import *
 from ff6.shops import Shops
-from ff6.espers import Espers
+from ff6.dances import Dances, DanceAttacks
+from ff6.espers import Espers, EsperLevelBonuses
 from ff6.blitzes import Blitzes
 from ff6.bushido import Bushidos
 from ff6.monsters import Monsters
+from ff6.lore_attacks import LoreAttacks
+from ff6.magitek_menu import MagitekMenu
+from ff6.misc_attacks import MiscAttacks
+from ff6.slot_attacks import SlotAttacks
+from ff6.skean_attacks import SkeanAttacks
+from ff6.magitek_attacks import MagitekAttacks
+from ff6.monster_attacks import MonsterAttacks
 from ff6.natural_magic import CelesNaturalMagic, TerraNaturalMagic
 from ff6.morph_packages import MorphPackages
 from ff6.character_starts import CharacterStarts
+from ff6.desperation_attacks import DesperationAttacks
 
 class FF6ROM(ROM):
 
@@ -30,7 +39,18 @@ class FF6ROM(ROM):
         Espers +
         CelesNaturalMagic +
         TerraNaturalMagic +
-        Shops
+        Shops +
+        SkeanAttacks +
+        Dances +
+        DanceAttacks +
+        SlotAttacks +
+        MagitekAttacks +
+        LoreAttacks +
+        MonsterAttacks +
+        DesperationAttacks +
+        MiscAttacks +
+        MagitekMenu +
+        EsperLevelBonuses
     )
 
     Overrides = (
@@ -59,6 +79,10 @@ class FF6ROM(ROM):
         (('espers', Item, 'spell3'), Index(('magic',), {255: None})),
         (('espers', Item, 'spell4'), Index(('magic',), {255: None})),
         (('espers', Item, 'spell5'), Index(('magic',), {255: None})),
+        (
+            ('espers', Item, 'level_bonus'),
+            Index(('esper_level_bonuses',), {255: None})
+        ),
         (('celes_natural_magic', Item, 'spell'), Index(('magic',))),
         (('terra_natural_magic', Item, 'spell'), Index(('magic',))),
         (('shops', Item, 'item1'), Index(('inventory_items',))),

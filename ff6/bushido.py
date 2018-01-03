@@ -2,6 +2,7 @@ from ff6 import counts, offsets, sizes
 
 from ff6.dte import DTE_BATTLE, TO_DTE_BATTLE
 from ff6.data import *
+from ff6.magic import get_magic_data_struct
 from ff6.struct import *
 
 Bushidos = (
@@ -23,21 +24,7 @@ Bushidos = (
         offset=offsets.BushidoEffectData,
         count=counts.Bushidos,
         element_size=sizes.BushidoEffectData,
-        element_field=StructField(
-            name='bushido',
-            offset=0,
-            fields=(
-                FlagsField('targeting', Targeting, 0),
-                FlagsField('elements', Element, 1),
-                FlagsField('properties', MagicProperty, 2),
-                U8Field('mp', 5),
-                U8Field('power', 6),
-                FlagsField('extra_properties', MagicPropertyExtra, 7),
-                U8Field('hit_rate', 8),
-                EnumField('special_effect', MagicExtraEffect, 9),
-                FlagsField('caused_conditions', Condition, 10),
-            )
-        )
+        element_field=get_magic_data_struct('bushido'),
     ),
     ArrayField(
         name='bushidos',

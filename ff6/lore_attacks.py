@@ -5,39 +5,26 @@ from ff6.data import *
 from ff6.magic import get_magic_data_struct
 from ff6.struct import *
 
-Blitzes = (
+LoreAttacks = (
     ArrayField(
-        name='blitzes',
-        count=counts.Blitzes,
-        element_size=1,
-        offset=offsets.BlitzLevels,
-        element_field=StructField(
-            name='blitz',
-            offset=0,
-            fields=(
-                U8Field('level', 0),
-            )
-        )
+        name='lore_attacks',
+        count=counts.Lores,
+        offset=offsets.LoreAttackData,
+        element_size=sizes.MagicData,
+        element_field=get_magic_data_struct('lore'),
     ),
     ArrayField(
-        name='blitzes',
-        offset=offsets.BlitzEffectData,
-        count=counts.Blitzes,
-        element_size=sizes.BlitzEffectData,
-        element_field=get_magic_data_struct('blitz'),
-    ),
-    ArrayField(
-        name='blitzes',
-        count=counts.Blitzes,
-        element_size=sizes.BlitzName,
-        offset=offsets.BlitzNames,
+        name='lore_attacks',
+        count=counts.Lores,
+        offset=offsets.LoreAttackNames,
+        element_size=sizes.LoreAttackName,
         element_field=StructField(
-            name='blitz',
+            name='lore_attack',
             offset=0,
             fields=(
                 StrField(
                     name='name',
-                    size=sizes.BlitzName,
+                    size=sizes.LoreAttackName,
                     translation=(TO_DTE_BATTLE, DTE_BATTLE),
                     offset=0
                 ),
@@ -45,18 +32,18 @@ Blitzes = (
         )
     ),
     ArrayField(
-        name='blitzes',
-        offset=offsets.BlitzDescriptionPointers,
-        count=counts.Blitzes,
+        name='lore_attacks',
+        offset=offsets.LoreAttackDescriptionPointers,
+        count=counts.Lores,
         element_size=2,
         element_field=StructField(
-            name='blitz',
+            name='lore',
             offset=0,
             fields=(
                 PointerField(
                     name='description',
                     offset=0,
-                    base=offsets.BlitzDescriptions,
+                    base=offsets.LoreAttackDescriptions,
                     pointer_field=U16Field(name='pointer', offset=0),
                     target_field=StrField(
                         name='description',

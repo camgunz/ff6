@@ -101,10 +101,10 @@ class SaveGame(BinaryModelObject):
     # MainCharacterCount = 12
     # InventoryItemCount = 256
 
-    def __init__(self, slot, rom, data):
+    def __init__(self, rom, data, slot):
         super().__init__(data)
-        self.slot = slot
         self._rom = rom
+        self.slot = slot
 
     @classmethod
     def from_file(cls, slot, rom, file_name):
