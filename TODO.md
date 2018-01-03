@@ -1,6 +1,13 @@
 # To Do
 
+## Data
+
 - ROM:
+  - Shops
+  - Colosseum
+  - Battle dialogue
+
+- ROM, not super important
   - Magitek
     - Attacks (0x26FBAD, 8 items, 10 bytes each)
   - Espers
@@ -20,12 +27,11 @@
     - Descriptions (0x2D79A0, variable strings)
       - Pointers (0x2D7C70, 24 elements)
   - Skean attack names
-  - Battle dialogue
-  - Shops
   - Monster attacks
   - Desperation attacks
   - Miscellaneous attacks (Lagomorph, Interceptor, etc.)
   - checksum
+
 - Save game:
   - magic
   - bushido
@@ -35,6 +41,15 @@
   - rages
   - current party
   - checksum
+
+## To Find
+
+- Magitek attacks
+
+## Hacking
+
+- Esper Stat Gains:
+  - Basically make the stat gains bigger
 - Item stats:
   - Change the data format for items
   - ASM hack the item stats loading

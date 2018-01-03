@@ -43,9 +43,6 @@ BushidoDescriptionPointers = 0x1001AE
 
 MorphPackages = 0x48140
 
-ShopNames = 0x3C20C
-ShopData = 0x47CC0
-
 SketchData = 0xF4500
 
 ControlData = 0xF3F00
@@ -77,3 +74,7 @@ TerraNaturalMagic = 0x2CE5C0
 CelesNaturalMagic = 0x2CE5E0
 BushidoLevels = 0x26F690
 BlitzLevels = 0x26F698
+
+ShopData = 0x47CC9
+ShopNamePointers = 0x3C20C
+ShopNames = 0x3F4FE

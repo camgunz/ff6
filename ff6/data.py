@@ -1,6 +1,20 @@
 from io import StringIO
 from enum import IntEnum, IntFlag
 
+class ShopType(IntEnum):
+    NoType = 0
+    Weapon = 1
+    Armor = 2
+    Item = 3
+    Relics = 4
+    Vendor = 5
+
+class ShopProperties(IntEnum):
+    NormalPrice               = 0
+    DoublePrice               = 1
+    OneAndAHalfTimesPrice     = 2
+    HalfPriceWithEdgarOrSabin = 3
+
 class MagicBall(IntEnum):
     WhiteMagic = 232
     BlackMagic = 233

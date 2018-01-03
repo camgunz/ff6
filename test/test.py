@@ -3,16 +3,22 @@
 import pprint
 
 from ff6.data import *
+from ff6.patch import Patch
 from ff6.ff6rom import FF6ROM
 from ff6.save_game import SaveGame
 
 ROM_FILENAME = 'ff6.rom'
 SAVE_FILENAME = 'ff6.srm'
+PATCH_FILENAME1 = 'Patches/update-magitek.ips'
+PATCH_FILENAME2 = 'Patches/more-magitek-edits.ips'
 
 def get_rom(rom_filename):
     rom = FF6ROM.from_file(rom_filename)
     rom.deserialize()
     return rom
+
+def get_patch(patch_filename):
+    return Patch.from_file(patch_filename, False, False, '')
 
 def test_monsters(rom_filename):
     rom = get_rom(rom_filename)
@@ -118,13 +124,23 @@ def test_blitz_levels(rom_filename):
     for blitz_level in rom.blitz_levels:
         print(blitz_level)
 
+def test_patch(patch_filename):
+    patch = get_patch(patch_filename)
+    for command, args in patch:
+        print(command, (hex(args[0]), args[1], args[2]))
+
+def test_shops(rom_filename):
+    rom = get_rom(rom_filename)
+    for shop in rom.shops:
+        pprint.pprint(shop.to_dict())
+
 def main():
     # read_save(ROM_FILENAME, SAVE_FILENAME)
     # test_monsters(ROM_FILENAME)
     # test_items(ROM_FILENAME)
     # # compare_roms(ROM_FILENAME)
     # test_blitzes(ROM_FILENAME)
-    test_bushidos(ROM_FILENAME)
+    # test_bushidos(ROM_FILENAME)
     # test_magic(ROM_FILENAME)
     # test_hp_per_level(ROM_FILENAME)
     # test_mp_per_level(ROM_FILENAME)
@@ -136,5 +152,9 @@ def main():
     # test_natural_magic(ROM_FILENAME)
     # test_bushido_levels(ROM_FILENAME)
     # test_blitz_levels(ROM_FILENAME)
+    # test_patch(PATCH_FILENAME1)
+    # print('')
+    # test_patch(PATCH_FILENAME2)
+    test_shops(ROM_FILENAME)
 
 main()

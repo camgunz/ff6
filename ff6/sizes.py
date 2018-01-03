@@ -24,3 +24,5 @@ EsperName = 8
 EsperAttackName = 10
 
 NaturalMagic = 2
+
+ShopData = 9

@@ -5,6 +5,7 @@ from ff6.rom import ROM
 from ff6.items import InventoryItems
 from ff6.magic import Magic
 from ff6.model import *
+from ff6.shops import Shops
 from ff6.espers import Espers
 from ff6.blitzes import Blitzes
 from ff6.bushido import Bushidos
@@ -28,7 +29,8 @@ class FF6ROM(ROM):
         CharacterStarts +
         Espers +
         CelesNaturalMagic +
-        TerraNaturalMagic
+        TerraNaturalMagic +
+        Shops
     )
 
     Overrides = (
@@ -54,4 +56,12 @@ class FF6ROM(ROM):
         (('espers', Item, 'spell5'), Index(('magic',), {255: None})),
         (('celes_natural_magic', Item, 'spell'), Index(('magic',))),
         (('terra_natural_magic', Item, 'spell'), Index(('magic',))),
+        (('shops', Item, 'item1'), Index(('inventory_items',))),
+        (('shops', Item, 'item2'), Index(('inventory_items',))),
+        (('shops', Item, 'item3'), Index(('inventory_items',))),
+        (('shops', Item, 'item4'), Index(('inventory_items',))),
+        (('shops', Item, 'item5'), Index(('inventory_items',))),
+        (('shops', Item, 'item6'), Index(('inventory_items',))),
+        (('shops', Item, 'item7'), Index(('inventory_items',))),
+        (('shops', Item, 'item8'), Index(('inventory_items',))),
     )

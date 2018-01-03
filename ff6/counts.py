@@ -12,3 +12,4 @@ Monsters = 384
 MorphPackages = 26
 Characters = 16
 NaturalMagic = 16
+Shops = 127
