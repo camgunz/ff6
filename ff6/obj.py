@@ -30,16 +30,10 @@ def ObjClass(type_name, field_names):
 
     def __iter__(self):
         for attr_name in self.__attr_names:
-            obj = getattr(self, attr_name)
-            yield (attr_name, obj)
+            yield (attr_name, getattr(self, attr_name))
 
     def __repr__(self):
-        return '%s(%s)' % (
-            type(self).__name__,
-            ', '.join([
-                '='.join((name, str(value))) for name, value in self
-            ])
-       )
+        return '%s(%s)' % (type(self).__name__, getattr(self, 'name', ''))
 
     def set_override(self, field_name, override):
         self.__overrides[field_name] = override

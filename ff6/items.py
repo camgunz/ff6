@@ -95,6 +95,21 @@ InventoryItems = (
     ArrayField(
         name='inventory_items',
         count=counts.Items,
+        element_size=sizes.InventoryItemColosseumData,
+        offset=offsets.InventoryItemColosseumData,
+        element_field=StructField(
+            name='inventory_item',
+            offset=0,
+            fields=(
+                U8Field('colosseum_monster', 0),
+                U8Field('colosseum_prize', 2),
+                EnumField('show_colosseum_prize_name', ShowPrizeName, 3)
+            )
+        )
+    ),
+    ArrayField(
+        name='inventory_items',
+        count=counts.Items,
         element_size=sizes.InventoryItemData,
         offset=offsets.InventoryItemData,
         element_field=VariantField(

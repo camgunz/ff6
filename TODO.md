@@ -3,7 +3,6 @@
 ## Data
 
 - ROM:
-  - Shops
   - Colosseum
   - Battle dialogue
 

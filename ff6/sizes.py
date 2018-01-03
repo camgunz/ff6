@@ -1,5 +1,6 @@
 InventoryItemName = 12
 InventoryItemData = 30
+InventoryItemColosseumData = 4
 
 MonsterName = 10
 MonsterAttackName = 10

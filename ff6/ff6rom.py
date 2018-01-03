@@ -42,6 +42,11 @@ class FF6ROM(ROM):
             ('inventory_items', Item, 'spell_learned'),
             Index(('magic',))
         ),
+        (('inventory_items', Item, 'colosseum_monster'), Index(('monsters',))),
+        (
+            ('inventory_items', Item, 'colosseum_prize'),
+            Index(('inventory_items',))
+        ),
         (('character_starts', Item, 'weapon'), Index(('inventory_items',))),
         (('character_starts', Item, 'weapon'), Index(('inventory_items',))),
         (('character_starts', Item, 'shield'), Index(('inventory_items',))),

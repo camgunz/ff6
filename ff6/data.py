@@ -1,6 +1,10 @@
 from io import StringIO
 from enum import IntEnum, IntFlag
 
+class ShowPrizeName(IntEnum):
+    Yes = 0
+    No = 0xFF
+
 class ShopType(IntEnum):
     NoType = 0
     Weapon = 1

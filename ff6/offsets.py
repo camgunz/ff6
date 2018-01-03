@@ -1,5 +1,6 @@
 InventoryItemNames = 0x12B500
 InventoryItemData = 0x185200
+InventoryItemColosseumData = 0x1FB800
 
 MonsterNames = 0xFC250
 MonsterData = 0xF0200
@@ -48,8 +49,6 @@ SketchData = 0xF4500
 ControlData = 0xF3F00
 
 RageData = 0xF4800
-
-ColosseumData = 0x1FB800
 
 MagicNames = 0x26F767
 MagicData = 0x46CC0
