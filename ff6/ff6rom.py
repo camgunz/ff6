@@ -93,4 +93,30 @@ class FF6ROM(ROM):
         (('shops', Item, 'item6'), Index(('inventory_items',))),
         (('shops', Item, 'item7'), Index(('inventory_items',))),
         (('shops', Item, 'item8'), Index(('inventory_items',))),
+        (
+            ('magitek_menu', Item, 'commands'),
+            SplitIndex(
+                (
+                    (range(  0,   8), ('magitek_attacks',)),
+                    (range(  8,  32), ('lore_attacks',)),
+                    (range( 32, 109), ('monster_attacks',)),
+                    (range(109, 117), ('desperation_attacks',)),
+                    (range(109, 117), ('misc_attacks',)),
+                ),
+                {255: None}
+            )
+        ),
+        (
+            ('magitek_menu', Item, 'terra_commands'),
+            SplitIndex(
+                (
+                    (range(  0,   8), ('magitek_attacks',)),
+                    (range(  8,  32), ('lore_attacks',)),
+                    (range( 32, 109), ('monster_attacks',)),
+                    (range(109, 117), ('desperation_attacks',)),
+                    (range(109, 117), ('misc_attacks',)),
+                ),
+                {255: None}
+            )
+        ),
     )

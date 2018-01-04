@@ -207,7 +207,7 @@ def main():
     #     test_patch(patch_filename)
     #     print('')
     # test_shops(ROM_FILENAME)
-    test_skean_attacks(ROM_FILENAME)
+    # test_skean_attacks(ROM_FILENAME)
     # test_dance_attacks(ROM_FILENAME)
     # test_slot_attacks(ROM_FILENAME)
     # test_magitek_attacks(ROM_FILENAME)
@@ -215,7 +215,7 @@ def main():
     # test_monster_attacks(ROM_FILENAME)
     # test_desperation_attacks(ROM_FILENAME)
     # test_misc_attacks(ROM_FILENAME)
-    # test_magitek_menu(ROM_FILENAME)
+    test_magitek_menu(ROM_FILENAME)
     # test_dances(ROM_FILENAME)
 
     # All ally targeting: 0x2e

@@ -108,7 +108,9 @@ DesperationAttackNames = 0x26FFEF
 MiscAttackData = 0x47A88
 MiscAttackNames = 0x270067
 
-MagitekMenu = 0x19106
+MagitekMenuTargeting = 0x19304
+MagitekMenuTerraCommands = 0x1930C
+MagitekMenuCommands = 0x19314
 
 # Ultima: 0x94 0xa5 0xad 0xa2 0xa6 0x9a
 # Ramuh:

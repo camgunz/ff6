@@ -18,10 +18,6 @@
   - Current party
   - Checksum
 
-## To Find
-
-- Magitek menu configuration
-
 ## Maybe
 
 Monster AI.  I feel like this could be pretty simple, actually.

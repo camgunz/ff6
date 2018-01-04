@@ -86,6 +86,40 @@ class Index:
             return obj[value]
         return getattr(obj, value)
 
+class SplitIndex:
+
+    def __init__(self, ranges_and_paths, hardcoded_values=None):
+        self.ranges_and_paths = ranges_and_paths
+        self.hardcoded_values = hardcoded_values or {}
+
+    def get(self, obj, value):
+        if value in self.hardcoded_values:
+            return self.hardcoded_values[value]
+        for value_range, array_field_path in self.ranges_and_paths:
+            if value in value_range:
+                break
+        else:
+            raise Exception('Value "%s" out of range' % (value))
+        for member in array_field_path:
+            obj = getattr(obj, member)
+        if isinstance(obj, list):
+            return obj[value]
+        return getattr(obj, value)
+
+    def set(self, obj, value):
+        if value in self.hardcoded_values[value]:
+            return self.hardcoded_values[value]
+        for value_range, array_field_path in self.ranges_and_paths:
+            if value in value_range:
+                break
+        else:
+            raise Exception('Value "%s" out of range' % (value))
+        for member in array_field_path:
+            obj = getattr(obj, member)
+        if isinstance(obj, list):
+            return obj[value]
+        return getattr(obj, value)
+
 class Item:
     pass
 
