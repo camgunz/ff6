@@ -604,21 +604,3 @@ class BinaryModel:
                 for existing, new in zip(existing_value, new_value):
                     existing.update(new)
             instance._deserialized_fields[field.name] = existing_value
-        # for field_name, value in self._deserialized_fields.items():
-        #     if isinstance(value, list):
-        #         setattr(instance, field_name, Array(field_name, (field_name,)))
-        #     elif isinstance(value, dict):
-        #         setattr(instance, field_name, Struct(field_name, (field_name,)))
-        #     else:
-        #         raise Exception('[TODO] Top-level scalars are unsupported')
-        #     setattr(instance, field_name, value)
-        # for field in self.Structure:
-        #     setattr(
-        #         self,
-        #         field.name,
-        #         field.map(self._deserialized_fields)
-        #     )
-        # for field_name, mappers in self.Mappers.items():
-        #     for mapper in mappers:
-        #         mapper.map(bin_obj, field_name)
-

@@ -120,5 +120,3 @@ BattleDialoguePointers2 = 0xFE1E0
 
 BattleMessages = 0x110200
 BattleMessagePointers = 0x11F9A0
-
-# 96 84 83

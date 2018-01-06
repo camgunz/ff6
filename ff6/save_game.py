@@ -109,11 +109,9 @@ class SaveGame(BinaryModelObject):
 
     def _update_checksum(self):
         checksum = 0
-
         for b in self.data[:self.MaxSize-2]:
             checksum += b
             checksum &= 0xFFFF
-
         self.data[self.MaxSize-1] = (checksum >> 8) & 0xFF
         self.data[self.MaxSize-2] = checksum & 0xFF
 

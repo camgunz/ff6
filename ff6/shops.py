@@ -16,7 +16,6 @@ Shops = (
             fields=(
                 Enum4HighField('properties', ShopProperties, 0),
                 Enum4LowField('type', ShopType, 0),
-                # U8Field('nybbles', 0),
                 U8Field('item1', 1),
                 U8Field('item2', 2),
                 U8Field('item3', 3),

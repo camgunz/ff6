@@ -4,56 +4,6 @@ from ff6.dte import DTE_BATTLE, TO_DTE_BATTLE
 from ff6.data import *
 from ff6.struct import *
 
-"""
-1: Targeting - Targeting
-2: Elements - Elements
-3: Effect
-4: Damage type (first half) Where used (second half)
-5: Effect 2
-6: MP Cost
-7: Power
-8: ?
-9: ?
-10: Special effect - Extra effects
-11: Status 1 - Status 1
-12: Status 2 - Status 2
-13: Status 3 - Status 3
-14: Status 4 - Status 4
-
-- Extra effects
-  - Mantra
-  - Empowerer
-  - Etc.
-
-- Damage Type
-  - Can use outside battle  = 1 << 0
-  - Not reflectable         = 1 << 1
-  - Learn if casted on      = 1 << 2
-  - Enable Runic            = 1 << 3
-  - Warp/Quick              = 1 << 4
-  - Retarget if target dead = 1 << 5
-  - Kill caster             = 1 << 6
-  - Affect MP               = 1 << 7
-
-- Status 1/2/3/4
-
-- Elements
-
-- Special 1
-  - Physical damage
-  - Spell miss if death protect
-  - Etc.
-
-- Special 2
-  - Heal
-  - Redirection
-  - Etc.
-
-- Special 3
-  - Miss if prot. from ailments
-  - Text on hit
-"""
-
 def get_magic_data_struct(name):
     return StructField(
         name=name,
