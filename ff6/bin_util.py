@@ -161,7 +161,7 @@ def write_24(data, location, num):
     high = num >> 16
     mid = num >> 8
     low = num & 0xFF
-    struct.pack_into('3B', data, location, (low, mid, high))
+    struct.pack_into('3B', data, location, low, mid, high)
 
 def read_int(data, location):
     return struct.unpack_from('<I', data, location)[0]
@@ -174,10 +174,9 @@ def read_timestamp(data, location):
     return timedelta(hours=high, minutes=mid, seconds=low)
 
 def write_timestamp(data, location, timestamp):
-    high = timestamp.seconds % 3600
-    mid = timestamp.seconds % 60
-    low = timestamp.seconds
-    struct.pack_into('3B', data, location, (high, mid, low))
+    high, seconds = divmod(timestamp.seconds, 3600)
+    mid, low = divmod(seconds, 60)
+    struct.pack_into('3B', data, location, high, mid, low)
 
 def read_bytes(data, location, count):
     return struct.unpack_from('%ds' % (count), data, location)[0]

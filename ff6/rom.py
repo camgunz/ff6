@@ -7,12 +7,6 @@ class ROM(BinaryModelObject):
     def __init__(self, data):
         super().__init__(data)
         self.header_size = len(self.data) % 1024
-        if self.header_size == 0:
-            self.has_header = False
-        elif self.header_size == 512:
-            self.has_header = True
-        else:
-            raise Exception('Invalid header size %s' % (self.header_size))
         self.ensure_has_header()
 
     @classmethod
@@ -23,9 +17,21 @@ class ROM(BinaryModelObject):
     def __eq__(self, other):
         return self.data == other.data
 
+    @property
+    def has_header(self):
+        if self.header_size == 0:
+            return False
+        if self.header_size == 512:
+            return True
+        raise Exception('Invalid header size %s' % (self.header_size))
+
     def apply_patch(self, patch):
+        if not patch.apply:
+            return
         if patch.header:
             self.ensure_has_header()
+        else:
+            self.ensure_has_no_header()
         for command, args in patch:
             if command == PatchCommands.Patch:
                 loc, patch_size, replacement_data = args
@@ -38,23 +44,16 @@ class ROM(BinaryModelObject):
                 self.data[loc:loc+run_size] = fill_byte * run_size
             else:
                 raise Exception('Unknown patch command: %s' % (command))
-        if patch.header:
-            self.ensure_has_no_header()
+        self.ensure_has_header()
 
     def ensure_has_no_header(self):
         if not self.has_header:
             return
         del self.data[:self.header_size]
         self.header_size = 0
-        self.has_header = False
 
     def ensure_has_header(self):
         if self.has_header:
             return
         self.data = bytearray((0,) * 512) + self.data
         self.header_size = 512
-        self.has_header = True
-
-    def save_to_file(self, file_name):
-        with open(file_name, 'wb') as fobj:
-            fobj.write(self.data)

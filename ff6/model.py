@@ -2,65 +2,22 @@ import itertools
 
 from abc import abstractmethod
 
-from ff6.obj import ObjClass
 from ff6.struct import BinaryModel, FieldType
 from ff6.bin_util import BinaryObject
 
-def _get_section(d, path):
-    for member in path:
-        d = d[path]
-    return d
-
-def _get_model(name, value):
-    if isinstance(value, list):
-        return Array(name)
-    if isinstance(value, dict):
-        return Struct(name)
-    return value
-
-class AbstractModel:
-
-    def __init__(self, name, path=None):
-        self.name = name
-        self.path = path or []
-        self.deserialized_fields = None
-
-    def _get_section(self):
-        return _get_section(self.deserialized_fields, path)
-
-class StructModel:
-
-    def __init__(self, name=None, overrides=[]):
-        super().__init__(name)
-        self.overrides = overrides
-
-    def __getattr__(self, attr):
-        return self._get_section()[attr]
-
-    def __setattr__(self, attr, value):
-        self._get_section()[attr] = value
-
-class ArrayModel(AbstractModel):
-
-    def __init__(self, name, path=None, element=None):
-        super().__init__(name, path)
-        self.element = element
-
-    def __getitem__(self, item):
-        return self._get_section()[item]
-
-    def __setitem__(self, item, value):
-        self._get_section()[item] = value
-
-class AbstractOverride:
-
-    @abstractmethod
-    def get(self, fields, value):
-        raise NotImplementedError()
-
-    @abstractmethod
-    def set(self, fields, value):
-        raise NotImplementedError()
+def _build_property(name):
+    real_name = '_' + name
+    def getter(self):
+        value = getattr(self, real_name)
+        if name in self.__overrides:
+            value = self.__overrides[name].get(self.__bin_obj, value)
+        return value
+    def setter(self, value):
+        if name in self.__overrides:
+            value = self.__overrides[name].set(self.__bin_obj, value)
+        setattr(self, real_name, value)
+        self.__section[name] = value
+    return property(getter, setter)
 
 class Index:
 
@@ -121,13 +78,20 @@ class SplitIndex:
         return getattr(obj, value)
 
 class Item:
-    pass
+
+    def __init__(self, index):
+        self.index = index
 
 def dict_to_obj(path, bin_obj, deserialized_fields, d):
     if isinstance(d, list):
         return [
-            dict_to_obj(path + [Item], bin_obj, deserialized_fields, element)
-            for element in d
+            dict_to_obj(
+                path + [Item(n)],
+                bin_obj,
+                deserialized_fields,
+                element
+            )
+            for n, element in enumerate(d)
         ]
     elif isinstance(d, dict):
         Object = ObjClass('Obj', d.keys())
@@ -172,3 +136,66 @@ class BinaryModelObject(BinaryObject, BinaryModel):
             for obj in self._objs_for_path(real_path):
                 obj.set_override(name, override)
 
+    def save_to_file(self, file_name):
+        with open(file_name, 'wb') as fobj:
+            fobj.write(self.data)
+
+def ObjClass(type_name, field_names):
+    d = {name: _build_property(name) for name in field_names}
+
+    def __init__(self, path, bin_obj, **kwargs):
+        self.__overrides = {}
+        self.__path = path
+        self.__bin_obj = bin_obj
+        self.__fields = self.__bin_obj._deserialized_fields
+        self.__section = self.__fields
+        for member in path:
+            if isinstance(member, Item):
+                self.__section = self.__section[member.index]
+            else:
+                self.__section = self.__section[member]
+        self.__attr_names = sorted(kwargs.keys())
+        for name, value in kwargs.items():
+            setattr(self, '_' + name, value)
+
+    def __iter__(self):
+        for attr_name in self.__attr_names:
+            yield (attr_name, getattr(self, attr_name))
+
+    def __repr__(self):
+        return '%s(%s)' % (type(self).__name__, getattr(self, 'name', ''))
+
+    def __getitem__(self, item):
+        raise NotImplementedError()
+
+    def __setitem__(self, item):
+        raise NotImplementedError()
+
+    def set_override(self, field_name, override):
+        self.__overrides[field_name] = override
+
+    def clear_override(self, field_name):
+        del self.__overrides[field_name]
+
+    def to_dict(self):
+        return {
+            attr_name: getattr(self, attr_name)
+            for attr_name in self.__attr_names
+        }
+
+    def update(self, obj):
+        for name, value in obj:
+            setattr(self, name, value)
+        self.__attr_names = sorted(list(set(
+            self.__attr_names + [name for name, value in obj]
+        )))
+
+    d['__init__'] = __init__
+    d['__iter__'] = __iter__
+    d['__repr__'] = __repr__
+    d['set_override'] = set_override
+    d['clear_override'] = clear_override
+    d['to_dict'] = to_dict
+    d['update'] = update
+
+    return type(type_name, tuple(), d)

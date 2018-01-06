@@ -92,7 +92,7 @@ class SaveGame(BinaryModelObject):
 
     Overrides = []
 
-    # MaxSize = 0xA00
+    MaxSize = 0xA00
     # MagicCount = 54
     # BushidoCount = 8
     # BushidoNameSize = 6
@@ -101,12 +101,27 @@ class SaveGame(BinaryModelObject):
     # MainCharacterCount = 12
     # InventoryItemCount = 256
 
-    def __init__(self, rom, data, slot):
+    def __init__(self, data, rom, slot):
+        self.slot = slot
+        offset = self.slot * self.MaxSize
         super().__init__(data)
         self._rom = rom
-        self.slot = slot
+
+    def _update_checksum(self):
+        checksum = 0
+
+        for b in self.data[:self.MaxSize-2]:
+            checksum += b
+            checksum &= 0xFFFF
+
+        self.data[self.MaxSize-1] = (checksum >> 8) & 0xFF
+        self.data[self.MaxSize-2] = checksum & 0xFF
+
+    def serialize(self):
+        super().serialize()
+        self._update_checksum()
 
     @classmethod
-    def from_file(cls, slot, rom, file_name):
+    def from_file(cls, file_name, rom, slot):
         with open(file_name, 'rb') as fobj:
-            return cls(slot, rom, fobj.read())
+            return cls(fobj.read(), rom, slot)

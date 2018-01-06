@@ -1,7 +1,6 @@
 from abc import abstractmethod
 from enum import IntEnum
 
-from ff6.obj import ObjClass
 from ff6.util import snake_to_camel
 from ff6.bin_util import BinaryObject
 
@@ -49,10 +48,10 @@ class AbstractField:
         raise NotImplementedError()
 
     def serialize(self, bin_obj, offset, value):
-        if not self.check_serialized_value(value):
-            raise InvalidFieldValueError(self.name, value)
         if self.transform_out:
             value = self.transform_out(value)
+        if not self.check_serialized_value(value):
+            raise InvalidFieldValueError(self.name, value)
         self._serialize(bin_obj, offset, value)
 
     def deserialize(self, bin_obj, offset):
@@ -438,10 +437,6 @@ class StructField(AbstractStructField):
                  transform_in=None):
         super().__init__(name, offset, transform_out, transform_in)
         self.fields = fields
-        # self.Obj = ObjClass(
-        #     snake_to_camel(self.name),
-        #     [field.name for field in self.fields]
-        # )
 
     def __repr__(self):
         return '%s(%s, %s, %s)' % (

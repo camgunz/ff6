@@ -23,3 +23,5 @@ NaturalMagic = 16
 Shops = 127
 MagitekMenuSlots = 8
 EsperLevelBonuses = 17
+BattleDialogues1 = 256
+BattleDialogues2 = 256

@@ -186,6 +186,15 @@ def test_magitek_menu(rom_filename):
     for magitek_menu_slot in rom.magitek_menu:
         pprint.pprint(magitek_menu_slot.to_dict())
 
+def test_battle_dialogues(rom_filename):
+    rom = get_rom(rom_filename)
+    for battle_dialogue in rom.battle_dialogues1[:5]:
+        d = battle_dialogue.to_dict()
+        d['pointer'] = hex(d['pointer'])
+        pprint.pprint(d)
+    # for battle_dialogue in rom.battle_dialogues2:
+    #     pprint.pprint(battle_dialogue.to_dict())
+
 def main():
     # read_save(ROM_FILENAME, SAVE_FILENAME)
     # test_monsters(ROM_FILENAME)
@@ -215,54 +224,8 @@ def main():
     # test_monster_attacks(ROM_FILENAME)
     # test_desperation_attacks(ROM_FILENAME)
     # test_misc_attacks(ROM_FILENAME)
-    test_magitek_menu(ROM_FILENAME)
+    # test_magitek_menu(ROM_FILENAME)
     # test_dances(ROM_FILENAME)
-
-    # All ally targeting: 0x2e
-    # Single ally targeting: 0x01
-    # All enemy targeting: 0x6a
-    # Single enemy targeting: 0x43
-
-    # Fire Beam: 0x69
-    # Bolt Beam: 0x6a
-    # Ice Beam: 0x6b
-    # Bio Blast: 0x6c
-    # Heal Force: 0x6d
-    # Grav Bomb: 0xa2
-
-    # 0x8f 0xa1 0xa8 0x9e 0xa7 0xa2 0xb1
-    # 0x8e 0xa8 0xb0 0xa7
-
-    # Maybe 0x1bb0e0, but probably not (no TekMissile)
-
-    # 0x1910f, 0x3c
-    # 0x19117, 0x3c
-    # 0x19119, 0x7c, 0x06, 0x07
-    # 0x12bf30 0xeb
-    # 0x12bf38 0xfe
-
-    # 0x19107, 0x43
-    # 0x1910f, 0x51
-    # 0x19112, 0x07, 0x7c
-    # 0x19117, 0x51
-    # 0x1911a, 0x7c, 0x7c
-
-    # # 'TekM': 0x93 0x9E 0xA4 0xBC
-    # # 0x26f9f0
-    # Magic:   0x46CC0 - 0x46FB4 # 54,  54
-    # Espers:  0x46FB4 - 0x4712E # 27,  81
-    # Skeans:  0x4712E - 0x47166 #  4,  85
-    # Bushido: 0x47166 - 0x471D6 #  8,  93
-    # Blitzes: 0x471D6 - 0x47246 #  8, 101
-
-    # Slots: 8
-    # Dance Attacks: 24
-    # Lores: 24
-    # Enemy attacks: 77
-    # Desperation attacks: 12
-    # Misc attacks: 4
-    # Esper attacks: 27
-
-    # 10% bonus in HP increase
+    test_battle_dialogues(ROM_FILENAME)
 
 main()
