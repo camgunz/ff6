@@ -22,7 +22,8 @@ from ff6.natural_magic import CelesNaturalMagic, TerraNaturalMagic
 from ff6.morph_packages import MorphPackages
 from ff6.character_starts import CharacterStarts
 from ff6.desperation_attacks import DesperationAttacks
-from ff6.battle_dialogue import BattleDialogues1, BattleDialogues2
+from ff6.battle_dialogue import (BattleDialogues1, BattleDialogues2,
+                                 BattleMessages)
 
 class FF6ROM(ROM):
 
@@ -53,7 +54,8 @@ class FF6ROM(ROM):
         MagitekMenu +
         EsperLevelBonuses +
         BattleDialogues1 +
-        BattleDialogues2
+        BattleDialogues2 +
+        BattleMessages
     )
 
     Overrides = (

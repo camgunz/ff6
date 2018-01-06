@@ -112,13 +112,13 @@ MagitekMenuTargeting = 0x19304
 MagitekMenuTerraCommands = 0x1930C
 MagitekMenuCommands = 0x19314
 
-BattleDialogues1 = 0x100000
-BattleDialoguePointers1 = 0x10CE04
+BattleDialogues1 = 0x100200
+BattleDialoguePointers1 = 0x10D200
 
-BattleDialogues2 = 0xFE3E0
+BattleDialogues2 = 0xF0200
 BattleDialoguePointers2 = 0xFE1E0
 
-BattleMessages = 0x11F200
+BattleMessages = 0x110200
 BattleMessagePointers = 0x11F9A0
 
 # 96 84 83

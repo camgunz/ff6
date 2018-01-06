@@ -25,3 +25,4 @@ MagitekMenuSlots = 8
 EsperLevelBonuses = 17
 BattleDialogues1 = 256
 BattleDialogues2 = 256
+BattleMessages = 256

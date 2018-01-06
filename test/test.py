@@ -188,12 +188,15 @@ def test_magitek_menu(rom_filename):
 
 def test_battle_dialogues(rom_filename):
     rom = get_rom(rom_filename)
-    for battle_dialogue in rom.battle_dialogues1[:5]:
-        d = battle_dialogue.to_dict()
-        d['pointer'] = hex(d['pointer'])
-        pprint.pprint(d)
-    # for battle_dialogue in rom.battle_dialogues2:
-    #     pprint.pprint(battle_dialogue.to_dict())
+    for battle_dialogue in rom.battle_dialogues1:
+        pprint.pprint(battle_dialogue.to_dict())
+    for battle_dialogue in rom.battle_dialogues2:
+        pprint.pprint(battle_dialogue.to_dict())
+
+def test_battle_messages(rom_filename):
+    rom = get_rom(rom_filename)
+    for battle_message in rom.battle_messages:
+        pprint.pprint(battle_message.to_dict())
 
 def main():
     # read_save(ROM_FILENAME, SAVE_FILENAME)
@@ -226,6 +229,7 @@ def main():
     # test_misc_attacks(ROM_FILENAME)
     # test_magitek_menu(ROM_FILENAME)
     # test_dances(ROM_FILENAME)
-    test_battle_dialogues(ROM_FILENAME)
+    # test_battle_dialogues(ROM_FILENAME)
+    test_battle_messages(ROM_FILENAME)
 
 main()
