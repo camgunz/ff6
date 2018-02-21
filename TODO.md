@@ -21,6 +21,7 @@ Monster AI.  I feel like this could be pretty simple, actually.
 
 ## Hacking
 
+- Weapons don't give magic
 - Esper Stat Gains:
   - Basically make the stat gains bigger
 - Item stats:

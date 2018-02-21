@@ -4,6 +4,7 @@ from abc import abstractmethod
 
 from ff6.struct import BinaryModel, FieldType
 from ff6.bin_util import BinaryObject
+from ff6.named_element_list import NamedElementList
 
 def _build_property(name):
     real_name = '_' + name
@@ -30,18 +31,21 @@ class Index:
             return self.hardcoded_values[value]
         for member in self.array_field_path:
             obj = getattr(obj, member)
-        if isinstance(obj, list):
-            return obj[value]
-        return getattr(obj, value)
+        if not isinstance(obj, list):
+            raise Exception('Index on a non-list')
+        return obj[value]
 
     def set(self, obj, value):
         if value in self.hardcoded_values:
             return self.hardcoded_values[value]
         for member in self.array_field_path:
             obj = getattr(obj, member)
-        if isinstance(obj, list):
-            return obj[value]
-        return getattr(obj, value)
+        if not isinstance(obj, list):
+            raise Exception('Index on a non-list')
+        for n, element in enumerate(obj):
+            if element == value:
+                return n
+        raise Exception('%s not in %s' % (value, obj))
 
 class SplitIndex:
 
@@ -84,7 +88,7 @@ class Item:
 
 def dict_to_obj(path, bin_obj, deserialized_fields, d):
     if isinstance(d, list):
-        return [
+        return NamedElementList([
             dict_to_obj(
                 path + [Item(n)],
                 bin_obj,
@@ -92,7 +96,7 @@ def dict_to_obj(path, bin_obj, deserialized_fields, d):
                 element
             )
             for n, element in enumerate(d)
-        ]
+        ])
     elif isinstance(d, dict):
         Object = ObjClass('Obj', d.keys())
         return Object(path, bin_obj, **{

@@ -272,7 +272,7 @@ class MagicExtraEffect(IntEnum):
     ActivateRandomStatus                              = 59
     Retort                                            = 60
     BaseEffectOnMissingHP                             = 61
-    UncurableHPDrain                                  = 62
+    IncurableHPDrain                                  = 62
     Stunner                                           = 63
     DropHPToOne                                       = 64
     GiveTargetTwoTurns                                = 67
@@ -557,6 +557,40 @@ class Condition(IntFlag):
     DefendedByInterceptor = 1 << 30
     Float                 = 1 << 31
 
+class ConditionNumbers(IntEnum):
+    Dark                  = 0
+    Zombie                = 1
+    Poison                = 2
+    Magitek               = 3
+    Vanish                = 4
+    Imp                   = 5
+    Petrify               = 6
+    Death                 = 7
+    Condemned             = 8
+    Kneeling              = 9
+    Blink                 = 10
+    Silence               = 11
+    Berserk               = 12
+    Confusion             = 13
+    HPDrain               = 14
+    Sleep                 = 15
+    DanceOrFloat          = 16
+    Regen                 = 17
+    Slow                  = 18
+    Haste                 = 19
+    Stop                  = 20
+    Shell                 = 21
+    Safe                  = 22
+    Reflect               = 23
+    Rage                  = 24
+    Frozen                = 25
+    ProtectionFromDeath   = 26
+    Morph                 = 27
+    Casting               = 28
+    Removed               = 29
+    DefendedByInterceptor = 30
+    Float                 = 31
+
 class BattleEffect1(IntFlag):
     IncreasesPreemptiveAttackRate = 1 << 0
     AllowsRunningInSideAttack     = 1 << 1
@@ -759,3 +793,37 @@ class MonsterSpecialAttackEffect(IntEnum):
     RemoveReflect12       = 61
     RemoveReflect13       = 62
     RemoveReflect14       = 63
+
+class MonsterFormationAnimation(IntEnum):
+    MonsterFlashesRed = 0
+    MonsterMovesBackOneStepSlow = 1
+    MonsterMovesForwardOneStepSlow = 2
+    MonsterMovesBackOneStepFast = 3
+    MonsterMovesForwardOneStepFast = 4
+    CharactersRunToTheRight = 5
+    CharactersRunToTheLeft = 6
+    MonsterMovesBackThreeStepsFast = 7
+    MonsterMovesForwardThreeStepsFast = 8
+    SoundPlays = 9
+    HeadAppearsAndScreenShakes = 10
+    MonsterFlashes1 = 11
+    MonsterFlashes2 = 12
+    BossDies = 13
+
+class MonsterFormationChangeAttributes(IntEnum):
+    ShowAndFillHP = 0
+    HideAndNullHP = 1
+    ShowAndKeepHP = 2
+    HideAndFillHP = 3
+    HideAndKeepHP = 4
+
+class BattleScriptMathFunction(IntEnum):
+    Set1     = 0
+    Set2     = 1
+    Add      = 3
+    Subtract = 4
+
+class BattleScriptBinOpFunction(IntEnum):
+    Xor = 0
+    Or  = 1
+    Not = 2

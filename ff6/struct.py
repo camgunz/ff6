@@ -3,6 +3,7 @@ from enum import IntEnum
 
 from ff6.util import snake_to_camel
 from ff6.bin_util import BinaryObject
+from ff6.named_element_list import NamedElementList
 
 def _value_in_range(name, val, min_val, max_val):
     val = int(val)
@@ -17,6 +18,7 @@ class FieldType(IntEnum):
     Scalar = 1
     Struct = 2
     Array  = 3
+    Data   = 4
 
 class ByteSide(IntEnum):
     Low  = 1
@@ -63,16 +65,16 @@ class AbstractField:
         return value
 
 class AbstractScalarField(AbstractField):
-
     FieldType = FieldType.Scalar
 
 class AbstractStructField(AbstractField):
-
     FieldType = FieldType.Struct
 
 class AbstractArrayField(AbstractField):
-
     FieldType = FieldType.Array
+
+class AbstractDataField(AbstractField):
+    FieldType = FieldType.Data
 
 class NumberRangeCheckMixin:
 
@@ -84,6 +86,36 @@ class NumberRangeCheckMixin:
 
     def check_deserialized_value(self, value):
         return _value_in_range(self.name, value, self.MinValue, self.MaxValue)
+
+class StaticField(AbstractScalarField):
+
+    def __init__(self, name, value, offset, transform_out=None,
+                 transform_in=None):
+        super().__init__(name, offset, transform_out, transform_in)
+        self.value = value
+
+    def check_serialized_value(self, value):
+        return value == self.value
+
+    def check_deserialized_value(self, value):
+        return value == self.value
+
+    @property
+    def byte_length(self):
+        byte_length, bit_length = divmod(self.value.bit_length(), 8)
+        if bit_length > 0:
+            byte_length += 1
+        return byte_length
+
+    def _serialize(self, bin_obj, offset, value):
+        bytes = value.to_bytes(self.byte_length, 'little')
+        bin_obj.write_bytes(offset + self.offset, bytes)
+
+    def _deserialize(self, bin_obj, offset):
+        start = offset + self.offset
+        end = start + self.byte_length
+        bytes = bin_obj.data[start:end]
+        return self.enum.from_bytes(bytes, 'little')
 
 class EnumField(AbstractScalarField):
 
@@ -107,9 +139,8 @@ class EnumField(AbstractScalarField):
     @property
     def byte_length(self):
         max_val = list(self.enum)[-1]
-        bit_length = max_val.bit_length()
-        byte_length = bit_length // 8
-        if bit_length % 8 > 0:
+        byte_length, bit_length = divmod(max_val.bit_length(), 8)
+        if bit_length > 0:
             byte_length += 1
         return byte_length
 
@@ -144,29 +175,28 @@ class ShortEnumFieldMixin:
         return self.enum(func(offset + self.offset, self.BitSize))
 
 class Enum6LowField(ShortEnumFieldMixin, EnumField):
-
     ByteSide = ByteSide.Low
     BitSize  = 6
 
 class Enum4HighField(ShortEnumFieldMixin, EnumField):
-
     ByteSide = ByteSide.High
     BitSize = 4
 
 class Enum4LowField(ShortEnumFieldMixin, EnumField):
-
     ByteSide = ByteSide.Low
     BitSize = 4
 
 class Enum3HighField(ShortEnumFieldMixin, EnumField):
-
     ByteSide = ByteSide.High
     BitSize  = 3
 
 class Enum3LowField(ShortEnumFieldMixin, EnumField):
-
     ByteSide = ByteSide.Low
     BitSize  = 3
+
+class Enum2LowField(ShortEnumFieldMixin, EnumField):
+    ByteSide = ByteSide.Low
+    BitSize  = 2
 
 class FlagsField(EnumField):
 
@@ -183,7 +213,6 @@ class FlagsField(EnumField):
         return value == 0
 
 class Flags4HighField(ShortEnumFieldMixin, FlagsField):
-
     ByteSide = ByteSide.High
     BitSize  = 4
 
@@ -456,6 +485,42 @@ class StructField(AbstractStructField):
             for field in self.fields
         }
 
+class DataField(AbstractDataField):
+
+    def __init__(self, name, size, structs, padding_byte, offset,
+                 transform_out=None, transform_in=None):
+        super().__init__(name, offset, transform_out, transform_in)
+        self.size = size
+        self.structs = structs
+        self.padding_byte = padding_byte
+        self.fields = []
+
+    def __repr__(self):
+        return '%s(%s, %s, %r, %r, %r)' % (
+            type(self).__name__,
+            self.name,
+            self.size,
+            self.structs,
+            self.padding_byte,
+            hex(self.offset),
+        )
+
+    def _serialize(self, bin_obj, offset, data):
+        if len(data) > self.size:
+            raise Exception('Data exceeds max size (%s)' % (self.size))
+        bin_obj.write_bytes(offset, data)
+        current_offset = offset
+        for field in self.fields:
+            field.serialize(bin_obj, current_offset, 
+        while True:
+            for struct in self.structs:
+                if struct.matches(data[current_offset:]):
+                    break
+            else:
+                break
+            new_struct = struct.copy()
+            new_struct.
+
 class ArrayField(AbstractArrayField):
 
     def __init__(self, name, count, element_field, element_size, offset,
@@ -483,13 +548,13 @@ class ArrayField(AbstractArrayField):
             )
 
     def _deserialize(self, bin_obj, offset):
-        return [
+        return NamedElementList([
             self.element_field.deserialize(
                 bin_obj,
                 offset + self.offset + (n * self.element_size)
             )
             for n in range(self.count)
-        ]
+        ])
 
 class VariantField(AbstractStructField):
 
