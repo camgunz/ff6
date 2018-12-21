@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import sys
 import pprint
 
 from ff6.data import *
@@ -198,38 +199,53 @@ def test_battle_messages(rom_filename):
     for battle_message in rom.battle_messages:
         pprint.pprint(battle_message.to_dict())
 
-def main():
-    read_save(ROM_FILENAME, SAVE_FILENAME)
-    test_monsters(ROM_FILENAME)
-    test_items(ROM_FILENAME)
-    # compare_roms(ROM_FILENAME)
-    test_blitzes(ROM_FILENAME)
-    test_bushidos(ROM_FILENAME)
-    test_magic(ROM_FILENAME)
-    test_hp_per_level(ROM_FILENAME)
-    test_mp_per_level(ROM_FILENAME)
-    test_xp_per_level(ROM_FILENAME)
-    test_morph_packages(ROM_FILENAME)
-    test_character_starts(ROM_FILENAME)
-    test_mapping(ROM_FILENAME)
-    test_espers(ROM_FILENAME)
-    test_natural_magic(ROM_FILENAME)
+def test_patches(rom_filename):
     for patch_filename in PATCH_FILENAMES:
         print(patch_filename)
         test_patch(patch_filename)
         print('')
-    test_shops(ROM_FILENAME)
-    test_skean_attacks(ROM_FILENAME)
-    test_dance_attacks(ROM_FILENAME)
-    test_slot_attacks(ROM_FILENAME)
-    test_magitek_attacks(ROM_FILENAME)
-    test_lore_attacks(ROM_FILENAME)
-    test_monster_attacks(ROM_FILENAME)
-    test_desperation_attacks(ROM_FILENAME)
-    test_misc_attacks(ROM_FILENAME)
-    test_magitek_menu(ROM_FILENAME)
-    test_dances(ROM_FILENAME)
-    test_battle_dialogues(ROM_FILENAME)
-    test_battle_messages(ROM_FILENAME)
+
+def test_battle_formations(rom_filename):
+    rom = get_rom(rom_filename)
+    for battle_formation in rom.battle_formations:
+        pprint.pprint(battle_formation.to_dict())
+
+def main():
+    tests = sys.argv[1:]
+    if not tests:
+        read_save(ROM_FILENAME, SAVE_FILENAME)
+        test_monsters(ROM_FILENAME)
+        test_items(ROM_FILENAME)
+        # compare_roms(ROM_FILENAME)
+        test_blitzes(ROM_FILENAME)
+        test_bushidos(ROM_FILENAME)
+        test_magic(ROM_FILENAME)
+        test_hp_per_level(ROM_FILENAME)
+        test_mp_per_level(ROM_FILENAME)
+        test_xp_per_level(ROM_FILENAME)
+        test_morph_packages(ROM_FILENAME)
+        test_character_starts(ROM_FILENAME)
+        test_mapping(ROM_FILENAME)
+        test_espers(ROM_FILENAME)
+        test_natural_magic(ROM_FILENAME)
+        test_patches(ROM_FILENAME)
+        test_shops(ROM_FILENAME)
+        test_skean_attacks(ROM_FILENAME)
+        test_dance_attacks(ROM_FILENAME)
+        test_slot_attacks(ROM_FILENAME)
+        test_magitek_attacks(ROM_FILENAME)
+        test_lore_attacks(ROM_FILENAME)
+        test_monster_attacks(ROM_FILENAME)
+        test_desperation_attacks(ROM_FILENAME)
+        test_misc_attacks(ROM_FILENAME)
+        test_magitek_menu(ROM_FILENAME)
+        test_dances(ROM_FILENAME)
+        test_battle_dialogues(ROM_FILENAME)
+        test_battle_messages(ROM_FILENAME)
+        test_battle_formations(ROM_FILENAME)
+    else:
+        for test in tests:
+            test_call = f'test_{test}(ROM_FILENAME)'
+            eval(test_call)
 
 main()

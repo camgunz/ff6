@@ -827,3 +827,129 @@ class BattleScriptBinOpFunction(IntEnum):
     Xor = 0
     Or  = 1
     Not = 2
+
+class ActorTarget(IntEnum):
+    Terra                      = Actor.Terra
+    Locke                      = Actor.Locke
+    Cyan                       = Actor.Cyan
+    Shadow                     = Actor.Shadow
+    Edgar                      = Actor.Edgar
+    Sabin                      = Actor.Sabin
+    Celes                      = Actor.Celes
+    Strago                     = Actor.Strago
+    Relm                       = Actor.Relm
+    Setzer                     = Actor.Setzer
+    Mog                        = Actor.Mog
+    Gau                        = Actor.Gau
+    Gogo                       = Actor.Gogo
+    Umaro                      = Actor.Umaro
+    Banon                      = Actor.Banon
+    Leo                        = Actor.Leo
+    Ghost1                     = Actor.Ghost1
+    Ghost2                     = Actor.Ghost2
+    Kupek                      = Actor.Kupek
+    Kupop                      = Actor.Kupop
+    Kumama                     = Actor.Kumama
+    Kuku1                      = Actor.Kuku1
+    Kutan                      = Actor.Kutan
+    Kupan                      = Actor.Kupan
+    Kushu                      = Actor.Kushu
+    Kurin                      = Actor.Kurin
+    Kuku2                      = Actor.Kuku2
+    Kamog                      = Actor.Kamog
+    FakeMog                    = Actor.FakeMog
+    Unknown1                   = Actor.Unknown1
+    Maduin                     = Actor.Maduin
+    Unknown2                   = Actor.Unknown2
+    Wedge                      = Actor.Wedge
+    Vicks                      = Actor.Vicks
+    Undefined1                 = Actor.Undefined1
+    Undefined2                 = Actor.Undefined2
+    Undefined3                 = Actor.Undefined3
+    Undefined4                 = Actor.Undefined4
+    Undefined5                 = Actor.Undefined5
+    Undefined6                 = Actor.Undefined6
+    Undefined7                 = Actor.Undefined7
+    Kefka1                     = Actor.Kefka1
+    Kefka2                     = Actor.Kefka2
+    Kefka3                     = Actor.Kefka3
+    Kefka4                     = Actor.Kefka4
+    Kefka5                     = Actor.Kefka5
+    Kefka6                     = Actor.Kefka6
+    Kefka7                     = Actor.Kefka7
+    Enemy1                     = 48
+    Enemy2                     = 49
+    Enemy3                     = 50
+    Enemy4                     = 51
+    Enemy5                     = 52
+    Enemy6                     = 53
+    Self                       = 54
+    AllOtherEnemies            = 55
+    AllEnemies                 = 56
+    RandomOtherEnemy           = 57
+    RandomEnemy                = 58
+    AllDeadAllies              = 59
+    RandomDeadAlly             = 60
+    AllDeadEnemies             = 61
+    AllDeadEnemiesAlt          = 62
+    AllAlliesWithWallStatus    = 63
+    RandomAllyWithWallStatus   = 64
+    AllEnemiesWithWallStatus   = 65
+    RandomEnemyWithWallStatus  = 66
+    AllAllies                  = 67
+    RandomAlly                 = 68
+    LastAttackingEntity        = 69
+    AllEntities                = 70
+    DefaultSpellTarget         = 71
+    Character1                 = 72
+    Character2                 = 73
+    Character3                 = 74
+    Character4                 = 75
+    AllTargets                 = 76
+    RandomTarget               = 77
+    LastTargetOfTargetingSpell = 78
+
+class BattleFormationPresentEnemies(IntFlag):
+    Enemy1    = 1 << 0
+    Enemy2    = 1 << 1
+    Enemy3    = 1 << 2
+    Enemy4    = 1 << 3
+    Enemy5    = 1 << 4
+    Enemy6    = 1 << 5
+    Unused1   = 1 << 6
+    Unused2   = 1 << 7
+
+class BattleFormationBossEnemies(IntFlag):
+    Enemy1    = 1 << 0
+    Enemy2    = 1 << 1
+    Enemy3    = 1 << 2
+    Enemy4    = 1 << 3
+    Enemy5    = 1 << 4
+    Enemy6    = 1 << 5
+    Unused1   = 1 << 6
+    Unused2   = 1 << 7
+
+class BattleFormationFlags1(IntFlag):
+    Unknown1              = 1 << 0
+    Unknown2              = 1 << 1
+    Unknown3              = 1 << 2
+    Unknown4              = 1 << 3
+    NormalAttacksDisabled = 1 << 4
+    BackAttacksDisabled   = 1 << 5
+    PincerAttacksDisabled = 1 << 6
+    SideAttacksDisabled   = 1 << 7
+
+class BattleFormationFlags2(IntFlag):
+    FanfareDisabled    = 1 << 1
+    Unknown1           = 1 << 2
+    EventScriptEnabled = 1 << 7
+
+class BattleFormationFlags3(IntFlag):
+    Unknown1                 = 1 << 0
+    Unknown2                 = 1 << 1
+    AttackTypeWindowsEnabled = 1 << 2
+    UseBattleMusic1          = 1 << 3
+    UseBattleMusic2          = 1 << 4
+    UseBattleMusic3          = 1 << 5
+    Unknown3                 = 1 << 6
+    UseCurrentMusic          = 1 << 7

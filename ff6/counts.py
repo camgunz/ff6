@@ -26,3 +26,4 @@ EsperLevelBonuses = 17
 BattleDialogues1 = 256
 BattleDialogues2 = 256
 BattleMessages = 256
+BattleFormations = 576

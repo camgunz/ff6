@@ -24,6 +24,7 @@ from ff6.character_starts import CharacterStarts
 from ff6.desperation_attacks import DesperationAttacks
 from ff6.battle_dialogue import (BattleDialogues1, BattleDialogues2,
                                  BattleMessages)
+from ff6.battle_formations import BattleFormations
 
 class FF6ROM(ROM):
 
@@ -55,7 +56,8 @@ class FF6ROM(ROM):
         EsperLevelBonuses +
         BattleDialogues1 +
         BattleDialogues2 +
-        BattleMessages
+        BattleMessages +
+        BattleFormations
     )
 
     Overrides = (
@@ -124,4 +126,10 @@ class FF6ROM(ROM):
                 {255: None}
             )
         ),
+        (('battle_formations', Item, 'enemy1'), Index(('monsters',), {255: None})),
+        (('battle_formations', Item, 'enemy2'), Index(('monsters',), {255: None})),
+        (('battle_formations', Item, 'enemy3'), Index(('monsters',), {255: None})),
+        (('battle_formations', Item, 'enemy4'), Index(('monsters',), {255: None})),
+        (('battle_formations', Item, 'enemy5'), Index(('monsters',), {255: None})),
+        (('battle_formations', Item, 'enemy6'), Index(('monsters',), {255: None})),
     )

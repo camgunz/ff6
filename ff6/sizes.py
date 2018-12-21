@@ -48,3 +48,6 @@ MiscAttackName = 10
 MagitekMenuSlot = 3
 
 ShortEsperLevelBonusDescription = 9
+
+BattleFormationData = 4
+BattleFormationEnemyData = 15

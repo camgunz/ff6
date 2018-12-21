@@ -120,3 +120,6 @@ BattleDialoguePointers2 = 0xFE1E0
 
 BattleMessages = 0x110200
 BattleMessagePointers = 0x11F9A0
+
+BattleFormationEnemyData = 0xF6400
+BattleFormationData = 0xF5B00
