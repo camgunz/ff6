@@ -505,21 +505,21 @@ class DataField(AbstractDataField):
             hex(self.offset),
         )
 
-    def _serialize(self, bin_obj, offset, data):
-        if len(data) > self.size:
-            raise Exception('Data exceeds max size (%s)' % (self.size))
-        bin_obj.write_bytes(offset, data)
-        current_offset = offset
-        for field in self.fields:
-            field.serialize(bin_obj, current_offset, 
-        while True:
-            for struct in self.structs:
-                if struct.matches(data[current_offset:]):
-                    break
-            else:
-                break
-            new_struct = struct.copy()
-            new_struct.
+    # def _serialize(self, bin_obj, offset, data):
+    #     if len(data) > self.size:
+    #         raise Exception('Data exceeds max size (%s)' % (self.size))
+    #     bin_obj.write_bytes(offset, data)
+    #     current_offset = offset
+    #     for field in self.fields:
+    #         field.serialize(bin_obj, current_offset, 
+    #     while True:
+    #         for struct in self.structs:
+    #             if struct.matches(data[current_offset:]):
+    #                 break
+    #         else:
+    #             break
+    #         new_struct = struct.copy()
+    #         new_struct.
 
 class ArrayField(AbstractArrayField):
 

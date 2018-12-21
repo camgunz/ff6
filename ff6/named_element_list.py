@@ -1,0 +1,2 @@
+class NamedElementList(list):
+    pass

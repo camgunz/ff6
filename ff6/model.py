@@ -97,14 +97,13 @@ def dict_to_obj(path, bin_obj, deserialized_fields, d):
             )
             for n, element in enumerate(d)
         ])
-    elif isinstance(d, dict):
+    if isinstance(d, dict):
         Object = ObjClass('Obj', d.keys())
         return Object(path, bin_obj, **{
             k: dict_to_obj(path + [k], bin_obj, deserialized_fields, v)
             for k, v in d.items()
         })
-    else:
-        return d
+    return d
 
 class BinaryModelObject(BinaryObject, BinaryModel):
 
