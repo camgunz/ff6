@@ -14,6 +14,17 @@ class ROM(BinaryModelObject):
         with open(file_name, 'rb') as fobj:
             return cls(fobj.read())
 
+    @classmethod
+    def deserialize_from_file(cls, file_name):
+        with open(file_name, 'rb') as fobj:
+            obj = cls(fobj.read())
+            obj.deserialize()
+            return obj
+
+    def serialize_to_file(self, file_name):
+        with open(file_name, 'wb') as fobj:
+            fobj.write(self.serialize())
+
     def __eq__(self, other):
         return self.data == other.data
 
