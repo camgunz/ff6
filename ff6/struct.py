@@ -1,9 +1,10 @@
 from abc import abstractmethod
 from enum import IntEnum
 
-from ff6.util import snake_to_camel
 from ff6.bin_util import BinaryObject
+from ff6.dte import DTE_BATTLE, TO_DTE_BATTLE
 from ff6.named_element_list import NamedElementList
+from ff6.util import snake_to_camel
 
 def _value_in_range(name, val, min_val, max_val):
     val = int(val)
@@ -418,6 +419,15 @@ class StrField(AbstractScalarField):
         if self.translation_from:
             return ''.join([self.translation_from[index] for index in value])
         return value.decode('ascii')
+
+class DTEField(StrField):
+
+    def __init__(self, name, offset, size=None, terminator=None,
+                 padding_byte=None, transform_out=None, transform_in=None):
+        super().__init__(
+            name, offset, size, terminator, (TO_DTE_BATTLE, DTE_BATTLE),
+            padding_byte, transform_out, transform_in
+        )
 
 ###
 # For maximum utility there needs to be something like PointerArrayField,
