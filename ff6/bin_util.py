@@ -104,7 +104,6 @@ def read_low_signed_bits(data, location, bit_width):
 def write_low_bits(data, location, bit_width, low_bits):
     assert bit_width > 0
     assert bit_width < 8
-    byte = read_byte(data, location)
     high_bits = read_high_bits(data, location, 8 - bit_width) << bit_width
     write_byte(data, location, high_bits | _unsigned(low_bits, bit_width))
 
@@ -134,7 +133,7 @@ def read_bit(data, location, bit_index):
     assert bit_index < 8
     mask = 1 << (bit_index - 1)
     byte = read_byte(data, location)
-    return (byte & mask) and True or False
+    return bool(byte & mask)
 
 def write_bit(data, location, bit_index, value):
     assert bit_index >= 0

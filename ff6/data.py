@@ -1,4 +1,3 @@
-from io import StringIO
 from enum import IntEnum, IntFlag
 
 class ShowPrizeName(IntEnum):

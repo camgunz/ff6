@@ -1,14 +1,11 @@
 from abc import abstractmethod
 from enum import IntEnum
 
-from ff6.bin_util import BinaryObject
 from ff6.dte import DTE_BATTLE, TO_DTE_BATTLE
 from ff6.named_element_list import NamedElementList
-from ff6.util import snake_to_camel
 
-def _value_in_range(name, val, min_val, max_val):
-    val = int(val)
-    return val >= min_val and val <= max_val
+def _value_in_range(val, min_val, max_val):
+    return min_val <= int(val) <= max_val
 
 class InvalidFieldValueError(ValueError):
 
@@ -36,9 +33,11 @@ class AbstractField:
     def __repr__(self):
         return '%s(%s, %s)' % (type(self).__name__, self.name, hex(self.offset))
 
+    # pylint: disable=no-self-use,unused-argument
     def check_serialized_value(self, value):
         return True
 
+    # pylint: disable=no-self-use,unused-argument
     def check_deserialized_value(self, value):
         return True
 
@@ -83,10 +82,10 @@ class NumberRangeCheckMixin:
     MaxValue = 0
 
     def check_serialized_value(self, value):
-        return _value_in_range(self.name, value, self.MinValue, self.MaxValue)
+        return _value_in_range(value, self.MinValue, self.MaxValue)
 
     def check_deserialized_value(self, value):
-        return _value_in_range(self.name, value, self.MinValue, self.MaxValue)
+        return _value_in_range(value, self.MinValue, self.MaxValue)
 
 class StaticField(AbstractScalarField):
 
@@ -115,8 +114,7 @@ class StaticField(AbstractScalarField):
     def _deserialize(self, bin_obj, offset):
         start = offset + self.offset
         end = start + self.byte_length
-        bytes = bin_obj.data[start:end]
-        return self.enum.from_bytes(bytes, 'little')
+        return bin_obj.data[start:end]
 
 class EnumField(AbstractScalarField):
 
@@ -351,6 +349,7 @@ class U24Field(NumberRangeCheckMixin, AbstractScalarField):
 
 class TimestampField(AbstractScalarField):
 
+    # pylint: disable=arguments-differ
     def _serialize(self, bin_obj, offset, timestamp):
         bin_obj.write_timestamp(offset + self.offset, timestamp)
 
@@ -459,7 +458,7 @@ class BitField(AbstractScalarField):
         self.index = index
 
     def check_serialized_value(self, value):
-        return value == 0 or value == 1
+        return value in (0, 1)
 
     def check_deserialized_value(self, value):
         return isinstance(value, bool)
@@ -485,6 +484,7 @@ class StructField(AbstractStructField):
             ', '.join([repr(field) for field in self.fields])
        )
 
+    # pylint: disable=arguments-differ
     def _serialize(self, bin_obj, offset, values):
         for field in self.fields:
             field.serialize(bin_obj, offset + self.offset, values[field.name])
@@ -521,7 +521,7 @@ class DataField(AbstractDataField):
     #     bin_obj.write_bytes(offset, data)
     #     current_offset = offset
     #     for field in self.fields:
-    #         field.serialize(bin_obj, current_offset, 
+    #         field.serialize(bin_obj, current_offset,
     #     while True:
     #         for struct in self.structs:
     #             if struct.matches(data[current_offset:]):
@@ -548,6 +548,7 @@ class ArrayField(AbstractArrayField):
             self.element_field
         )
 
+    # pylint: disable=arguments-differ
     def _serialize(self, bin_obj, offset, elements):
         assert len(elements) == self.count
         for n, element in enumerate(elements):
@@ -621,10 +622,10 @@ class IndexMapper:
             array = getattr(bin_obj, array_field_name)
             index = getattr(self, '_' + index_field_name)
             return array[index]
-        def setter(self, value):
-            array = getattr(bin_obj, array_field_name)
-            index = array.index(getattr(obj, index_field_name))
-            setattr(self, '_' + index_field_name, index)
+        # def setter(self, value):
+        #     array = getattr(bin_obj, array_field_name)
+        #     index = array.index(getattr(obj, index_field_name))
+        #     setattr(self, '_' + index_field_name, index)
         prop = property(
             fget=getter,
             fset=lambda self, value: setattr(obj, index_field_name, value)
@@ -654,19 +655,22 @@ def seq_equal(seq1, seq2):
 
 class BinaryModel:
 
-    Fields = tuple()
+    Fields = []
     Mappers = []
+    Overrides = []
 
     def __init__(self):
         self._deserialized_fields = {}
 
     def serialize(self, instance, bin_obj):
         for field in self.Fields:
+            # pylint: disable=protected-access
             value = instance._deserialized_fields[field.name]
             field.serialize(bin_obj, 0, value)
 
     def deserialize(self, instance, bin_obj):
         for field in self.Fields:
+            # pylint: disable=protected-access
             existing_value = instance._deserialized_fields.get(field.name)
             new_value = field.deserialize(bin_obj, 0)
             if existing_value is None:

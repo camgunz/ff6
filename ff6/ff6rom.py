@@ -28,7 +28,7 @@ from ff6.battle_formations import BattleFormations
 
 class FF6ROM(ROM):
 
-    Fields = (
+    Fields = [
         InventoryItems +
         Monsters +
         Blitzes +
@@ -58,9 +58,9 @@ class FF6ROM(ROM):
         BattleDialogues2 +
         BattleMessages +
         BattleFormations
-    )
+    ]
 
-    Overrides = (
+    Overrides = [
         (('monsters', Item, 'steal1'), Index(('inventory_items',))),
         (('monsters', Item, 'steal2'), Index(('inventory_items',))),
         (('monsters', Item, 'drop1'), Index(('inventory_items',))),
@@ -126,10 +126,28 @@ class FF6ROM(ROM):
                 {255: None}
             )
         ),
-        (('battle_formations', Item, 'enemy1'), Index(('monsters',), {255: None})),
-        (('battle_formations', Item, 'enemy2'), Index(('monsters',), {255: None})),
-        (('battle_formations', Item, 'enemy3'), Index(('monsters',), {255: None})),
-        (('battle_formations', Item, 'enemy4'), Index(('monsters',), {255: None})),
-        (('battle_formations', Item, 'enemy5'), Index(('monsters',), {255: None})),
-        (('battle_formations', Item, 'enemy6'), Index(('monsters',), {255: None})),
-    )
+        (
+            ('battle_formations', Item, 'enemy1'),
+            Index(('monsters',), {255: None})
+        ),
+        (
+            ('battle_formations', Item, 'enemy2'),
+            Index(('monsters',), {255: None})
+        ),
+        (
+            ('battle_formations', Item, 'enemy3'),
+            Index(('monsters',), {255: None})
+        ),
+        (
+            ('battle_formations', Item, 'enemy4'),
+            Index(('monsters',), {255: None})
+        ),
+        (
+            ('battle_formations', Item, 'enemy5'),
+            Index(('monsters',), {255: None})
+        ),
+        (
+            ('battle_formations', Item, 'enemy6'),
+            Index(('monsters',), {255: None})
+        ),
+    ]

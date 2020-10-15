@@ -1,17 +1,17 @@
-from ff6 import counts, offsets, sizes
+from ff6 import counts, offsets
 
 from ff6.dte import DTE_BATTLE, TO_DTE_BATTLE
 from ff6.data import *
 from ff6.model import BinaryModelObject
 from ff6.struct import *
 
-"""
----------------------------------------------
-| ? | in party | front | pos | ? | team num |
----------------------------------------------
-| * |    *     |   *   | **  | * |    **    |
----------------------------------------------
-"""
+###
+# ---------------------------------------------
+# | ? | in party | front | pos | ? | team num |
+# ---------------------------------------------
+# | * |    *     |   *   | **  | * |    **    |
+# ---------------------------------------------
+###
 
 class SaveGame(BinaryModelObject):
 
@@ -103,7 +103,7 @@ class SaveGame(BinaryModelObject):
 
     def __init__(self, data, rom, slot):
         self.slot = slot
-        offset = self.slot * self.MaxSize
+        self.offset = self.slot * self.MaxSize
         super().__init__(data)
         self._rom = rom
 

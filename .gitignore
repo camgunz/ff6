@@ -6,3 +6,6 @@ project.ini
 *.srm
 *.rom
 *.exe
+build
+dist
+ff6.egg-info

@@ -29,6 +29,7 @@ class Patch:
         with open(file_path, 'rb') as fobj:
             return cls(file_name, header, apply, notes, fobj.read())
 
+    # pylint: disable=too-many-locals
     @classmethod
     def from_roms(cls, file_name, header, apply, notes, base_rom, modded_rom):
         ###
@@ -90,7 +91,6 @@ class Patch:
         if header != Patch.HEADER_BYTES:
             raise Exception('Invalid IPS patch data')
         while offset < len(self.data):
-            start_offset = offset
             loc = struct.unpack_from('3B', self.data, offset=offset)
             offset += 3
             if loc == Patch.EOF_BYTES:

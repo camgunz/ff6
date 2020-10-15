@@ -9,7 +9,7 @@ from ff6.patch import Patch
 __PROJECT_CONFIG_FILE_NAME = 'project.ini'
 __CONFIG = None
 
-def build_rom(buf=None):
+def build_rom():
     config = get_config()
     patch_list = get_patch_list()
     ff6 = ROM.from_file(config['base_rom'])
@@ -53,7 +53,7 @@ def save_patch_list(patch_list):
             ))
 
 def get_config():
-    global __CONFIG
+    global __CONFIG  # pylint: disable=global-statement
     if __CONFIG is None:
         config = ConfigParser()
         config.read(__PROJECT_CONFIG_FILE_NAME)

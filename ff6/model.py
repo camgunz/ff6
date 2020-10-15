@@ -1,13 +1,12 @@
 import itertools
 
-from abc import abstractmethod
-
-from ff6.struct import BinaryModel, FieldType
+from ff6.struct import BinaryModel
 from ff6.bin_util import BinaryObject
 from ff6.named_element_list import NamedElementList
 
 def _build_property(name):
     real_name = '_' + name
+    # pylint: disable=protected-access
     def getter(self):
         value = getattr(self, real_name)
         if name in self.__overrides:
@@ -61,6 +60,7 @@ class SplitIndex:
                 break
         else:
             raise Exception('Value "%s" out of range' % (value))
+        # pylint: disable=undefined-loop-variable
         for member in array_field_path:
             obj = getattr(obj, member)
         if isinstance(obj, list):
@@ -75,6 +75,7 @@ class SplitIndex:
                 break
         else:
             raise Exception('Value "%s" out of range' % (value))
+        # pylint: disable=undefined-loop-variable
         for member in array_field_path:
             obj = getattr(obj, member)
         if isinstance(obj, list):
@@ -120,10 +121,10 @@ class BinaryModelObject(BinaryObject, BinaryModel):
                 objs = [getattr(obj, member) for obj in objs]
         return objs
 
-    def serialize(self):
+    def serialize(self):  # pylint: disable=arguments-differ
         super().serialize(self, self)
 
-    def deserialize(self):
+    def deserialize(self): # pylint: disable=arguments-differ
         super().deserialize(self, self)
         obj = dict_to_obj(
             [],
@@ -147,6 +148,7 @@ def ObjClass(type_name, field_names):
     d = {name: _build_property(name) for name in field_names}
 
     def __init__(self, path, bin_obj, **kwargs):
+        # pylint: disable=protected-access
         self.__overrides = {}
         self.__path = path
         self.__bin_obj = bin_obj
@@ -162,25 +164,31 @@ def ObjClass(type_name, field_names):
             setattr(self, '_' + name, value)
 
     def __iter__(self):
+        # pylint: disable=protected-access
         for attr_name in self.__attr_names:
             yield (attr_name, getattr(self, attr_name))
 
     def __repr__(self):
         return '%s(%s)' % (type(self).__name__, getattr(self, 'name', ''))
 
+    # pylint: disable=unused-variable
     def __getitem__(self, item):
         raise NotImplementedError()
 
+    # pylint: disable=unused-variable
     def __setitem__(self, item):
         raise NotImplementedError()
 
     def set_override(self, field_name, override):
+        # pylint: disable=protected-access
         self.__overrides[field_name] = override
 
     def clear_override(self, field_name):
+        # pylint: disable=protected-access
         del self.__overrides[field_name]
 
     def to_dict(self):
+        # pylint: disable=protected-access
         return {
             attr_name: getattr(self, attr_name)
             for attr_name in self.__attr_names
@@ -189,6 +197,7 @@ def ObjClass(type_name, field_names):
     def update(self, obj):
         for name, value in obj:
             setattr(self, name, value)
+        # pylint: disable=protected-access
         self.__attr_names = sorted(list(set(
             self.__attr_names + [name for name, value in obj]
         )))
