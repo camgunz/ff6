@@ -14,4 +14,3 @@ AttackUsingOneOf = StructField(
         )
     )
 )
-
